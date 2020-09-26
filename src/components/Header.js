@@ -42,7 +42,7 @@ function Header() {
     return (
         <Fragment>
             <header className="top-header">
-                <div className="top-header-logo"></div>
+                <Link to="/" className="top-header-logo"></Link>
                 <nav className="top-header-navbar">
                     <span className="top-header-navbar-title">Categories</span>
                     <div className="top-header-navbar-dropdown">
