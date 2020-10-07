@@ -201,7 +201,10 @@ function Landing(props) {
                 tempStartIndex = taggedCoursesCount - 5;
             }
         }
-        if (taggedCoursesNextPage != null) {
+        if (
+            taggedCoursesNextPage != null &&
+            taggedCoursesCount - taggedCourseIndex.start <= 5
+        ) {
             getTaggedCourses(
                 activeCourseTab,
                 null,

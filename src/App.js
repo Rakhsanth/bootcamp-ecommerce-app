@@ -5,6 +5,8 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 // Components
 import Header from './components/Header';
 import Landing from './components/Landing';
+import Register from './components/Register';
+import Login from './components/Login';
 
 // Redux related
 import { Provider } from 'react-redux';
@@ -18,6 +20,8 @@ function App() {
                 <Route exact path="/" component={Landing} />
                 <Switch>
                     {/* Other specific dynamic routes and pages goes here */}
+                    <Route exact path="/register" component={Register} />
+                    <Route exact path="/login" component={Login} />
                 </Switch>
             </Router>
         </Provider>

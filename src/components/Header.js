@@ -1,11 +1,14 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
-function Header() {
+function Header(props) {
+    const { loading, isLoggedIn } = props;
+
     const openMenu = () => {
         const sidenav = document.querySelector('.sidenav');
         sidenav.style.width = '100vw';
@@ -124,12 +127,28 @@ function Header() {
                         <span className="top-header-cart-count-text">10</span>
                     </span>
                 </Link>
-                <Link to="/login">
-                    <button className="btn btn-secondary btn-md">Log in</button>
-                </Link>
-                <Link to="/signup">
-                    <button className="btn btn-primary btn-md">Sign up</button>
-                </Link>
+                <Fragment>
+                    {isLoggedIn ? (
+                        <Link to="/">
+                            <button className="btn btn-secondary btn-md">
+                                Log out
+                            </button>
+                        </Link>
+                    ) : (
+                        <Fragment>
+                            <Link to="/login">
+                                <button className="btn btn-secondary btn-md">
+                                    Log in
+                                </button>
+                            </Link>
+                            <Link to="/register">
+                                <button className="btn btn-primary btn-md">
+                                    Sign up
+                                </button>
+                            </Link>
+                        </Fragment>
+                    )}
+                </Fragment>
             </header>
 
             <header className="small-header">
@@ -239,4 +258,11 @@ function Header() {
     );
 }
 
-export default Header;
+const mapStateToProps = (store) => {
+    return {
+        loading: store.auth.loading,
+        isLoggedIn: store.auth.loggedIn,
+    };
+};
+
+export default connect(mapStateToProps)(Header);

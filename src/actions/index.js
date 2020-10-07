@@ -5,10 +5,32 @@ import axios from 'axios';
 import { apiBaseURL } from '../config/config';
 
 // action types;
+import { REGISTER_USER } from './actionTypes';
+import { LOGIN_SIGNUP_ERROR } from './actionTypes';
 import { GET_TAG_FILTERED_BOOTCAMPS } from './actionTypes';
 import { GET_BOOTCAMPS_ERROR } from './actionTypes';
 import { GET_TAG_FILTERED_COURSES } from './actionTypes';
 import { GET_COURSES_ERROR } from './actionTypes';
+
+// User register action creator
+export const registerUser = (body) => {
+    return async function (dispatch) {
+        const config = {
+            'Content-Type': 'application/json',
+        };
+        try {
+            const response = await axios.post(
+                `${apiBaseURL}/auth/register`,
+                body,
+                config
+            );
+            dispatch({ type: REGISTER_USER, payload: response.data });
+        } catch (err) {
+            console.log(err.response.data);
+            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+        }
+    };
+};
 
 // Async action to get bootcamps based on dev, desgn tag
 export const getTaggedBootcamps = (
