@@ -6,22 +6,8 @@ import * as Yup from 'yup';
 import { connect } from 'react-redux';
 // action creators
 import { registerUser } from '../actions';
-
-const validatePassword = (password) => {
-    if (!password) return false;
-
-    if (password.length < 7) return false;
-
-    if (password.search(/[A-Z]/i) === -1) return false;
-
-    if (password.search(/[a-z]/i) === -1) return false;
-
-    if (password.search(/[0-9]/i) === -1) return false;
-
-    if (password.search(/\W/i) === -1) return false;
-
-    return true;
-};
+// utils
+import { validatePassword } from '../components/utils/utilFunctions';
 
 function Register(props) {
     const { registerUser } = props;
@@ -120,7 +106,7 @@ function Register(props) {
                 </Formik>
             </div>
             <div className="signup-container-signin">
-                Already have an account ? <a href="#">Sign In</a>
+                Already have an account ? <Link to="/login">Sign In</Link>
             </div>
         </div>
     );

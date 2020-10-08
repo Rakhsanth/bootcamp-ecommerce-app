@@ -1,13 +1,15 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+// action creator
+import { logout } from '../actions';
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
     const { loading, isLoggedIn } = props;
+    const { logout } = props;
 
     const openMenu = () => {
         const sidenav = document.querySelector('.sidenav');
@@ -40,6 +42,10 @@ function Header(props) {
         );
         headerSearchArea.style.border = `2px solid ${lightGreySearchBarBorder}`;
         headerSearchIcon.style.fill = `${lightGreySearchBarBorder}`;
+    };
+
+    const handleLogout = () => {
+        logout();
     };
 
     return (
@@ -130,7 +136,10 @@ function Header(props) {
                 <Fragment>
                     {isLoggedIn ? (
                         <Link to="/">
-                            <button className="btn btn-secondary btn-md">
+                            <button
+                                className="btn btn-secondary btn-md"
+                                onClick={handleLogout}
+                            >
                                 Log out
                             </button>
                         </Link>
@@ -265,4 +274,4 @@ const mapStateToProps = (store) => {
     };
 };
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, { logout })(Header);

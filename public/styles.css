@@ -241,6 +241,11 @@ a {
     border: black solid 2px;
     background-color: #992337;
 }
+.btn-explore {
+    border-radius: 1rem;
+    height: 4rem;
+    width: 8rem;
+}
 
 .course-review-btn {
     height: 3rem;
@@ -548,6 +553,9 @@ a {
 .top-header-navbar-dropdown-list-item-nested-dropdown {
     display: none;
 }
+.top-header-navbar-dropdown-list-item-nested-dropdown li {
+    padding: 1.5rem;
+}
 .top-header-navbar-dropdown-list-item-nested-dropdown-list {
     list-style: none;
 }
@@ -555,16 +563,26 @@ a {
     text-decoration: none;
     color: #73726c;
 }
+.top-header-navbar-dropdown-list-item-nested-dropdown-list-item-link-text {
+    padding: 1rem;
+    font-size: medium;
+}
 .top-header-navbar-dropdown-list-item:hover
     .top-header-navbar-dropdown-list-item-nested-dropdown {
     display: inline-flex;
-    position: relative;
-    margin-left: 18rem;
+    position: absolute;
+    margin-left: 1.9rem;
     flex-direction: column;
-    border: #73726c 2px solid;
-    width: 8rem;
-    height: 5rem;
+    border-left: #dcdacb;
+    border-right: #dcdacb;
+    border-bottom: #dcdacb;
+    box-shadow: 0 0.3rem 0.3rem #dcdacb;
+    width: 15rem;
+    height: 10rem;
     justify-content: space-around;
+    transition: width, opacity;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
 }
 .top-header-navbar-dropdown-list-item-link {
     text-decoration: none;
@@ -1445,6 +1463,11 @@ a {
     border: black solid 2px;
     background-color: #992337;
 }
+.btn-explore {
+    border-radius: 1rem;
+    height: 4rem;
+    width: 8rem;
+}
 
 .course-review-btn {
     height: 3rem;
@@ -1503,6 +1526,9 @@ a {
     width: 1.5rem;
     margin-right: 20px;
     margin-top: 8px;
+}
+.login-container-google {
+    margin-left: -0.4rem;
 }
 .login-container-google a {
     color: black;
@@ -2130,6 +2156,11 @@ a {
     border: black solid 2px;
     background-color: #992337;
 }
+.btn-explore {
+    border-radius: 1rem;
+    height: 4rem;
+    width: 8rem;
+}
 
 .course-review-btn {
     height: 3rem;
@@ -2311,6 +2342,11 @@ a {
     height: 0.1px;
     overflow: hidden;
 }
+.pubProfile-form-control span {
+    display: block;
+    width: 90%;
+    align-self: center;
+}
 
 .label-btn {
     width: 100%;
@@ -2408,6 +2444,21 @@ a {
 .bootcamp-form-content-basic-bottom button:nth-last-child(1) {
     margin-left: auto;
 }
-.errorMessage {
-    color: red;
+
+.filter-result-card-button {
+    position: absolute;
+    margin-left: 100rem;
+    margin-top: 5rem;
+}
+.filter-result-card-button button {
+    background-color: #ffe799;
+}
+.filter-result-card-button a {
+    text-decoration: none;
+    color: black;
+}
+
+.filter-result-container {
+    display: flex;
+    position: relative;
 }

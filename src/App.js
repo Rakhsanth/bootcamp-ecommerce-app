@@ -1,5 +1,5 @@
 // React related
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 // Components
@@ -11,8 +11,13 @@ import Login from './components/Login';
 // Redux related
 import { Provider } from 'react-redux';
 import store from './store';
+import { loadUser } from './actions';
 
 function App() {
+    useEffect(() => {
+        store.dispatch(loadUser());
+    }, []);
+
     return (
         <Provider store={store}>
             <Router>

@@ -3,6 +3,9 @@ import { combineReducers } from 'redux';
 // action types
 import {
     REGISTER_USER,
+    LOGIN_USER,
+    LOAD_USER,
+    LOGOUT,
     LOGIN_SIGNUP_ERROR,
     GET_TAG_FILTERED_BOOTCAMPS,
     GET_BOOTCAMPS_ERROR,
@@ -14,13 +17,15 @@ const initialLoginStatus = {
     loading: true,
     loggedIn: false,
     token: null,
+    user: null,
     error: false,
 };
 // reducer to register a user
-const userRegisterReducer = (state = initialLoginStatus, action) => {
+const userLoginRegisterReducer = (state = initialLoginStatus, action) => {
     const { type, payload } = action;
     switch (type) {
         case REGISTER_USER:
+        case LOGIN_USER:
             localStorage.setItem('token', payload.token);
             return {
                 ...state,
@@ -28,22 +33,26 @@ const userRegisterReducer = (state = initialLoginStatus, action) => {
                 loggedIn: true,
                 token: payload.token,
             };
+        case LOAD_USER:
+            return {
+                ...state,
+                loading: false,
+                loggedIn: true,
+                user: payload,
+            };
         case LOGIN_SIGNUP_ERROR:
+        case LOGOUT:
+            localStorage.removeItem('token');
             return {
                 ...state,
                 loading: false,
                 loggedIn: false,
                 token: null,
-                error: true,
+                user: null,
             };
         default:
             return { ...state };
     }
-};
-
-// reducer to login a user
-const userLoginReducer = (state = initialLoginStatus, action) => {
-    const { type, payload } = action;
 };
 
 // reducer to get tagged bootcamps with filters
@@ -122,7 +131,7 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
 };
 
 export default combineReducers({
-    auth: userRegisterReducer,
+    auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
 });

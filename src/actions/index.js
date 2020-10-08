@@ -5,12 +5,17 @@ import axios from 'axios';
 import { apiBaseURL } from '../config/config';
 
 // action types;
-import { REGISTER_USER } from './actionTypes';
-import { LOGIN_SIGNUP_ERROR } from './actionTypes';
-import { GET_TAG_FILTERED_BOOTCAMPS } from './actionTypes';
-import { GET_BOOTCAMPS_ERROR } from './actionTypes';
-import { GET_TAG_FILTERED_COURSES } from './actionTypes';
-import { GET_COURSES_ERROR } from './actionTypes';
+import {
+    REGISTER_USER,
+    LOGIN_USER,
+    LOAD_USER,
+    LOGOUT,
+    LOGIN_SIGNUP_ERROR,
+    GET_TAG_FILTERED_BOOTCAMPS,
+    GET_BOOTCAMPS_ERROR,
+    GET_TAG_FILTERED_COURSES,
+    GET_COURSES_ERROR,
+} from './actionTypes';
 
 // User register action creator
 export const registerUser = (body) => {
@@ -27,6 +32,55 @@ export const registerUser = (body) => {
             dispatch({ type: REGISTER_USER, payload: response.data });
         } catch (err) {
             console.log(err.response.data);
+            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+        }
+    };
+};
+
+// User login action creator
+export const loginUser = (body, history) => {
+    return async function (dispatch) {
+        const config = {
+            'Content-Type': 'application/json',
+        };
+        try {
+            const response = await axios.post(
+                `${apiBaseURL}/auth/login`,
+                body,
+                config
+            );
+            history.replace('/');
+            dispatch({ type: LOGIN_USER, payload: response.data });
+        } catch (err) {
+            console.log(err.response.data);
+            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+        }
+    };
+};
+// logout user
+export const logout = () => {
+    return function (dispatch) {
+        dispatch({ type: LOGOUT });
+    };
+};
+
+// load user when the app loads to check if he is already logged in (from local storage)
+export const loadUser = () => {
+    return async function (dispatch) {
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const response = await axios.get(`${apiBaseURL}/auth/me`, config);
+            dispatch({ type: LOAD_USER, payload: response.data.data });
+        } catch (err) {
             dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
         }
     };
