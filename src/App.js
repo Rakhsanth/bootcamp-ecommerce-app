@@ -1,4 +1,4 @@
-// React related
+// React
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -7,8 +7,9 @@ import Header from './components/Header';
 import Landing from './components/Landing';
 import Register from './components/Register';
 import Login from './components/Login';
+import CourseResults from './components/course/CourseResults';
 
-// Redux related
+// Redux store and actions
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions';
@@ -27,6 +28,7 @@ function App() {
                     {/* Other specific dynamic routes and pages goes here */}
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
+                    <Route path="/courseResults" component={CourseResults} />
                 </Switch>
             </Router>
         </Provider>

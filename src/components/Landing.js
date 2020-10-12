@@ -1,6 +1,6 @@
 // react related imports
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
 // component imports
@@ -20,6 +20,8 @@ function Landing(props) {
         taggedCoursesLoading,
         taggedCoursesNextPage,
     } = props;
+
+    const { history } = props;
 
     // action creators
     const { getTaggedBootcamps, getTaggedCourses } = props;
@@ -211,6 +213,8 @@ function Landing(props) {
                 null,
                 null,
                 taggedCoursesNextPage,
+                null,
+                null,
                 null
             );
         }
@@ -304,6 +308,20 @@ function Landing(props) {
         } else {
             return <h2 className="center">No Bootcamps have this category</h2>;
         }
+    };
+
+    const handleCategoryCard = (event, category) => {
+        console.log(category);
+        getTaggedCourses(
+            category,
+            null,
+            null,
+            null,
+            null,
+            10,
+            '-averageRating',
+            history
+        );
     };
 
     return (
@@ -463,15 +481,25 @@ function Landing(props) {
                     Top Categories
                 </h3>
                 <div className="top-catagories-cards">
-                    <div className="top-catagories-card">
+                    <Link
+                        to="/courseResults/design"
+                        className="top-catagories-card"
+                        // onClick={(event) => handleCategoryCard(event, 'design')}
+                    >
                         <img
                             src="./img/courseImages/course.png"
                             alt=""
                             className="top-catagories-card-img"
                         />
                         <h5 className="top-catagories-card-title">Design</h5>
-                    </div>
-                    <div className="top-catagories-card">
+                    </Link>
+                    <Link
+                        to="/courseResults/development"
+                        className="top-catagories-card"
+                        // onClick={(event) =>
+                        //     handleCategoryCard(event, 'development')
+                        // }
+                    >
                         <img
                             src="./img/courseImages/course.png"
                             alt=""
@@ -480,8 +508,14 @@ function Landing(props) {
                         <h5 className="top-catagories-card-title">
                             Development
                         </h5>
-                    </div>
-                    <div className="top-catagories-card">
+                    </Link>
+                    <Link
+                        to="/courseResults/data science"
+                        className="top-catagories-card"
+                        // onClick={(event) =>
+                        //     handleCategoryCard(event, 'data science')
+                        // }
+                    >
                         <img
                             src="./img/courseImages/course.png"
                             alt=""
@@ -490,8 +524,14 @@ function Landing(props) {
                         <h5 className="top-catagories-card-title">
                             Data Science
                         </h5>
-                    </div>
-                    <div className="top-catagories-card">
+                    </Link>
+                    <Link
+                        to="/courseResults/digital marketing"
+                        className="top-catagories-card"
+                        // onClick={(event) =>
+                        //     handleCategoryCard(event, 'digital marketing')
+                        // }
+                    >
                         <img
                             src="./img/courseImages/course.png"
                             alt=""
@@ -500,15 +540,21 @@ function Landing(props) {
                         <h5 className="top-catagories-card-title">
                             Digital Marketing
                         </h5>
-                    </div>
-                    <div className="top-catagories-card">
+                    </Link>
+                    <Link
+                        to="/courseResults/finance"
+                        className="top-catagories-card"
+                        // onClick={(event) =>
+                        //     handleCategoryCard(event, 'finance')
+                        // }
+                    >
                         <img
                             src="./img/courseImages/course.png"
                             alt=""
                             className="top-catagories-card-img"
                         />
                         <h5 className="top-catagories-card-title">Finance</h5>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </main>
@@ -531,4 +577,4 @@ const mapStateToProps = (store) => {
 export default connect(mapStateToProps, {
     getTaggedBootcamps,
     getTaggedCourses,
-})(Landing);
+})(withRouter(Landing));

@@ -199,12 +199,32 @@ function Header(props) {
                         </div>
                     </div>
                     <div className="sidenav-main-top">
-                        <Link to="/" className="sidenav-main-top-login">
-                            Login
-                        </Link>
-                        <Link to="/" className="sidenav-main-top-signup">
-                            Sign up
-                        </Link>
+                        {isLoggedIn ? (
+                            <Fragment>
+                                <Link
+                                    to="/"
+                                    className="sidenav-main-top-login"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </Link>
+                            </Fragment>
+                        ) : (
+                            <Fragment>
+                                <Link
+                                    to="/login"
+                                    className="sidenav-main-top-login"
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="sidenav-main-top-signup"
+                                >
+                                    Sign up
+                                </Link>
+                            </Fragment>
+                        )}
                     </div>
                     <div className="sidenav-main-categories">
                         <h3 className="sidenav-main-categories-header">

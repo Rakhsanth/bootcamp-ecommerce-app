@@ -96,7 +96,11 @@ export const getTaggedBootcamps = (
     sort
 ) => {
     return async function (dispatch) {
-        let getURL = `${apiBaseURL}/bootcamps/category/${category}?`;
+        let getURL = `${apiBaseURL}/bootcamps?`;
+
+        if (category) {
+            getURL = `${apiBaseURL}/bootcamps/category/${category}?`;
+        }
         if (averageRating) {
             const { filter, value } = averageRating;
             getURL = getURL + `averageRating[${filter}]=${value}`;
@@ -149,52 +153,74 @@ export const getTaggedCourses = (
     averageCost,
     select,
     page,
-    sort
+    limit,
+    sort,
+    history,
+    otherQuery
 ) => {
-    console.log(averageRating, averageCost, page);
     return async function (dispatch) {
-        let getURL = `${apiBaseURL}/courses/category/${category}?`;
+        let getURL = `${apiBaseURL}/courses?`;
+
+        if (category) {
+            getURL = `${apiBaseURL}/courses/category/${category}?`;
+        }
         if (averageRating) {
             const { filter, value } = averageRating;
             getURL = getURL + `averageRating[${filter}]=${value}`;
         }
         if (averageCost) {
             const { filter, value } = averageCost;
-            if (getURL.includes('?')) {
-                getURL = getURL + `&averageCost[${filter}]=${value}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `averageCost[${filter}]=${value}`;
+            } else {
+                getURL = getURL + `&averageCost[${filter}]=${value}`;
             }
         }
         if (select) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&select=${select}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `select=${select}`;
+            } else {
+                getURL = getURL + `&select=${select}`;
             }
         }
         if (sort) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&sort=${sort}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `sort=${sort}`;
+            } else {
+                getURL = getURL + `&sort=${sort}`;
             }
         }
         if (page) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&page=${page}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `page=${page}`;
+            } else {
+                getURL = getURL + `&page=${page}`;
+            }
+        }
+        if (limit) {
+            if (getURL.endsWith('?')) {
+                getURL = getURL + `limit=${limit}`;
+            } else {
+                getURL = getURL + `&limit=${limit}`;
+            }
+        }
+        if (otherQuery) {
+            if (getURL.endsWith('?')) {
+                getURL = getURL + `${otherQuery}`;
+            } else {
+                getURL = getURL + `&${otherQuery}`;
             }
         }
         try {
             const response = await axios.get(getURL);
+            if (history) history.push('/courseResults');
+            console.log(response.data);
             dispatch({
                 type: GET_TAG_FILTERED_COURSES,
                 payload: response.data,
             });
         } catch (err) {
-            dispatch({ type: GET_COURSES_ERROR, payload: err.response.data });
+            dispatch({ type: GET_COURSES_ERROR, payload: err.response });
         }
     };
 };

@@ -106,6 +106,12 @@ a {
     border-bottom: 1px solid;
 }
 
+.focus-pagenum {
+    padding: 0.25rem;
+    color: #3c3b37;
+    border: 1px solid;
+}
+
 .btn {
     font-size: 1.2rem;
     font-weight: bold;
@@ -861,7 +867,8 @@ a {
     transition: all 0.3s ease-out;
 }
 .filter-result-card-details {
-    width: 60%;
+    width: 50%;
+    margin-left: 7%;
     display: flex;
     flex-direction: column;
 }
@@ -1076,6 +1083,7 @@ a {
     border-top: 1px solid #dcdacb;
     border-right: 1px solid #dcdacb;
     border-bottom: 1px solid #dcdacb;
+    overflow: hidden;
 }
 @media (max-width: 56.25em) {
     .filter-criteria-container {
@@ -1169,7 +1177,7 @@ a {
     padding-left: 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows: 15rem 7rem minmax(min-content, 150rem) 10rem 25vh;
+    grid-template-rows: 15rem 7rem minmax(25rem, min-content) 10rem 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1188,9 +1196,10 @@ a {
     padding: 0 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows:
-        50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
-        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
+            20rem,
+            min-content
+        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1199,12 +1208,10 @@ a {
 @media (max-width: 56.25em) {
     .main-conatiner-course {
         margin-top: 4rem;
-        grid-template-rows:
-            50vh min-content minmax(15rem, min-content) minmax(
+        grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
                 20rem,
                 min-content
-            )
-            minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+            ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     }
 }
 @media (max-width: 56.25em) {
@@ -1217,9 +1224,10 @@ a {
 .main-conatiner-home {
     margin-top: 10rem;
     display: grid;
-    grid-template-rows:
-        65vh 5rem minmax(40vh, min-content) 5rem minmax(40vh, min-content)
-        repeat(3, min-content) 25vh;
+    grid-template-rows: 65vh 5rem minmax(40vh, min-content) 5rem minmax(
+            40vh,
+            min-content
+        ) repeat(3, min-content) 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1527,9 +1535,6 @@ a {
     margin-right: 20px;
     margin-top: 8px;
 }
-.login-container-google {
-    margin-left: -0.4rem;
-}
 .login-container-google a {
     color: black;
     padding-right: 134px;
@@ -1685,6 +1690,7 @@ a {
     color: #2896a9;
     font-size: 1.2rem;
     font-weight: bold;
+    cursor: pointer;
 }
 .courses-pagination-pagenum:hover,
 .courses-pagination-pagenum:active,
@@ -2341,11 +2347,6 @@ a {
     width: 0.1px;
     height: 0.1px;
     overflow: hidden;
-}
-.pubProfile-form-control span {
-    display: block;
-    width: 90%;
-    align-self: center;
 }
 
 .label-btn {
