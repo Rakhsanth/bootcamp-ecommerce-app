@@ -1,7 +1,9 @@
 // react related
 import { combineReducers } from 'redux';
+import { resetLoading } from '../actions';
 // action types
 import {
+    RESET_LOADING,
     REGISTER_USER,
     LOGIN_USER,
     LOAD_USER,
@@ -76,7 +78,9 @@ const taggedBootcampsReducer = (
                 loading: false,
                 prevPage: payload.pagination.prev,
                 nextPage: payload.pagination.next,
-                bootcamps: payload.data,
+                bootcamps: payload.append
+                    ? [...state.bootcamps, payload.data]
+                    : [payload.data],
                 totalCount: payload.count,
             };
         case GET_BOOTCAMPS_ERROR:
@@ -106,13 +110,21 @@ const initialTaggedCoursesState = {
 const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'taggedCourses') {
+                return { ...state, loading: true };
+            } else {
+                return { ...state };
+            }
         case GET_TAG_FILTERED_COURSES:
             return {
                 ...state,
                 loading: false,
                 prevPage: payload.pagination.prev,
                 nextPage: payload.pagination.next,
-                courses: payload.data,
+                courses: payload.append
+                    ? state.courses.concat(payload.data)
+                    : payload.data,
                 totalCount: payload.count,
             };
         case GET_COURSES_ERROR:

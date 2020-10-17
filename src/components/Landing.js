@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
 // actions imports
-import { getTaggedBootcamps, getTaggedCourses } from '../actions';
+import { getTaggedBootcamps, getTaggedCourses, resetLoading } from '../actions';
 
 const defaultTab = 'design';
 
 function Landing(props) {
     const {
+        resetLoading,
         taggedBootcamps,
         taggedCourses,
         taggedBootcampsCount,
@@ -106,7 +107,18 @@ function Landing(props) {
             courseFinanceTab.current.classList.add('focus-tab');
         }
         setactiveCourseTab(category);
-        getTaggedCourses(category);
+        getTaggedCourses(
+            category,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false
+        );
     };
 
     const handleBootcampTabs = (event, category) => {
@@ -204,9 +216,10 @@ function Landing(props) {
             }
         }
         if (
-            taggedCoursesNextPage != null &&
-            taggedCoursesCount - taggedCourseIndex.start <= 5
+            taggedCoursesNextPage !== null &&
+            taggedCourses.length - taggedCourseIndex.start <= 5
         ) {
+            resetLoading('taggedCourses');
             getTaggedCourses(
                 activeCourseTab,
                 null,
@@ -215,7 +228,9 @@ function Landing(props) {
                 taggedCoursesNextPage,
                 null,
                 null,
-                null
+                null,
+                null,
+                true
             );
         }
         settaggedCourseIndex({ ...taggedCourseIndex, start: tempStartIndex });
@@ -274,7 +289,7 @@ function Landing(props) {
         isTabletLandscape,
         isDesktopOrLaptop
     ) => {
-        if (taggedCourses.length > 0) {
+        if (taggedCoursesCount > 0) {
             if (isMobile) {
                 return;
             }
@@ -301,7 +316,33 @@ function Landing(props) {
                     index < taggedCoursesCount;
                     index++
                 ) {
-                    cardList.push(<CourseCard key={index} />);
+                    console.log(taggedCourses);
+                    if (!taggedCoursesLoading) {
+                        const course = taggedCourses[index];
+                        const {
+                            picture,
+                            author,
+                            title,
+                            description,
+                            contentList,
+                            averageRating,
+                            ratings,
+                            cost,
+                        } = course;
+                        cardList.push(
+                            <CourseCard
+                                key={index}
+                                image={picture}
+                                author={author}
+                                title={title}
+                                description={description}
+                                keyPointsList={contentList}
+                                price={cost}
+                                rating={averageRating}
+                                userCount={ratings}
+                            />
+                        );
+                    }
                 }
                 return cardList;
             }
@@ -484,7 +525,6 @@ function Landing(props) {
                     <Link
                         to="/courseResults/design"
                         className="top-catagories-card"
-                        // onClick={(event) => handleCategoryCard(event, 'design')}
                     >
                         <img
                             src="./img/courseImages/course.png"
@@ -496,9 +536,6 @@ function Landing(props) {
                     <Link
                         to="/courseResults/development"
                         className="top-catagories-card"
-                        // onClick={(event) =>
-                        //     handleCategoryCard(event, 'development')
-                        // }
                     >
                         <img
                             src="./img/courseImages/course.png"
@@ -512,9 +549,6 @@ function Landing(props) {
                     <Link
                         to="/courseResults/data science"
                         className="top-catagories-card"
-                        // onClick={(event) =>
-                        //     handleCategoryCard(event, 'data science')
-                        // }
                     >
                         <img
                             src="./img/courseImages/course.png"
@@ -528,9 +562,6 @@ function Landing(props) {
                     <Link
                         to="/courseResults/digital marketing"
                         className="top-catagories-card"
-                        // onClick={(event) =>
-                        //     handleCategoryCard(event, 'digital marketing')
-                        // }
                     >
                         <img
                             src="./img/courseImages/course.png"
@@ -544,9 +575,6 @@ function Landing(props) {
                     <Link
                         to="/courseResults/finance"
                         className="top-catagories-card"
-                        // onClick={(event) =>
-                        //     handleCategoryCard(event, 'finance')
-                        // }
                     >
                         <img
                             src="./img/courseImages/course.png"
@@ -577,4 +605,5 @@ const mapStateToProps = (store) => {
 export default connect(mapStateToProps, {
     getTaggedBootcamps,
     getTaggedCourses,
+    resetLoading,
 })(withRouter(Landing));

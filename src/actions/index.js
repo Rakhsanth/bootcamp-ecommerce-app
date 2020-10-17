@@ -6,6 +6,7 @@ import { apiBaseURL } from '../config/config';
 
 // action types;
 import {
+    RESET_LOADING,
     REGISTER_USER,
     LOGIN_USER,
     LOAD_USER,
@@ -16,6 +17,13 @@ import {
     GET_TAG_FILTERED_COURSES,
     GET_COURSES_ERROR,
 } from './actionTypes';
+
+// reset loading property of specified state
+export const resetLoading = (state) => {
+    return async function (dispatch) {
+        dispatch({ type: RESET_LOADING, payload: state });
+    };
+};
 
 // User register action creator
 export const registerUser = (body) => {
@@ -156,7 +164,8 @@ export const getTaggedCourses = (
     limit,
     sort,
     history,
-    otherQuery
+    otherQuery,
+    append
 ) => {
     return async function (dispatch) {
         let getURL = `${apiBaseURL}/courses?`;
@@ -215,11 +224,29 @@ export const getTaggedCourses = (
             const response = await axios.get(getURL);
             if (history) history.push('/courseResults');
             console.log(response.data);
-            dispatch({
-                type: GET_TAG_FILTERED_COURSES,
-                payload: response.data,
-            });
+            if (append) {
+                dispatch({
+                    type: GET_TAG_FILTERED_COURSES,
+                    payload: {
+                        count: response.data.count,
+                        pagination: response.data.pagination,
+                        data: response.data.data,
+                        append: true,
+                    },
+                });
+            } else {
+                dispatch({
+                    type: GET_TAG_FILTERED_COURSES,
+                    payload: {
+                        count: response.data.count,
+                        pagination: response.data.pagination,
+                        data: response.data.data,
+                        append: false,
+                    },
+                });
+            }
         } catch (err) {
+            console.log(err);
             dispatch({ type: GET_COURSES_ERROR, payload: err.response });
         }
     };

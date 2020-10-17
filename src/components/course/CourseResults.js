@@ -61,7 +61,9 @@ function CourseResults(props) {
             null,
             10,
             sortResult,
-            null
+            null,
+            null,
+            false
         );
     }, [getTaggedCourses, pathname]);
     useEffect(() => {
@@ -134,7 +136,8 @@ function CourseResults(props) {
             10,
             values.sortBy,
             null,
-            filterQuery
+            filterQuery,
+            false
         );
     };
     const onSubmitCheckboxes = (values) => {
@@ -178,6 +181,7 @@ function CourseResults(props) {
         }
         console.log(query);
 
+        setfilterQuery(query);
         getTaggedCourses(
             category,
             null,
@@ -187,7 +191,8 @@ function CourseResults(props) {
             10,
             sortResult,
             null,
-            query
+            query,
+            false
         );
     };
 
@@ -196,6 +201,21 @@ function CourseResults(props) {
             start: currentBoundaries.start - 10,
             end: currentBoundaries.end - 10,
         });
+    };
+    const handlePageNumber = (pageNum) => {
+        setcurrentPage(pageNum);
+        getTaggedCourses(
+            category,
+            null,
+            null,
+            null,
+            pageNum,
+            10,
+            sortResult,
+            null,
+            filterQuery,
+            false
+        );
     };
     const renderPageNumbers = () => {
         let pageNumbers = [];
@@ -210,7 +230,7 @@ function CourseResults(props) {
                     <a
                         key={pageNum}
                         className="courses-pagination-pagenum focus-pagenum"
-                        onClick={() => setcurrentPage(pageNum)}
+                        onClick={() => handlePageNumber(pageNum)}
                     >
                         {pageNum}
                     </a>
@@ -220,7 +240,7 @@ function CourseResults(props) {
                     <a
                         key={pageNum}
                         className="courses-pagination-pagenum"
-                        onClick={() => setcurrentPage(pageNum)}
+                        onClick={() => handlePageNumber(pageNum)}
                     >
                         {pageNum}
                     </a>
@@ -384,7 +404,31 @@ function CourseResults(props) {
 
             <div ref={filterResults} className="filter-results-container">
                 {totalCount !== 0 ? (
-                    courses.map((course, index) => <CourseResult key={index} />)
+                    courses.map((course, index) => {
+                        const {
+                            picture,
+                            author,
+                            title,
+                            description,
+                            contentList,
+                            averageRating,
+                            ratings,
+                            cost,
+                        } = course;
+                        return (
+                            <CourseResult
+                                key={index}
+                                image={picture}
+                                title={title}
+                                description={description}
+                                author={author}
+                                rating={averageRating}
+                                ratingCount={ratings}
+                                price={cost}
+                                keyPointsList={contentList}
+                            />
+                        );
+                    })
                 ) : (
                     <h2>Nothing matches the current filter</h2>
                 )}
