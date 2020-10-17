@@ -8,6 +8,7 @@ import Landing from './components/Landing';
 import Register from './components/Register';
 import Login from './components/Login';
 import CourseResults from './components/course/CourseResults';
+import Course from './components/course/Course';
 
 // Redux store and actions
 import { Provider } from 'react-redux';
@@ -29,6 +30,7 @@ function App() {
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
                     <Route path="/courseResults" component={CourseResults} />
+                    <Route path="/courses/:courseId" component={Course} />
                 </Switch>
             </Router>
         </Provider>

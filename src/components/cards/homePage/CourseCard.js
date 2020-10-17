@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 function CourseCard(props) {
     const {
+        courseId,
         image,
         title,
         author,
@@ -50,7 +51,7 @@ function CourseCard(props) {
     };
 
     return (
-        <div className="categories-card">
+        <Link to={`/courses/${courseId}`} className="categories-card">
             <img
                 src={image !== 'no-photo.jpg' ? image : '/bootcamp_logo.jpg'}
                 alt="best seller course"
@@ -114,7 +115,7 @@ function CourseCard(props) {
                     </Link>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 

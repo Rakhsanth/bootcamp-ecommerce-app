@@ -16,6 +16,8 @@ import {
     GET_BOOTCAMPS_ERROR,
     GET_TAG_FILTERED_COURSES,
     GET_COURSES_ERROR,
+    GET_COURSE,
+    GET_COURSE_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -248,6 +250,23 @@ export const getTaggedCourses = (
         } catch (err) {
             console.log(err);
             dispatch({ type: GET_COURSES_ERROR, payload: err.response });
+        }
+    };
+};
+
+// get a single course by id
+export const getCourse = (courseId) => {
+    return async function (dispatch) {
+        const getURL = `${apiBaseURL}/courses/${courseId}`;
+        try {
+            const response = await axios.get(getURL);
+            dispatch({
+                type: GET_COURSE,
+                payload: { course: response.data.data },
+            });
+        } catch (err) {
+            console.log(err);
+            dispatch({ type: GET_COURSE_ERROR, payload: err.response.data });
         }
     };
 };

@@ -13,6 +13,8 @@ import {
     GET_BOOTCAMPS_ERROR,
     GET_TAG_FILTERED_COURSES,
     GET_COURSES_ERROR,
+    GET_COURSE,
+    GET_COURSE_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -142,8 +144,50 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
     }
 };
 
+// reducer to get a single course
+const initialCourseState = {
+    loading: true,
+    course: null,
+    error: false,
+};
+
+const courseReducer = (state = initialCourseState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case RESET_LOADING:
+            if (payload === 'course') {
+                return {
+                    ...state,
+                    loading: true,
+                    course: null,
+                    error: false,
+                };
+            } else {
+                return { ...state };
+            }
+
+        case GET_COURSE:
+            return {
+                ...state,
+                loading: false,
+                course: payload.course,
+                error: false,
+            };
+        case GET_COURSE_ERROR:
+            return {
+                ...state,
+                loading: false,
+                course: null,
+                error: true,
+            };
+        default:
+            return { ...state };
+    }
+};
+
 export default combineReducers({
     auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
+    course: courseReducer,
 });

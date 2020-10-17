@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function CourseResult(props) {
     const {
+        courseId,
         image,
         title,
         description,
@@ -48,7 +50,7 @@ function CourseResult(props) {
     };
 
     return (
-        <div className="filter-result-card">
+        <Link to={`/courses/${courseId}`} className="filter-result-card">
             <img
                 src={image !== 'no-photo.jpg' ? image : '/bootcamp_logo.jpg'}
                 alt="dev-course-img"
@@ -96,7 +98,7 @@ function CourseResult(props) {
                     ))}
                 </ul>
             </div>
-        </div>
+        </Link>
     );
 }
 

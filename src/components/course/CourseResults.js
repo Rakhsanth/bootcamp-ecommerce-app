@@ -406,6 +406,7 @@ function CourseResults(props) {
                 {totalCount !== 0 ? (
                     courses.map((course, index) => {
                         const {
+                            _id,
                             picture,
                             author,
                             title,
@@ -418,6 +419,7 @@ function CourseResults(props) {
                         return (
                             <CourseResult
                                 key={index}
+                                courseId={_id}
                                 image={picture}
                                 title={title}
                                 description={description}

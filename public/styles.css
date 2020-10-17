@@ -697,6 +697,8 @@ a {
     flex-direction: column;
     justify-content: space-evenly;
     border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
@@ -829,6 +831,8 @@ a {
     border-radius: 0.5rem;
     cursor: pointer;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
     transition: transform 0.5s ease-out;
 }
 .top-catagories-card:hover {
@@ -855,6 +859,8 @@ a {
     justify-content: flex-start;
     align-items: flex-start;
     border-bottom: 1px solid #dcdacb;
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
 }
 .filter-result-card:nth-last-child(1) {
@@ -935,6 +941,8 @@ a {
     border: 1px solid #dcdacb;
     border-radius: 1rem;
     box-shadow: -0.25rem 0.5rem 1rem #dcdacb;
+    text-decoration: none;
+    color: inherit;
     z-index: 1;
 }
 .filter-result-card-popup-cap {

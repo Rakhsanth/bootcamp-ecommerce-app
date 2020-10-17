@@ -320,6 +320,7 @@ function Landing(props) {
                     if (!taggedCoursesLoading) {
                         const course = taggedCourses[index];
                         const {
+                            _id,
                             picture,
                             author,
                             title,
@@ -332,6 +333,7 @@ function Landing(props) {
                         cardList.push(
                             <CourseCard
                                 key={index}
+                                courseId={_id}
                                 image={picture}
                                 author={author}
                                 title={title}
@@ -347,7 +349,11 @@ function Landing(props) {
                 return cardList;
             }
         } else {
-            return <h2 className="center">No Bootcamps have this category</h2>;
+            return (
+                <h2 className="center" style={{ marginTop: '10rem' }}>
+                    No Courses yet on this category
+                </h2>
+            );
         }
     };
 
