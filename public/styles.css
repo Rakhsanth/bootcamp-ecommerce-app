@@ -1997,20 +1997,14 @@ a {
     height: 100%;
     background-color: rgba(49, 49, 46, 0.623);
 }
-.course-feedback-top .course-feedback-top-percents5-bar-empty::after {
-    width: 60%;
-}
-.course-feedback-top .course-feedback-top-percents4-bar-empty::after {
-    width: 20%;
-}
-.course-feedback-top .course-feedback-top-percents3-bar-empty::after {
-    width: 10%;
-}
-.course-feedback-top .course-feedback-top-percents2-bar-empty::after {
-    width: 5%;
-}
-.course-feedback-top .course-feedback-top-percents1-bar-empty::after {
-    width: 5%;
+.course-feedback-top .course-feedback-top-percents5-bar-fill,
+.course-feedback-top .course-feedback-top-percents4-bar-fill,
+.course-feedback-top .course-feedback-top-percents3-bar-fill,
+.course-feedback-top .course-feedback-top-percents2-bar-fill,
+.course-feedback-top .course-feedback-top-percents1-bar-fill {
+    display: block;
+    height: 100%;
+    background-color: rgba(49, 49, 46, 0.623);
 }
 .course-feedback-main {
     padding-top: 2rem;

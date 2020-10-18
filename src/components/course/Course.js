@@ -17,21 +17,60 @@ function Course(props) {
     const [reviews, setreviews] = useState([]);
     const [totalReviews, settotalReviews] = useState(0);
     const [currentPage, setcurrentPage] = useState(1);
+    const [starPercents, setstarPercents] = useState({});
+    const [filterQuery, setfilterQuery] = useState(null);
 
-    console.log(courseId, currentPage);
+    console.log(courseId, currentPage, starPercents);
 
-    const setReviewToState = async (pageNum) => {
+    const classes = {
+        five: {
+            width: `${starPercents.five}%`,
+        },
+        four: {
+            width: `${starPercents.four}%`,
+        },
+        three: {
+            width: `${starPercents.three}%`,
+        },
+        two: {
+            width: `${starPercents.two}%`,
+        },
+        one: {
+            width: `${starPercents.one}%`,
+        },
+    };
+
+    const setReviewToState = async (pageNum, query) => {
         let reviewList;
         if (pageNum) {
-            reviewList = await getReviews(courseId, pageNum);
+            reviewList = await getReviews(
+                courseId,
+                pageNum,
+                true,
+                query ? query : filterQuery
+            );
         } else {
-            reviewList = await getReviews(courseId, currentPage);
+            reviewList = await getReviews(
+                courseId,
+                currentPage,
+                true,
+                query ? query : filterQuery
+            );
         }
-        setreviews(reviews.concat(reviewList.data));
+        if (query) {
+            setreviews(reviewList.data);
+        } else {
+            setreviews(reviews.concat(reviewList.data));
+        }
         settotalReviews(reviewList.count);
+    };
+    const setStarPercerntsToState = async () => {
+        const review = await getReviews(courseId, null, true);
+        setstarPercents(review.percents);
     };
 
     useEffect(() => {
+        setStarPercerntsToState();
         setReviewToState();
         getCourse(courseId);
     }, [getCourse]);
@@ -75,6 +114,13 @@ function Course(props) {
         }
 
         return iconsList;
+    };
+
+    const handleStarFilter = (noOfStars) => {
+        const query = `rating[gte]=${noOfStars}&rating[lt]=${noOfStars + 1}`;
+        setReviewToState(1, query);
+        setcurrentPage(1);
+        setfilterQuery(query);
     };
 
     const handleSeeMore = () => {
@@ -220,64 +266,97 @@ function Course(props) {
                             </div>
                         </div>
                         <div className="course-feedback-top-percents">
-                            <div className="course-feedback-top-percents5">
+                            <div
+                                className="course-feedback-top-percents5"
+                                onClick={() => handleStarFilter(5)}
+                            >
                                 <div className="course-feedback-top-percents5-bar">
-                                    <span className="course-feedback-top-percents5-bar-empty"></span>
-                                    <span className="course-feedback-top-percents5-bar-fill"></span>
+                                    <span
+                                        className="course-feedback-top-percents5-bar-empty"
+                                        style={classes.five}
+                                    ></span>
+                                    <span
+                                        className="course-feedback-top-percents5-bar-fill"
+                                        style={classes.five}
+                                    ></span>
                                 </div>
                                 <div className="course-feedback-top-rating-stars">
                                     {renderStars(5)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    60%
+                                    {starPercents.five}%
                                 </span>
                             </div>
-                            <div className="course-feedback-top-percents4">
+                            <div
+                                className="course-feedback-top-percents4"
+                                onClick={() => handleStarFilter(4)}
+                            >
                                 <div className="course-feedback-top-percents4-bar">
                                     <span className="course-feedback-top-percents4-bar-empty"></span>
-                                    <span className="course-feedback-top-percents4-bar-fill"></span>
+                                    <span
+                                        className="course-feedback-top-percents4-bar-fill"
+                                        style={classes.four}
+                                    ></span>
                                 </div>
                                 <div className="course-feedback-top-rating-stars">
                                     {renderStars(4)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    20%
+                                    {starPercents.four}%
                                 </span>
                             </div>
-                            <div className="course-feedback-top-percents3">
+                            <div
+                                className="course-feedback-top-percents3"
+                                onClick={() => handleStarFilter(3)}
+                            >
                                 <div className="course-feedback-top-percents3-bar">
                                     <span className="course-feedback-top-percents3-bar-empty"></span>
-                                    <span className="course-feedback-top-percents3-bar-fill"></span>
+                                    <span
+                                        className="course-feedback-top-percents3-bar-fill"
+                                        style={classes.three}
+                                    ></span>
                                 </div>
                                 <div className="course-feedback-top-rating-stars">
                                     {renderStars(3)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    10%
+                                    {starPercents.three}%
                                 </span>
                             </div>
-                            <div className="course-feedback-top-percents2">
+                            <div
+                                className="course-feedback-top-percents2"
+                                onClick={() => handleStarFilter(2)}
+                            >
                                 <div className="course-feedback-top-percents2-bar">
                                     <span className="course-feedback-top-percents2-bar-empty"></span>
-                                    <span className="course-feedback-top-percents2-bar-fill"></span>
+                                    <span
+                                        className="course-feedback-top-percents2-bar-fill"
+                                        style={classes.two}
+                                    ></span>
                                 </div>
                                 <div className="course-feedback-top-rating-stars">
                                     {renderStars(2)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    5%
+                                    {starPercents.two}%
                                 </span>
                             </div>
-                            <div className="course-feedback-top-percents1">
+                            <div
+                                className="course-feedback-top-percents1"
+                                onClick={() => handleStarFilter(1)}
+                            >
                                 <div className="course-feedback-top-percents1-bar">
                                     <span className="course-feedback-top-percents1-bar-empty"></span>
-                                    <span className="course-feedback-top-percents1-bar-fill"></span>
+                                    <span
+                                        className="course-feedback-top-percents1-bar-fill"
+                                        style={classes.one}
+                                    ></span>
                                 </div>
                                 <div className="course-feedback-top-rating-stars">
                                     {renderStars(1)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    5%
+                                    {starPercents.one}%
                                 </span>
                             </div>
                         </div>

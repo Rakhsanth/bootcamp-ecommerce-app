@@ -357,19 +357,19 @@ function Landing(props) {
         }
     };
 
-    const handleCategoryCard = (event, category) => {
-        console.log(category);
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            null,
-            10,
-            '-averageRating',
-            history
-        );
-    };
+    // const handleCategoryCard = (event, category) => {
+    //     console.log(category);
+    //     getTaggedCourses(
+    //         category,
+    //         null,
+    //         null,
+    //         null,
+    //         null,
+    //         10,
+    //         '-averageRating',
+    //         history
+    //     );
+    // };
 
     return (
         <main className="main-conatiner-home">
