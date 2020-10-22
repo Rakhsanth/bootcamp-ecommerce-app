@@ -15,6 +15,9 @@ import {
     GET_COURSES_ERROR,
     GET_COURSE,
     GET_COURSE_ERROR,
+    ADD_TO_CART,
+    REMOVE_FROM_CART,
+    CART_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -55,7 +58,7 @@ const userLoginRegisterReducer = (state = initialLoginStatus, action) => {
                 user: null,
             };
         default:
-            return { ...state };
+            return state;
     }
 };
 
@@ -181,7 +184,40 @@ const courseReducer = (state = initialCourseState, action) => {
                 error: true,
             };
         default:
-            return { ...state };
+            return state;
+    }
+};
+
+// cart related reducer
+const initialCartState = {
+    loading: true,
+    cartItems: [],
+    error: false,
+};
+const cartReducer = (state = initialCartState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case ADD_TO_CART:
+            return {
+                loading: false,
+                cartItems: [payload, ...state.cartItems],
+                error: false,
+            };
+        case REMOVE_FROM_CART:
+            return {
+                loading: false,
+                cartItems: state.cartItems.filter(
+                    (cartItem) => cartItem.id !== payload
+                ),
+                error: false,
+            };
+        case CART_ERROR:
+            return {
+                loading: false,
+                error: true,
+            };
+        default:
+            return state;
     }
 };
 
@@ -190,4 +226,5 @@ export default combineReducers({
     taggedBootcamps: taggedBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
     course: courseReducer,
+    cart: cartReducer,
 });

@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // action creator
 import { logout } from '../actions';
+
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const { loading, isLoggedIn } = props;
+    const { loading, isLoggedIn, cartCount } = props;
     const { logout } = props;
 
     const openMenu = () => {
@@ -130,7 +131,9 @@ function Header(props) {
                         <use xlinkHref="img/sprite.svg#icon-cart"></use>
                     </svg>
                     <span className="top-header-cart-count">
-                        <span className="top-header-cart-count-text">10</span>
+                        <span className="top-header-cart-count-text">
+                            {cartCount}
+                        </span>
                     </span>
                 </Link>
                 <Fragment>
@@ -168,14 +171,16 @@ function Header(props) {
                     <use xlinkHref="img/sprite.svg#icon-menu"></use>
                 </svg>
                 <div className="top-header-logo"></div>
-                <div className="small-header-cart">
+                <Link to="/cart" className="small-header-cart">
                     <svg className="small-header-cart-icon">
                         <use xlinkHref="img/sprite.svg#icon-cart"></use>
                     </svg>
                     <span className="small-header-cart-count">
-                        <span className="top-header-cart-count-text">10</span>
+                        <span className="top-header-cart-count-text">
+                            {cartCount}
+                        </span>
                     </span>
-                </div>
+                </Link>
             </header>
 
             <section
@@ -291,6 +296,7 @@ const mapStateToProps = (store) => {
     return {
         loading: store.auth.loading,
         isLoggedIn: store.auth.loggedIn,
+        cartCount: store.cart.cartItems.length,
     };
 };
 

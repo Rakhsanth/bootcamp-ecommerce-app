@@ -252,6 +252,15 @@ a {
     height: 4rem;
     width: 8rem;
 }
+.btn-enroll {
+    position: relative;
+    height: 7rem;
+    width: 10rem;
+    border-radius: 10%;
+    font-size: 1.5rem;
+    margin-top: 60%;
+    margin-left: 5rem;
+}
 
 .course-review-btn {
     height: 3rem;
@@ -494,6 +503,7 @@ a {
     margin-left: auto;
     margin-right: 5rem;
     position: relative;
+    cursor: pointer;
 }
 .small-header-cart-icon {
     fill: #0f7c90;
@@ -1287,6 +1297,54 @@ a {
     }
 }
 
+.main-container-bootcamp {
+    margin-top: 10rem;
+    padding: 0 3rem;
+    width: 100vw;
+    display: grid;
+    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
+            20rem,
+            min-content
+        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
+    row-gap: 4rem;
+    column-gap: 1rem;
+    overflow: hidden;
+}
+
+.main-container-courseForm {
+    width: 90vw;
+    padding-top: 10rem;
+    margin: 0 auto;
+    margin-bottom: 5rem;
+}
+
+.course-form-content-basic-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.main-container-userProfile {
+    width: 90vw;
+    margin: 0 auto;
+    margin-top: 10rem;
+    height: 100%;
+    display: grid;
+    grid-template-rows: min-content;
+    grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
+    row-gap: 1rem;
+    column-gap: 1rem;
+    overflow: hidden;
+}
+.main-conatiner-cart {
+    margin-top: 10rem;
+    padding: 0 10rem;
+    display: grid;
+    grid-template-rows: 15rem minmax(60rem, min-content) 30rem;
+    grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
+    grid-gap: 2rem;
+}
+
 .hero-section {
     grid-row: 1 / 2;
     grid-column: col-start 1 / col-end 11;
@@ -1483,6 +1541,15 @@ a {
     border-radius: 1rem;
     height: 4rem;
     width: 8rem;
+}
+.btn-enroll {
+    position: relative;
+    height: 7rem;
+    width: 10rem;
+    border-radius: 10%;
+    font-size: 1.5rem;
+    margin-top: 60%;
+    margin-left: 5rem;
 }
 
 .course-review-btn {
@@ -2169,6 +2236,15 @@ a {
     height: 4rem;
     width: 8rem;
 }
+.btn-enroll {
+    position: relative;
+    height: 7rem;
+    width: 10rem;
+    border-radius: 10%;
+    font-size: 1.5rem;
+    margin-top: 60%;
+    margin-left: 5rem;
+}
 
 .course-review-btn {
     height: 3rem;
@@ -2464,4 +2540,513 @@ a {
 .filter-result-container {
     display: flex;
     position: relative;
+}
+
+.bootcamp-image-overlay {
+    grid-row: 1 / 2;
+    grid-column: col-start 1 / col-end 10;
+    width: 100%;
+    height: 100%;
+}
+
+.bootcamp-image {
+    grid-row: 1 / 2;
+    grid-column: col-start 1 / col-end 10;
+    width: 100%;
+    height: 100%;
+}
+
+.bootcamp-title-details {
+    grid-row: 1 / 2;
+    grid-column: col-start 1 / col-end 10;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    margin: 0 auto;
+    justify-content: center;
+    align-content: space-around;
+}
+
+.bootcamp-title-name {
+    font-size: 2.5rem;
+    margin: 1rem;
+}
+
+.bootcamp-title-address {
+    font-size: 1.5rem;
+}
+
+.bootcamp-prompt {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    margin-top: 5.5rem;
+    margin-left: 75%;
+    height: 20rem;
+    width: 20rem;
+    border: 1px solid #dcdacb;
+    box-shadow: 0.3rem 0.5rem 1rem #dcdacb;
+}
+
+.bootcamp-desc {
+    font-size: 1.5rem;
+    grid-row: 2 / 3;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 10%;
+    font-size: 1.5rem;
+    background-color: #fbfbf8;
+    border: 1px solid #dcdacb;
+    border-radius: 0.5rem;
+    grid-column: col-start 1 / col-end 10;
+    width: 70vw;
+}
+.bootcamp-desc-title {
+    align-self: center;
+}
+.bootcamp-desc-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2rem auto;
+    width: 80%;
+}
+.bootcamp-desc-list-item {
+    padding: 0 1rem;
+    width: 50%;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.bootcamp-desc-list-item-icon {
+    width: 1rem;
+    height: 1rem;
+    fill: #3c3b37;
+    flex: 0 0 auto;
+    margin-right: 1rem;
+}
+.bootcamp-desc-list-item-text {
+    font-weight: lighter;
+    margin: 0rem;
+    line-height: 2rem;
+}
+
+.bootcamp-small-desc {
+    grid-row: 3 / 4;
+    grid-column: col-start 1 / col-end 10;
+    width: 70vw;
+}
+.bootcamp-small-desc-content {
+    margin-top: 1rem;
+    padding-bottom: 3rem;
+    font-size: 1.5rem;
+}
+
+.bootcamp-courses-offered {
+    border-bottom: 1px solid #dcdacb;
+    grid-row: 4 / 5;
+    grid-column: col-start 1 / col-end 10;
+    width: 100%;
+}
+.bootcamp-courses-offered-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+.bootcamp-courses-offered-item {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+    height: 25rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-top: 1px solid #dcdacb;
+    border-bottom: 1px solid #dcdacb;
+    padding: 1rem;
+}
+.bootcamp-courses-offered-item:nth-last-child() {
+    border-bottom: none;
+}
+.bootcamp-courses-offered-item-img {
+    width: 25%;
+    height: 90%;
+    margin-right: 1rem;
+}
+.bootcamp-courses-offered-item-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3rem;
+    padding: 1rem;
+}
+.bootcamp-courses-offered-item-details-title {
+    font-size: 1.5rem;
+}
+.bootcamp-courses-offered-item-details-description {
+    color: #73726c;
+    margin-top: 2rem;
+    font-size: 1.25rem;
+}
+.bootcamp-courses-offered-item-details-rating {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1rem;
+}
+.bootcamp-courses-offered-item-details-rating-number {
+    color: #be5a0e;
+    font-size: 1.5rem;
+}
+.bootcamp-courses-offered-item-details-rating-stars {
+    fill: #eb8a2f;
+    margin-left: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+}
+.bootcamp-courses-offered-item-details-rating-stars-star {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+.bootcamp-courses-offered-item .filter-result-card-price {
+    margin-top: 5rem;
+    font-size: 1.5rem;
+}
+
+.bootcamp-nearby-scroll {
+    grid-row: 5 / 6;
+    grid-column: col-start 1 / col-end 10;
+}
+.bootcamp-nearby-scroll .bootcamp-nearby-scroll-container {
+    width: 95%;
+    max-height: 50rem;
+    overflow-y: scroll;
+}
+.bootcamp-nearby-scroll-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.bootcamp-nearby-scroll-content {
+    width: 100%;
+    margin-top: 6rem;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    margin-left: 6rem;
+}
+.bootcamp-nearby-scroll-content-img {
+    width: 15%;
+    height: 100%;
+}
+.bootcamp-nearby-scroll-content-titledesc {
+    margin-left: 6rem;
+}
+.bootcamp-nearby-scroll-content-titledesc-title {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+.bootcamp-nearby-scroll-content-titledesc-desc {
+    font-size: 1.25rem;
+}
+.bootcamp-nearby-scroll-content-rating {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10rem;
+    margin-top: 4rem;
+}
+.bootcamp-nearby-scroll-content-rating-text {
+    color: #be5a0e;
+    font-size: 1.75rem;
+}
+.bootcamp-nearby-scroll-content-rating-star {
+    margin-left: 0.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: #eb8a2f;
+}
+
+.bootcamp-feedback-main-container {
+    grid-row: 6 / 7;
+    grid-column: col-start 1 / col-end 10;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-stats-container {
+    display: flex;
+    flex-direction: row;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-stats-figures {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-stats-figures-number {
+    font-size: 4.5rem;
+    color: #be5a0e;
+    margin-left: 3rem;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-stats-figures-stars {
+    display: flex;
+    flex-direction: row;
+    height: 2.5rem;
+    width: 9rem;
+    fill: #eb8a2f;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-stats-figures-desc {
+    margin-left: 1rem;
+    margin-top: 1rem;
+    font-size: 1.09rem;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-rating {
+    flex-grow: 1;
+    margin-left: 10rem;
+    display: flex;
+    flex-direction: column;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-rating1,
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-rating2,
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-rating3,
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-rating4,
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-rating5 {
+    width: 100%;
+    height: 2rem;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating1
+    > .bootcamp-feedback-rating-rating1-bar,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating2
+    > .bootcamp-feedback-rating-rating2-bar,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating3
+    > .bootcamp-feedback-rating-rating3-bar,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating4
+    > .bootcamp-feedback-rating-rating4-bar,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating5
+    > .bootcamp-feedback-rating-rating5-bar {
+    position: relative;
+    width: 100%;
+    height: 1rem;
+    margin-right: 3rem;
+    background-color: #dcdacb;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating1
+    > .bootcamp-feedback-rating-rating1-bar
+    > .bootcamp-feedback-rating-rating1-bar-empty,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating2
+    > .bootcamp-feedback-rating-rating2-bar
+    > .bootcamp-feedback-rating-rating2-bar-empty,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating3
+    > .bootcamp-feedback-rating-rating3-bar
+    > .bootcamp-feedback-rating-rating3-bar-empty,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating4
+    > .bootcamp-feedback-rating-rating4-bar
+    > .bootcamp-feedback-rating-rating4-bar-empty,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating5
+    > .bootcamp-feedback-rating-rating5-bar
+    > .bootcamp-feedback-rating-rating5-bar-empty {
+    width: 100%;
+    height: 100%;
+    background-color: #dcdacb;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-text {
+    color: #2896a9;
+    margin-left: auto;
+}
+.bootcamp-feedback-main-container .bootcamp-feedback-rating-stars {
+    display: flex;
+    flex-direction: row;
+    height: 2.5rem;
+    width: 9rem;
+    fill: #eb8a2f;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating1-bar-empty::after,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating2-bar-empty::after,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating3-bar-empty::after,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating4-bar-empty::after,
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating5-bar-empty::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(49, 49, 46, 0.623);
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating1-bar-empty::after {
+    width: 60%;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating2-bar-empty::after {
+    width: 20%;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating3-bar-empty::after {
+    width: 10%;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating4-bar-empty::after {
+    width: 5%;
+}
+.bootcamp-feedback-main-container
+    .bootcamp-feedback-rating-rating5-bar-empty::after {
+    width: 5%;
+}
+
+.bootcamp-feedback-reviews-container {
+    grid-row: 7 / 8;
+    grid-column: 1 / 10;
+    width: 100%;
+}
+.bootcamp-feedback-reviews-container .bootcamp-feedback-reviews-heading {
+    margin-top: 2rem;
+    font-size: 2rem;
+}
+.bootcamp-feedback-reviews-container .bootcamp-feedback-review {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+.bootcamp-feedback-reviews-container .bootcamp-feedback-review-author {
+    font-size: 1.6rem;
+    margin-left: 0.5rem;
+}
+.bootcamp-feedback-reviews-container .bootcamp-feedback-review-stars {
+    margin-top: -5rem;
+    margin-bottom: -3rem;
+    display: flex;
+    width: 8rem;
+    flex-direction: row;
+    fill: #eb8a2f;
+}
+.bootcamp-feedback-reviews-container .bootcamp-feedback-review-text {
+    font-size: 1.25rem;
+    border-bottom: 1px solid #dcdacb;
+}
+
+.course-form-content-basic-picture {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin: 0 auto;
+}
+
+.course-form-content-basic-details {
+    padding: 0 10rem;
+}
+
+.course-form-content-basic-bottom {
+    padding: 0 10rem;
+    margin-top: 5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.pubProfile-form-control input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+.field-with-button {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.btn-unroll {
+    margin-left: 8rem;
+    height: 80%;
+    width: 15%;
+    background-color: #ec5252;
+    color: white;
+}
+.shoping-header {
+    grid-row: 1 / 2;
+    grid-column: col-start 1 / col-end 10;
+    height: 100%;
+    width: 100%;
+    background-color: #505763;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.shoping-header-text {
+    font-size: 3rem;
+    color: white;
+}
+
+.cart-items {
+    grid-row: 2 / 3;
+    grid-column: col-start 1 / col-end 7;
+    display: flex;
+    flex-direction: column;
+}
+.cart-items-text {
+    font-size: 2rem;
+    font-weight: bolder;
+}
+.cart-items-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.cart-items-container .cart-items-card {
+    height: 10rem;
+    display: flex;
+    margin: 1rem 0;
+}
+.cart-items-container .cart-items-card-img {
+    width: 20rem;
+}
+.cart-items-container .cart-items-card-text {
+    margin-left: 1rem;
+    width: 60%;
+}
+.cart-items-container .cart-items-card-text-title {
+    font-size: 1.6rem;
+    font-weight: bolder;
+}
+.cart-items-container .cart-items-card-text-desc {
+    font-size: 1.2rem;
+}
+.cart-items-container .cart-items-card-text button {
+    margin-left: 75%;
+}
+.cart-items-container .cart-items-card-price {
+    margin-left: auto;
+    margin-right: 3rem;
+    font-size: 1.6rem;
+    color: #992337;
+}
+
+.cart-checkout {
+    grid-row: 2 / 3;
+    grid-column: col-start 8 / col-end 10;
+    height: 15rem;
+    margin-top: 50%;
+    transform: translateY(-50%);
+}
+.cart-checkout-total-price {
+    font-size: 3rem;
+    margin-bottom: 2rem;
 }

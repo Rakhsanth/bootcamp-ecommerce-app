@@ -9,11 +9,17 @@ import Register from './components/Register';
 import Login from './components/Login';
 import CourseResults from './components/course/CourseResults';
 import Course from './components/course/Course';
+import Cart from './components/Cart';
+import UserProfile from './components/user/UserProfile';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Redux store and actions
 import { Provider } from 'react-redux';
-import store from './store';
+import { store, persistor } from './store';
 import { loadUser } from './actions';
+
+// Redux presist related
+import { PersistGate } from 'redux-persist/integration/react';
 
 function App() {
     useEffect(() => {
@@ -22,17 +28,32 @@ function App() {
 
     return (
         <Provider store={store}>
-            <Router>
-                <Header />
-                <Route exact path="/" component={Landing} />
-                <Switch>
-                    {/* Other specific dynamic routes and pages goes here */}
-                    <Route exact path="/register" component={Register} />
-                    <Route exact path="/login" component={Login} />
-                    <Route path="/courseResults" component={CourseResults} />
-                    <Route path="/courses/:courseId" component={Course} />
-                </Switch>
-            </Router>
+            <PersistGate loading={null} persistor={persistor}>
+                <Router>
+                    <Header />
+                    <Route exact path="/" component={Landing} />
+                    <Switch>
+                        {/* Other specific dynamic routes and pages goes here */}
+                        <Route exact path="/register" component={Register} />
+                        <Route exact path="/login" component={Login} />
+                        <Route
+                            path="/courseResults"
+                            component={CourseResults}
+                        />
+                        <Route
+                            exact
+                            path="/courses/:courseId"
+                            component={Course}
+                        />
+                        <Route exact path="/cart" component={Cart} />
+                        <ProtectedRoute
+                            exact
+                            path="/user/profile"
+                            component={UserProfile}
+                        />
+                    </Switch>
+                </Router>
+            </PersistGate>
         </Provider>
     );
 }

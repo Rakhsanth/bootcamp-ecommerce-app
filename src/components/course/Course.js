@@ -24,19 +24,19 @@ function Course(props) {
 
     const classes = {
         five: {
-            width: `${starPercents.five}%`,
+            width: `${starPercents.five ? starPercents.five : 0}%`,
         },
         four: {
-            width: `${starPercents.four}%`,
+            width: `${starPercents.four ? starPercents.four : 0}%`,
         },
         three: {
-            width: `${starPercents.three}%`,
+            width: `${starPercents.three ? starPercents.three : 0}%`,
         },
         two: {
-            width: `${starPercents.two}%`,
+            width: `${starPercents.two ? starPercents.two : 0}%`,
         },
         one: {
-            width: `${starPercents.one}%`,
+            width: `${starPercents.one ? starPercents.one : 0}%`,
         },
     };
 
@@ -284,7 +284,7 @@ function Course(props) {
                                     {renderStars(5)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    {starPercents.five}%
+                                    {starPercents.five ? starPercents.five : 0}%
                                 </span>
                             </div>
                             <div
@@ -302,7 +302,7 @@ function Course(props) {
                                     {renderStars(4)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    {starPercents.four}%
+                                    {starPercents.four ? starPercents.four : 0}%
                                 </span>
                             </div>
                             <div
@@ -320,7 +320,10 @@ function Course(props) {
                                     {renderStars(3)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    {starPercents.three}%
+                                    {starPercents.three
+                                        ? starPercents.three
+                                        : 0}
+                                    %
                                 </span>
                             </div>
                             <div
@@ -338,7 +341,7 @@ function Course(props) {
                                     {renderStars(2)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    {starPercents.two}%
+                                    {starPercents.two ? starPercents.two : 0}%
                                 </span>
                             </div>
                             <div
@@ -356,7 +359,7 @@ function Course(props) {
                                     {renderStars(1)}
                                 </div>
                                 <span className="course-feedback-top-percents-text">
-                                    {starPercents.one}%
+                                    {starPercents.one ? starPercents.one : 0}%
                                 </span>
                             </div>
                         </div>

@@ -18,6 +18,9 @@ import {
     GET_COURSES_ERROR,
     GET_COURSE,
     GET_COURSE_ERROR,
+    ADD_TO_CART,
+    REMOVE_FROM_CART,
+    CART_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -268,5 +271,20 @@ export const getCourse = (courseId) => {
             console.log(err);
             dispatch({ type: GET_COURSE_ERROR, payload: err.response.data });
         }
+    };
+};
+
+// Add item to cart action (not async action as it is just payload sending and not API related)
+export const addToCart = (cartItem) => {
+    return {
+        type: ADD_TO_CART,
+        payload: cartItem,
+    };
+};
+// Remove item from cart action (not async action as it is just payload sending and not API related)
+export const removeFromCart = (cartItemId) => {
+    return {
+        type: REMOVE_FROM_CART,
+        payload: cartItemId,
     };
 };

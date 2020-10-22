@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+// redux actions
+import { addToCart } from '../../../actions';
 
 function CourseCard(props) {
     const {
@@ -13,6 +17,8 @@ function CourseCard(props) {
         description,
         keyPointsList,
     } = props;
+
+    const { cartItems, addToCart } = props;
 
     const renderStars = (stars) => {
         const fullStars = Math.floor(stars);
@@ -50,6 +56,42 @@ function CourseCard(props) {
         return iconsList;
     };
 
+    const handleAddToCart = () => {
+        const entries = new Map([
+            ['id', courseId],
+            ['image', image],
+            ['title', title],
+            ['price', price],
+            ['description', description],
+        ]);
+        const cartItem = Object.fromEntries(entries);
+        console.log(cartItem);
+        addToCart(cartItem);
+    };
+    const getAddOrCheckButton = () => {
+        const thisCourse = cartItems.find(
+            (cartItem) => cartItem.id === courseId
+        );
+        console.log(thisCourse);
+        if (thisCourse === undefined) {
+            return (
+                <Link
+                    to="/"
+                    className="btn btn-tertiary btn-lg btn-center"
+                    onClick={handleAddToCart}
+                >
+                    <span className="btn-text">Add to cart</span>
+                </Link>
+            );
+        } else {
+            return (
+                <Link to="/cart" className="btn btn-primary btn-lg btn-center">
+                    <span className="btn-text">Go to checkout</span>
+                </Link>
+            );
+        }
+    };
+
     return (
         <Link to={`/courses/${courseId}`} className="categories-card">
             <img
@@ -63,22 +105,6 @@ function CourseCard(props) {
                 <span className="categories-card-rating-rate">{rating}</span>
                 <div className="categories-card-rating stars">
                     {renderStars(rating)}
-                    {/* {starsList.map((star) => star)} */}
-                    {/* <svg className="categories-card-rating-stars-star">
-                        <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                    </svg>
-                    <svg className="categories-card-rating-stars-star">
-                        <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                    </svg>
-                    <svg className="categories-card-rating-stars-star">
-                        <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                    </svg>
-                    <svg className="categories-card-rating-stars-star">
-                        <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                    </svg>
-                    <svg className="categories-card-rating-stars-star">
-                        <use xlinkHref="img/sprite.svg#icon-star-half"></use>
-                    </svg> */}
                 </div>
                 <span className="categories-card-rating-count">
                     ({userCount})
@@ -110,13 +136,15 @@ function CourseCard(props) {
                             </li>
                         ))}
                     </ul>
-                    <Link to="/" className="btn btn-tertiary btn-lg btn-center">
-                        <span className="btn-text">Add to cart</span>
-                    </Link>
+                    {getAddOrCheckButton()}
                 </div>
             </div>
         </Link>
     );
 }
 
-export default CourseCard;
+const mapStateToProps = (store) => ({
+    cartItems: store.cart.cartItems,
+});
+
+export default connect(mapStateToProps, { addToCart })(CourseCard);
