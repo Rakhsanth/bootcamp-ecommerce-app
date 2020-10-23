@@ -11,6 +11,7 @@ import CourseResults from './components/course/CourseResults';
 import Course from './components/course/Course';
 import Cart from './components/Cart';
 import UserProfile from './components/user/UserProfile';
+import PublisherProfile from './components/publisher/PublisherProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Redux store and actions
@@ -50,6 +51,11 @@ function App() {
                             exact
                             path="/user/profile"
                             component={UserProfile}
+                        />
+                        <ProtectedRoute
+                            exact
+                            path="/publisher/profile"
+                            component={PublisherProfile}
                         />
                     </Switch>
                 </Router>

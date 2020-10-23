@@ -1265,7 +1265,7 @@ a {
     height: 100%;
     width: 90vw;
     display: grid;
-    grid-template-rows: min-content;
+    grid-template-rows: minmax(20rem, min-content);
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1280,7 +1280,7 @@ a {
 }
 
 .main-conatiner-bootcampForm {
-    width: 90vw;
+    width: 90%;
     padding-top: 10rem;
     margin: 0 auto;
     margin-bottom: 5rem;
@@ -1336,6 +1336,7 @@ a {
     column-gap: 1rem;
     overflow: hidden;
 }
+
 .main-conatiner-cart {
     margin-top: 10rem;
     padding: 0 10rem;
@@ -2335,13 +2336,8 @@ a {
 }
 
 .pubProfile-tabContent {
-    height: 60rem;
+    height: 100%;
     padding: 1rem 0;
-}
-@media (max-width: 37.5em) {
-    .pubProfile-tabContent {
-        height: 75rem;
-    }
 }
 .pubProfile-tabContent-profile,
 .pubProfile-tabContent-bankDT,
@@ -2452,7 +2448,7 @@ a {
 
 .pubBootcamp-create-btn {
     position: absolute;
-    top: 86%;
+    bottom: 5%;
     left: 94%;
     padding: 1rem 0;
     box-shadow: 0.5rem 0.5rem 0.5rem #dcdacb;
@@ -2980,6 +2976,7 @@ a {
     background-color: #ec5252;
     color: white;
 }
+
 .shoping-header {
     grid-row: 1 / 2;
     grid-column: col-start 1 / col-end 10;

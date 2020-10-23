@@ -27,7 +27,9 @@ function Cart(props) {
             <div className="cart-items">
                 {cartItems.length > 0 ? (
                     <Fragment>
-                        <h4 className="cart-items-text">3 Courses in cart</h4>
+                        <h4 className="cart-items-text">
+                            {cartItems.length} Courses in cart
+                        </h4>
                         <div className="cart-items-container">
                             {cartItems.map((cartItem, index) => (
                                 <div
