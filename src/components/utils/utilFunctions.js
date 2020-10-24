@@ -1,3 +1,5 @@
+const oneMB = 1 * 1024 * 1024;
+
 export const validatePassword = (password) => {
     if (!password) return false;
 
@@ -11,5 +13,12 @@ export const validatePassword = (password) => {
 
     if (password.search(/\W/i) === -1) return false;
 
+    return true;
+};
+
+export const validateFileSize = (file, fileSize) => {
+    if (file !== undefined) {
+        if (file.size > fileSize * oneMB) return false;
+    }
     return true;
 };
