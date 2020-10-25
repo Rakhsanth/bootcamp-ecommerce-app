@@ -1,6 +1,6 @@
 // react related
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ import { registerUser } from '../actions';
 import { validatePassword } from '../components/utils/utilFunctions';
 
 function Register(props) {
-    const { registerUser } = props;
+    const { registerUser, history } = props;
 
     const initialValues = {
         fullName: '',
@@ -35,7 +35,7 @@ function Register(props) {
         body.name = values.fullName;
         body.thirdParty = false;
         body.role = 'user';
-        registerUser(body);
+        registerUser(body, history);
     };
 
     return (
@@ -96,7 +96,7 @@ function Register(props) {
                                     </ErrorMessage>
                                 </div>
                                 <div className="signup-container-form-submit">
-                                    <button className="btn-loginpage">
+                                    <button className="btn btn-loginpage">
                                         Register
                                     </button>
                                 </div>
@@ -118,4 +118,4 @@ const mapStateToProps = (store) => {
     };
 };
 
-export default connect(mapStateToProps, { registerUser })(Register);
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));

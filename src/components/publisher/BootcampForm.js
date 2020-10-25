@@ -1,13 +1,22 @@
 import React, { createRef, Fragment, useState } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 
+// api calls
+import { createEditBootcamp } from '../../api';
+
 // custom utils
-import { validateFileSize } from '../utils/utilFunctions';
+import { validateImageFileSize } from '../utils/utilFunctions';
+
+// actions
+import { resetLoading } from '../../actions';
 
 function BootcampForm(props) {
-    let image = 'no-photo.jpg';
+    const { history, removeForm, resetLoading } = props;
+
+    let img = 'no-photo.jpg';
 
     const [formValues, setformValues] = useState({
         image: '',
@@ -67,7 +76,7 @@ function BootcampForm(props) {
         image: Yup.mixed().test(
             'testFileSize',
             'Please provide image less than 5 MB',
-            (value) => validateFileSize(value, 5)
+            (value) => validateImageFileSize(value, 5)
         ),
         name: Yup.string().required('Bootcamp name is mandatory'),
         state: Yup.string().required(
@@ -86,7 +95,7 @@ function BootcampForm(props) {
         description: Yup.string()
             .max(500, 'Please provide description less than 500 characters')
             .required('Bootcamp description is mandatory'),
-        website: Yup.string().optional(),
+        website: Yup.string().url().optional(),
         email: Yup.string().email().required('Email for contact is mandatory'),
         phone: Yup.number().required('Mobile number for cantact is mandatory'),
         offerings: Yup.array().test(
@@ -96,7 +105,11 @@ function BootcampForm(props) {
         ),
     });
 
-    const onSubmit = (values, submitProps) => {};
+    const onSubmit = (values, submitProps) => {
+        createEditBootcamp(values, 'create', history);
+        removeForm();
+        resetLoading('taggedBootcamps');
+    };
 
     const handleStepper = (stepper) => {
         tabRefs.forEach((tab, index) => {
@@ -155,16 +168,19 @@ function BootcampForm(props) {
                         {(formik) => {
                             console.log(formik);
                             const {
+                                image,
                                 name,
                                 state,
                                 district,
                                 address,
                                 zipcode,
                             } = formik.values;
+
                             const errors = Object.keys(formik.errors);
                             console.log(errors);
                             const tempErrorFound = errors.some(
                                 (value) =>
+                                    value === 'image' ||
                                     value === 'name' ||
                                     value === 'state' ||
                                     value === 'district' ||
@@ -192,8 +208,8 @@ function BootcampForm(props) {
                                         <div class="bootcamp-form-content-basic-picture">
                                             <img
                                                 src={
-                                                    image !== 'no-photo.jpg'
-                                                        ? image
+                                                    img !== 'no-photo.jpg'
+                                                        ? img
                                                         : '/bootcamp_logo.jpg'
                                                 }
                                                 alt=""
@@ -649,4 +665,8 @@ function BootcampForm(props) {
     );
 }
 
-export default connect()(BootcampForm);
+const mapStateTopProps = (store) => ({});
+
+export default connect(mapStateTopProps, { resetLoading })(
+    withRouter(BootcampForm)
+);

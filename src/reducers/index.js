@@ -77,6 +77,12 @@ const taggedBootcampsReducer = (
 ) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'taggedBootcamps') {
+                return { ...state, loading: true };
+            } else {
+                return state;
+            }
         case GET_TAG_FILTERED_BOOTCAMPS:
             return {
                 ...state,
@@ -84,8 +90,8 @@ const taggedBootcampsReducer = (
                 prevPage: payload.pagination.prev,
                 nextPage: payload.pagination.next,
                 bootcamps: payload.append
-                    ? [...state.bootcamps, payload.data]
-                    : [payload.data],
+                    ? state.bootcamps.concat(payload.data)
+                    : payload.data,
                 totalCount: payload.count,
             };
         case GET_BOOTCAMPS_ERROR:
@@ -119,7 +125,7 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
             if (payload === 'taggedCourses') {
                 return { ...state, loading: true };
             } else {
-                return { ...state };
+                return state;
             }
         case GET_TAG_FILTERED_COURSES:
             return {

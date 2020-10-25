@@ -1,4 +1,6 @@
 import React, { createRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 // components
 import BankForm from './BankForm';
@@ -6,6 +8,8 @@ import Bootcamps from './Bootcamps';
 import ProfileForm from './ProfileForm';
 
 function PublisherProfile(props) {
+    const { userType } = props;
+
     const profileTabRef = createRef();
     const bankTabRef = createRef();
     const bootcampTabRef = createRef();
@@ -47,7 +51,7 @@ function PublisherProfile(props) {
         }
     };
 
-    return (
+    return userType === 'publisher' || userType === 'admin' ? (
         <div class="main-conatiner-pubProfile">
             <div class="pubProfile-tabs">
                 <div class="ui top attached tabular menu grid three column row">
@@ -98,7 +102,13 @@ function PublisherProfile(props) {
                 </div>
             </div>
         </div>
+    ) : (
+        <Redirect to="/login" />
     );
 }
 
-export default PublisherProfile;
+const mapStateToProps = (store) => ({
+    userType: store.auth.user.role,
+});
+
+export default connect(mapStateToProps)(PublisherProfile);

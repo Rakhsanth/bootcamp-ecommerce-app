@@ -31,7 +31,7 @@ export const resetLoading = (state) => {
 };
 
 // User register action creator
-export const registerUser = (body) => {
+export const registerUser = (body, history) => {
     return async function (dispatch) {
         const config = {
             'Content-Type': 'application/json',
@@ -42,7 +42,9 @@ export const registerUser = (body) => {
                 body,
                 config
             );
+            history.replace('/');
             dispatch({ type: REGISTER_USER, payload: response.data });
+            dispatch(loadUser());
         } catch (err) {
             console.log(err.response.data);
             dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
@@ -64,6 +66,7 @@ export const loginUser = (body, history) => {
             );
             history.replace('/');
             dispatch({ type: LOGIN_USER, payload: response.data });
+            dispatch(loadUser());
         } catch (err) {
             console.log(err.response.data);
             dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
@@ -106,7 +109,11 @@ export const getTaggedBootcamps = (
     averageCost,
     select,
     page,
-    sort
+    limit,
+    sort,
+    history,
+    otherQuery,
+    append
 ) => {
     return async function (dispatch) {
         let getURL = `${apiBaseURL}/bootcamps?`;
@@ -147,13 +154,48 @@ export const getTaggedBootcamps = (
                 getURL = getURL + `page=${page}`;
             }
         }
+        if (limit) {
+            if (getURL.includes('?')) {
+                getURL = getURL + `&limit=${limit}`;
+            } else {
+                getURL = getURL + `limit=${limit}`;
+            }
+        }
+        if (otherQuery) {
+            if (getURL.endsWith('?')) {
+                getURL = getURL + `${otherQuery}`;
+            } else {
+                getURL = getURL + `&${otherQuery}`;
+            }
+        }
         try {
             const response = await axios.get(getURL);
-            dispatch({
-                type: GET_TAG_FILTERED_BOOTCAMPS,
-                payload: response.data,
-            });
+            if (history) history.push('/courseResults');
+            if (append) {
+                dispatch({
+                    type: GET_TAG_FILTERED_BOOTCAMPS,
+                    payload: {
+                        count: response.data.count,
+                        pagination: response.data.pagination,
+                        data: response.data.data,
+                        append: true,
+                    },
+                });
+            } else {
+                dispatch({
+                    type: GET_TAG_FILTERED_BOOTCAMPS,
+                    payload: {
+                        count: response.data.count,
+                        pagination: response.data.pagination,
+                        data: response.data.data,
+                        append: false,
+                    },
+                });
+            }
         } catch (err) {
+            if (err.response.data) {
+                console.log(err.response.data);
+            }
             dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response.data });
         }
     };

@@ -16,9 +16,10 @@ export const validatePassword = (password) => {
     return true;
 };
 
-export const validateFileSize = (file, fileSize) => {
+export const validateImageFileSize = (file, fileSize) => {
     if (file !== undefined) {
         if (file.size > fileSize * oneMB) return false;
+        if (!file.type.includes('image')) return false;
     }
     return true;
 };
