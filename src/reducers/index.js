@@ -13,6 +13,8 @@ import {
     GET_BOOTCAMPS_ERROR,
     GET_TAG_FILTERED_COURSES,
     GET_COURSES_ERROR,
+    GET_BOOTCAMP,
+    GET_BOOTCAMP_ERROR,
     GET_COURSE,
     GET_COURSE_ERROR,
     ADD_TO_CART,
@@ -124,6 +126,8 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
         case RESET_LOADING:
             if (payload === 'taggedCourses') {
                 return { ...state, loading: true };
+            } else if (payload === 'taggedCoursesClear') {
+                return { ...state, loading: true, courses: [] };
             } else {
                 return state;
             }
@@ -132,6 +136,7 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
                 ...state,
                 loading: false,
                 prevPage: payload.pagination.prev,
+                currentPage: payload.pagination.current,
                 nextPage: payload.pagination.next,
                 courses: payload.append
                     ? state.courses.concat(payload.data)
@@ -147,6 +152,47 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
                 courses: [],
                 error: true,
                 totalCount: 0,
+            };
+        default:
+            return state;
+    }
+};
+
+// reducer to get a single bootcamp
+const initialBootcampState = {
+    loading: true,
+    bootcamp: null,
+    error: false,
+};
+
+const bootcampReducer = (state = initialBootcampState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case RESET_LOADING:
+            if (payload === 'bootcamp') {
+                return {
+                    ...state,
+                    loading: true,
+                    bootcamp: null,
+                    error: false,
+                };
+            } else {
+                return state;
+            }
+
+        case GET_BOOTCAMP:
+            return {
+                ...state,
+                loading: false,
+                bootcamp: payload.bootcamp,
+                error: false,
+            };
+        case GET_BOOTCAMP_ERROR:
+            return {
+                ...state,
+                loading: false,
+                bootcamp: null,
+                error: true,
             };
         default:
             return state;
@@ -231,6 +277,7 @@ export default combineReducers({
     auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
+    bootcamp: bootcampReducer,
     course: courseReducer,
     cart: cartReducer,
 });

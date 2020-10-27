@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function BootcampCard(props) {
-    const { image, name, address, rating } = props;
+    const { id, image, name, address, rating } = props;
+    // For calling method from parent component
+    const { renderThisBootcamp } = props;
 
     // custom css related variable:
     const lineSeperatorColor = 'rgb(220, 218, 203)';
@@ -41,10 +43,15 @@ function BootcampCard(props) {
         return iconsList;
     };
 
+    const handleBootcampCard = () => {
+        renderThisBootcamp(id);
+    };
+
     return (
         <div
             class="filter-result-card"
             style={{ borderBottom: `1px solid ${lineSeperatorColor}` }}
+            onClick={handleBootcampCard}
         >
             <img
                 src={image !== 'no-photo.jpg' ? image : '/bootcamp_logo.jpg'}

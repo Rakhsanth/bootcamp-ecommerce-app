@@ -7,11 +7,14 @@ import BootcampForm from './BootcampForm';
 
 // actions
 import { getTaggedBootcamps } from '../../actions';
+import EditBootcamp from './EditBootcamp';
 
 function Bootcamps(props) {
     const { loading, bootcamps, getTaggedBootcamps, userId } = props;
 
     const [displayBootcampForm, setdisplayBootcampForm] = useState(false);
+    const [displayBootcampList, setdisplayBootcampList] = useState(true);
+    const [editBootcampId, seteditBootcampId] = useState(null);
     const [query, setquery] = useState(`user=${userId}`);
 
     useEffect(() => {
@@ -33,44 +36,60 @@ function Bootcamps(props) {
         setdisplayBootcampForm(false);
     };
 
+    const renderThisBootcamp = (bootcampId) => {
+        setdisplayBootcampList(false);
+        seteditBootcampId(bootcampId);
+    };
+
     const renderBootcampsOrForm = () => {
         if (displayBootcampForm) {
             return <BootcampForm removeForm={removeForm} />;
         } else {
-            return !loading ? (
-                <div class="publisher-bootcamps-container">
-                    {bootcamps.length > 0 ? (
-                        <Fragment>
-                            {bootcamps.map((bootcamp, index) => (
-                                <BootcampCard
-                                    key={bootcamp._id}
-                                    image={bootcamp.photo}
-                                    name={bootcamp.name}
-                                    address={bootcamp.address}
-                                    rating={
-                                        bootcamp.averageRating
-                                            ? bootcamp.averageRating
-                                            : null
-                                    }
-                                />
-                            ))}
-                        </Fragment>
-                    ) : (
-                        <h1>You have not created bootcamps yet !!!</h1>
-                    )}
-                </div>
-            ) : (
-                <h1>Loading !!!</h1>
-            );
+            if (displayBootcampList) {
+                return !loading ? (
+                    <div class="publisher-bootcamps-container">
+                        {bootcamps.length > 0 ? (
+                            <Fragment>
+                                {bootcamps.map((bootcamp, index) => (
+                                    <BootcampCard
+                                        key={bootcamp._id}
+                                        id={bootcamp._id}
+                                        image={bootcamp.photo}
+                                        name={bootcamp.name}
+                                        address={bootcamp.address}
+                                        rating={
+                                            bootcamp.averageRating
+                                                ? bootcamp.averageRating
+                                                : null
+                                        }
+                                        renderThisBootcamp={renderThisBootcamp}
+                                    />
+                                ))}
+                            </Fragment>
+                        ) : (
+                            <h1>You have not created bootcamps yet !!!</h1>
+                        )}
+                    </div>
+                ) : (
+                    <h1>Loading !!!</h1>
+                );
+            } else {
+                if (editBootcampId) {
+                    return <EditBootcamp bootcampId={editBootcampId} />;
+                }
+            }
         }
     };
 
     const renderAddButton = () => {
-        if (displayBootcampForm) {
+        if (displayBootcampForm || !displayBootcampList) {
             return (
                 <button
                     class="btn btn-primary btn-md"
-                    onClick={() => setdisplayBootcampForm(false)}
+                    onClick={() => {
+                        setdisplayBootcampForm(false);
+                        setdisplayBootcampList(true);
+                    }}
                 >
                     {'<< Back'}
                 </button>

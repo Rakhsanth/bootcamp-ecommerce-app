@@ -1,8 +1,9 @@
 // react related imports
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroller';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
 // actions imports
@@ -11,6 +12,8 @@ import { getTaggedBootcamps, getTaggedCourses, resetLoading } from '../actions';
 const defaultTab = 'design';
 
 function Landing(props) {
+    const scrollTriggerThreshold = 600;
+
     const {
         resetLoading,
         taggedBootcamps,
@@ -37,6 +40,7 @@ function Landing(props) {
         start: 0,
         end: 0,
     });
+    const [scrollNextPage, setscrollNextPage] = useState(null);
 
     const courseDesignTab = useRef();
     const courseDevelopmentTab = useRef();
@@ -53,6 +57,9 @@ function Landing(props) {
     const bootcampDigitalMarketingTab = useRef();
     const bootcampFinanceTab = useRef();
 
+    const coursesCategoryContainerRef = createRef();
+    const bootcampsCategoryContainerRef = createRef();
+
     const isMobile = useMediaQuery({ query: '(max-width: 37.5em)' });
     const isTabletPortrait = useMediaQuery({ query: '(max-width: 56.25em)' });
     const isTabletLandscape = useMediaQuery({ query: '(max-width: 75em)' });
@@ -61,8 +68,30 @@ function Landing(props) {
     useEffect(() => {
         courseDesignTab.current.classList.add('focus-tab');
         bootcampDesignTab.current.classList.add('focus-tab');
-        getTaggedCourses(defaultTab);
-        getTaggedBootcamps(defaultTab);
+        getTaggedCourses(
+            defaultTab,
+            null,
+            null,
+            null,
+            null,
+            10,
+            null,
+            null,
+            null,
+            false
+        );
+        getTaggedBootcamps(
+            defaultTab,
+            null,
+            null,
+            null,
+            null,
+            10,
+            null,
+            null,
+            null,
+            false
+        );
     }, [getTaggedBootcamps, getTaggedCourses]);
 
     useEffect(() => {
@@ -73,7 +102,9 @@ function Landing(props) {
     console.log(taggedCourseIndex);
     console.log(taggedBootcampIndex);
 
-    const handleCourseTabs = (event, category) => {
+    const handleCourseTabs = (category) => {
+        // to set the starting of such a course
+        settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
         // To remove the focus
         if (activeCourseTab === 'design') {
             courseDesignTab.current.classList.remove('focus-tab');
@@ -107,21 +138,38 @@ function Landing(props) {
             courseFinanceTab.current.classList.add('focus-tab');
         }
         setactiveCourseTab(category);
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false
-        );
+        if (isMobile) {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+        } else {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false
+            );
+        }
     };
 
-    const handleBootcampTabs = (event, category) => {
+    const handleBootcampTabs = (category) => {
+        // To set starting of such bootcamp
+        settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
         // To remove the focus
         if (activeBootcampTab === 'design') {
             bootcampDesignTab.current.classList.remove('focus-tab');
@@ -181,6 +229,9 @@ function Landing(props) {
         settaggedCourseIndex({ ...taggedCourseIndex, start: tempStartIndex });
     };
     const renderCoursesLeftNavButton = () => {
+        if (isMobile) {
+            return null;
+        }
         if (taggedCourseIndex.start !== 0) {
             return (
                 <button
@@ -197,10 +248,10 @@ function Landing(props) {
     };
     const handleCoursesRightNavButton = () => {
         let tempStartIndex;
-        if (isTabletPortrait) {
-            tempStartIndex = taggedCourseIndex.start + 3;
+        if (isDesktopOrLaptop) {
+            tempStartIndex = taggedCourseIndex.start + 5;
             if (tempStartIndex >= taggedCoursesCount) {
-                tempStartIndex = taggedCoursesCount - 3;
+                tempStartIndex = taggedCoursesCount - 5;
             }
         }
         if (isTabletLandscape) {
@@ -209,15 +260,16 @@ function Landing(props) {
                 tempStartIndex = taggedCoursesCount - 4;
             }
         }
-        if (isDesktopOrLaptop) {
-            tempStartIndex = taggedCourseIndex.start + 5;
+        if (isTabletPortrait) {
+            tempStartIndex = taggedCourseIndex.start + 3;
+            console.log(`current start index calculated = ${tempStartIndex}`);
             if (tempStartIndex >= taggedCoursesCount) {
-                tempStartIndex = taggedCoursesCount - 5;
+                tempStartIndex = taggedCoursesCount - 3;
             }
         }
         if (
             taggedCoursesNextPage !== null &&
-            taggedCourses.length - taggedCourseIndex.start <= 5
+            taggedCourses.length < taggedCoursesCount
         ) {
             resetLoading('taggedCourses');
             getTaggedCourses(
@@ -236,6 +288,9 @@ function Landing(props) {
         settaggedCourseIndex({ ...taggedCourseIndex, start: tempStartIndex });
     };
     const renderCoursesRightNavButton = () => {
+        if (isMobile) {
+            return null;
+        }
         if (isTabletPortrait) {
             if (taggedCourseIndex.start + 3 < taggedCoursesCount) {
                 return (
@@ -283,6 +338,37 @@ function Landing(props) {
         }
     };
 
+    const handleCoursesScroll = (event) => {
+        if (
+            // This makes sure that the API call is done only when we reach the sroll end
+            event.target.scrollWidth - Math.ceil(event.target.scrollLeft) <=
+                event.target.clientWidth &&
+            scrollNextPage !== taggedCoursesNextPage &&
+            taggedCourses.length < taggedCoursesCount
+        ) {
+            if (taggedCoursesNextPage !== null) {
+                coursesCategoryContainerRef.current.scrollLeft =
+                    coursesCategoryContainerRef.current.scrollLeft -
+                    scrollTriggerThreshold;
+                resetLoading('taggedCourses');
+                getTaggedCourses(
+                    activeCourseTab,
+                    null,
+                    null,
+                    null,
+                    taggedCoursesNextPage,
+                    10,
+                    null,
+                    null,
+                    null,
+                    true
+                );
+            }
+            setscrollNextPage(taggedCoursesNextPage);
+        }
+        return;
+    };
+
     const renderCourses = (
         isMobile,
         isTabletPortrait,
@@ -291,10 +377,61 @@ function Landing(props) {
     ) => {
         if (taggedCoursesCount > 0) {
             if (isMobile) {
-                return;
+                return taggedCourses.map((course) => (
+                    <CourseCard
+                        key={course._id}
+                        courseId={course._id}
+                        image={course.picture}
+                        author={course.author}
+                        title={course.title}
+                        description={course.description}
+                        keyPointsList={course.contentList}
+                        price={course.cost}
+                        rating={course.averageRating}
+                        userCount={course.ratings}
+                    />
+                ));
             }
             if (isTabletPortrait) {
-                return;
+                const cardList = [];
+                for (
+                    let index = taggedCourseIndex.start;
+                    index < taggedCourseIndex.start + 3 &&
+                    index < taggedCoursesCount;
+                    index++
+                ) {
+                    console.log(taggedCourses);
+                    if (!taggedCoursesLoading) {
+                        const course = taggedCourses[index];
+                        console.log(course, index);
+                        const {
+                            _id,
+                            picture,
+                            author,
+                            title,
+                            description,
+                            contentList,
+                            averageRating,
+                            ratings,
+                            cost,
+                        } = course;
+                        cardList.push(
+                            <CourseCard
+                                key={index}
+                                courseId={_id}
+                                image={picture}
+                                author={author}
+                                title={title}
+                                description={description}
+                                keyPointsList={contentList}
+                                price={cost}
+                                rating={averageRating}
+                                userCount={ratings}
+                            />
+                        );
+                    }
+                }
+                return cardList;
             }
             if (isTabletLandscape) {
                 const cardList = [];
@@ -304,7 +441,36 @@ function Landing(props) {
                     index < taggedCoursesCount;
                     index++
                 ) {
-                    cardList.push(<CourseCard key={index} />);
+                    console.log(taggedCourses);
+                    if (!taggedCoursesLoading) {
+                        const course = taggedCourses[index];
+                        console.log(course, index);
+                        const {
+                            _id,
+                            picture,
+                            author,
+                            title,
+                            description,
+                            contentList,
+                            averageRating,
+                            ratings,
+                            cost,
+                        } = course;
+                        cardList.push(
+                            <CourseCard
+                                key={index}
+                                courseId={_id}
+                                image={picture}
+                                author={author}
+                                title={title}
+                                description={description}
+                                keyPointsList={contentList}
+                                price={cost}
+                                rating={averageRating}
+                                userCount={ratings}
+                            />
+                        );
+                    }
                 }
                 return cardList;
             }
@@ -319,6 +485,7 @@ function Landing(props) {
                     console.log(taggedCourses);
                     if (!taggedCoursesLoading) {
                         const course = taggedCourses[index];
+                        console.log(course, index);
                         const {
                             _id,
                             picture,
@@ -357,20 +524,6 @@ function Landing(props) {
         }
     };
 
-    // const handleCategoryCard = (event, category) => {
-    //     console.log(category);
-    //     getTaggedCourses(
-    //         category,
-    //         null,
-    //         null,
-    //         null,
-    //         null,
-    //         10,
-    //         '-averageRating',
-    //         history
-    //     );
-    // };
-
     return (
         <main className="main-conatiner-home">
             <section className="hero-section">
@@ -386,7 +539,7 @@ function Landing(props) {
                     to="/"
                     id="course-design-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleCourseTabs(event, 'design')}
+                    onClick={() => handleCourseTabs('design')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Design
@@ -397,7 +550,7 @@ function Landing(props) {
                     to="/"
                     id="course-development-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleCourseTabs(event, 'development')}
+                    onClick={() => handleCourseTabs('development')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Development
@@ -408,7 +561,7 @@ function Landing(props) {
                     to="/"
                     id="course-data-science-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleCourseTabs(event, 'data science')}
+                    onClick={() => handleCourseTabs('data science')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Data Science
@@ -419,9 +572,7 @@ function Landing(props) {
                     to="/"
                     id="course-digital-marketing-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) =>
-                        handleCourseTabs(event, 'digital marketing')
-                    }
+                    onClick={() => handleCourseTabs('digital marketing')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Digital Marketing
@@ -432,7 +583,7 @@ function Landing(props) {
                     to="/"
                     id="course-finance-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleCourseTabs(event, 'finance')}
+                    onClick={() => handleCourseTabs('finance')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Finance
@@ -440,7 +591,11 @@ function Landing(props) {
                 </Link>
                 <h4 className="category-tabs-courses-title">Courses</h4>
             </div>
-            <div className="categories">
+            <div
+                ref={coursesCategoryContainerRef}
+                className="categories"
+                onScroll={(event) => handleCoursesScroll(event)}
+            >
                 {renderCoursesLeftNavButton()}
                 {renderCourses(
                     isMobile,
@@ -456,7 +611,7 @@ function Landing(props) {
                     to="/"
                     id="bootcamp-design-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleBootcampTabs(event, 'design')}
+                    onClick={() => handleBootcampTabs('design')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Design
@@ -467,9 +622,7 @@ function Landing(props) {
                     to="/"
                     id="bootcamp-development-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) =>
-                        handleBootcampTabs(event, 'development')
-                    }
+                    onClick={() => handleBootcampTabs('development')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Development
@@ -480,9 +633,7 @@ function Landing(props) {
                     to="/"
                     id="bootcamp-data-science-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) =>
-                        handleBootcampTabs(event, 'data science')
-                    }
+                    onClick={() => handleBootcampTabs('data science')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Data Science
@@ -493,9 +644,7 @@ function Landing(props) {
                     to="/"
                     id="bootcamp-digital-marketing-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) =>
-                        handleBootcampTabs(event, 'digital marketing')
-                    }
+                    onClick={() => handleBootcampTabs('digital marketing')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Digital Marketing
@@ -506,7 +655,7 @@ function Landing(props) {
                     to="/"
                     id="bootcamp-finance-tab"
                     className="category-tabs-courses-tab"
-                    onClick={(event) => handleBootcampTabs(event, 'finance')}
+                    onClick={() => handleBootcampTabs('finance')}
                 >
                     <span className="category-tabs-courses-tab-text">
                         Finance
@@ -605,6 +754,7 @@ const mapStateToProps = (store) => {
         taggedCoursesCount: store.taggedCourses.totalCount,
         taggedBootcampsNextPage: store.taggedBootcamps.nextPage,
         taggedCoursesNextPage: store.taggedCourses.nextPage,
+        taggedCoursesCurrentPage: store.taggedCourses.currentPage,
     };
 };
 

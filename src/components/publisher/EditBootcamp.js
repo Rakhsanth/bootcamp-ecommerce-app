@@ -1,68 +1,39 @@
-import React, { createRef, Fragment, useState } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import * as Yup from 'yup';
+import React, { createRef, useEffect, useState } from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
-
+import * as Yup from 'yup';
+import { connect } from 'react-redux';
 // api calls
 import { createEditBootcamp } from '../../api';
-
+// actions
+import { resetLoading, getBootcamp } from '../../actions';
 // custom utils
 import { validateImageFileSize } from '../utils/utilFunctions';
 
-// actions
-import { resetLoading } from '../../actions';
+function EditBootcamp(props) {
+    const { resetLoading, bootcampId } = props;
+    const { loading, bootcamp, getBootcamp } = props;
 
-function BootcampForm(props) {
-    const { history, removeForm, resetLoading } = props;
+    useEffect(() => {
+        getBootcamp(bootcampId);
+    }, [getBootcamp]);
 
-    let img = 'no-photo.jpg';
-
-    const [formValues, setformValues] = useState({
-        image: '',
-        name: '',
-        state: '',
-        district: '',
-        address: '',
-        housing: '',
-        jobAssistance: '',
-        jobGuarantee: '',
-        description: '',
-        website: '',
-        email: '',
-        offerings: [],
-    });
-
-    const [tabDisabled, settabDisabled] = useState('disabled');
-    const [allowNext, setallowNext] = useState(false);
-
-    const basicTabRef = createRef();
-    const techTabRef = createRef();
-    const tabRefs = [basicTabRef, techTabRef];
-    const basicTabContentRef = createRef();
-    const techTabContentRef = createRef();
-    const tabContents = [basicTabContentRef, techTabContentRef];
-
-    const formikInitialValuesArray = Object.entries(formValues);
-    const formikInit = Object.fromEntries(formikInitialValuesArray);
-
-    // const initialValues = formikInit;
     const initialValues = {
         image: '',
-        name: '',
-        state: '',
-        district: '',
-        address: '',
-        zipcode: '',
-        housing: 'false',
-        jobAssistance: 'true',
-        jobGuarantee: 'false',
-        description: '',
-        website: '',
-        email: '',
-        phone: '',
-        offerings: [''],
+        name: bootcamp ? bootcamp.name : '',
+        state: bootcamp ? bootcamp.state : '',
+        district: bootcamp ? bootcamp.district : '',
+        address: bootcamp ? bootcamp.address : '',
+        zipcode: bootcamp ? bootcamp.zipcode : '',
+        housing: bootcamp ? bootcamp.housing : 'false',
+        jobAssistance: bootcamp ? bootcamp.jobAssistance : 'true',
+        jobGuarantee: bootcamp ? bootcamp.jobGuarantee : 'false',
+        description: bootcamp ? bootcamp.description : '',
+        website: bootcamp ? bootcamp.website : '',
+        email: bootcamp ? bootcamp.email : '',
+        phone: bootcamp ? bootcamp.phone : '',
+        offerings: bootcamp ? bootcamp.offerings : [''],
     };
+
     const validateOfferingsLength = (values) => {
         console.log(values);
         if (values.length < 2) return false;
@@ -107,37 +78,51 @@ function BootcampForm(props) {
     });
 
     const onSubmit = (values, submitProps) => {
-        createEditBootcamp(values, 'create', history);
-        removeForm();
+        createEditBootcamp(values, 'edit');
         resetLoading('taggedBootcamps');
     };
 
-    const handleStepper = (stepper) => {
-        tabRefs.forEach((tab, index) => {
+    // Tab refs
+    const bootcampTabRef = createRef();
+    const courseTabRef = createRef();
+    const tabs = [bootcampTabRef, courseTabRef];
+    // Tab content refs
+    const bootcampTabContentRef = createRef();
+    const courseTabContentRef = createRef();
+    const tabsContent = [bootcampTabContentRef, courseTabContentRef];
+
+    const handleTabClick = (tab) => {
+        tabs.forEach((tab) => {
+            // console.log(tab.current.classList);
             tab.current.classList.remove('active');
         });
-        tabContents.forEach((content, index) => {
-            content.current.style.display = 'none';
+        tabsContent.forEach((tabContent) => {
+            tabContent.current.style.display = 'none';
         });
-
-        switch (stepper) {
-            case 'basic':
-                settabDisabled('enabled');
-                basicTabRef.current.classList.add('active');
-                basicTabContentRef.current.style.display = 'flex';
+        switch (tab) {
+            case 'bootcampTab':
+                bootcampTabRef.current.classList.add('active');
+                bootcampTabContentRef.current.style.display = 'flex';
                 break;
-
-            case 'tech':
-                settabDisabled('enabled active');
-                techTabContentRef.current.style.display = 'flex';
+            case 'courseTab':
+                courseTabRef.current.classList.add('active');
+                courseTabContentRef.current.style.display = 'flex';
                 break;
         }
     };
 
-    return (
+    return !loading ? (
         <div class="main-conatiner-bootcampForm">
             <div class="ui top attached two steps">
-                <div ref={basicTabRef} class="active step bootcamp-form-step">
+                <div
+                    ref={bootcampTabRef}
+                    class="active step bootcamp-form-step"
+                    style={{ cursor: 'pointer' }}
+                    onClick={(event) => {
+                        console.log(event);
+                        handleTabClick('bootcampTab');
+                    }}
+                >
                     <i aria-hidden="true" class="icon">
                         <svg style={{ height: '3rem', width: '3rem' }}>
                             <use xlinkHref="img/sprite.svg#icon-office"></use>
@@ -147,28 +132,28 @@ function BootcampForm(props) {
                         <use xlinkHref="img/sprite.svg#office"></use>
                     </svg> */}
                     <div class="content">
-                        <div class="title">Basic information</div>
+                        <div class="title">Edit Bootcamp Info</div>
                         <div class="description">
                             Bootcamp and location specific information
                         </div>
                     </div>
                 </div>
                 <div
-                    ref={techTabRef}
-                    class={`${tabDisabled} step bootcamp-form-step`}
+                    ref={courseTabRef}
+                    class={`step bootcamp-form-step`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleTabClick('courseTab')}
                 >
                     <i aria-hidden="true" class="icon">
                         <svg style={{ height: '3rem', width: '3rem' }}>
                             <use xlinkHref="img/sprite.svg#icon-laptop"></use>
                         </svg>
                     </i>
-                    {/* <svg class="icon">
-                        <use xlinkHref="img/sprite.svg#laptop"></use>
-                    </svg> */}
+
                     <div class="content">
-                        <div class="title">Technical information</div>
+                        <div class="title">Courses</div>
                         <div class="description">
-                            Bootcamp offerings, skillset and more
+                            View, Edit and Delete Courses
                         </div>
                     </div>
                 </div>
@@ -179,52 +164,21 @@ function BootcampForm(props) {
                         initialValues={initialValues}
                         validationSchema={validationSchema}
                         onSubmit={onSubmit}
+                        enableReinitialize
                     >
                         {(formik) => {
                             console.log(formik);
-                            const {
-                                image,
-                                name,
-                                state,
-                                district,
-                                address,
-                                zipcode,
-                            } = formik.values;
-
-                            const errors = Object.keys(formik.errors);
-                            console.log(errors);
-                            const tempErrorFound = errors.some(
-                                (value) =>
-                                    value === 'image' ||
-                                    value === 'name' ||
-                                    value === 'state' ||
-                                    value === 'district' ||
-                                    value === 'address' ||
-                                    value === 'zipcode'
-                            );
-                            if (
-                                name !== '' &&
-                                state !== '' &&
-                                district !== '' &&
-                                address !== '' &&
-                                zipcode !== '' &&
-                                !tempErrorFound
-                            ) {
-                                setallowNext(true);
-                            } else {
-                                setallowNext(false);
-                            }
                             return (
                                 <Form>
                                     <div
-                                        ref={basicTabContentRef}
+                                        ref={bootcampTabContentRef}
                                         class="bootcamp-form-content-basic"
                                     >
                                         <div class="bootcamp-form-content-basic-picture">
                                             <img
                                                 src={
-                                                    img !== 'no-photo.jpg'
-                                                        ? img
+                                                    bootcamp
+                                                        ? bootcamp.photo
                                                         : '/bootcamp_logo.jpg'
                                                 }
                                                 alt=""
@@ -488,25 +442,6 @@ function BootcampForm(props) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="bootcamp-form-content-basic-bottom">
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary btn-md"
-                                                disabled={!allowNext}
-                                                onClick={() =>
-                                                    handleStepper('tech')
-                                                }
-                                            >
-                                                next
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div
-                                        ref={techTabContentRef}
-                                        class="bootcamp-form-content-tech"
-                                    >
-                                        <div class="bootcamp-form-content-basic-details">
                                             <div class="pubProfile-form-control">
                                                 <label
                                                     for="bootcampDesc"
@@ -653,43 +588,43 @@ function BootcampForm(props) {
                                                     placeholder="9108765432"
                                                 />
                                             </div>
-                                        </div>
-                                        <div class="bootcamp-form-content-basic-bottom">
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary btn-md"
-                                                onClick={() =>
-                                                    handleStepper('basic')
-                                                }
-                                            >
-                                                back
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                class="btn btn-primary btn-md"
-                                                disabled={
-                                                    !(
-                                                        formik.isValid &&
-                                                        formik.dirty
-                                                    )
-                                                }
-                                            >
-                                                Save
-                                            </button>
+                                            <div class="bootcamp-form-content-basic-bottom">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-primary btn-md"
+                                                    disabled={
+                                                        !(
+                                                            formik.isValid &&
+                                                            formik.dirty
+                                                        )
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </Form>
                             );
                         }}
                     </Formik>
+                    <div
+                        ref={courseTabContentRef}
+                        class="bootcamp-form-content-tech"
+                    ></div>
                 </div>
             </div>
         </div>
+    ) : (
+        <h1> Loading !!!</h1>
     );
 }
 
-const mapStateTopProps = (store) => ({});
+const mapStateToProps = (store) => ({
+    loading: store.bootcamp.loading,
+    bootcamp: store.bootcamp.bootcamp,
+});
 
-export default connect(mapStateTopProps, { resetLoading })(
-    withRouter(BootcampForm)
+export default connect(mapStateToProps, { resetLoading, getBootcamp })(
+    EditBootcamp
 );

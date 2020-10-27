@@ -18,6 +18,7 @@
 
 html {
     font-size: 62.5%;
+    scroll-behavior: smooth;
 }
 @media (min-width: 112.5em) {
     html {
@@ -46,6 +47,9 @@ body {
 
 a {
     text-decoration: none;
+}
+a:hover {
+    color: inherit;
 }
 
 .login-container input placeholder {
@@ -719,6 +723,7 @@ a {
 .categories-card:hover {
     border: 2px solid #dcdacb;
     transform: scale(1.025);
+    text-decoration: none;
     z-index: 1;
 }
 .categories-card:hover .categories-card-img {
@@ -794,6 +799,7 @@ a {
     border: 2px #3c3b37;
     border-radius: 5px;
     box-shadow: -0.2rem 0.3rem 1rem #73726c;
+    text-decoration: none;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -1014,9 +1020,16 @@ a {
 .categories::-webkit-scrollbar-thumb {
     background: white;
 }
+@media (max-width: 37.5em) {
+    .categories {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
 @media (hover: none) {
     .categories {
-        overflow-x: scroll;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 }
 @media (hover: hover) {
