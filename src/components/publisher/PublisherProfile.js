@@ -1,13 +1,25 @@
 import React, { createRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
+import Pusher from 'pusher-js';
 // components
 import BankForm from './BankForm';
 import Bootcamps from './Bootcamps';
 import ProfileForm from './ProfileForm';
 
+// Config values
+import { pusherApiKey, pusherCluster } from '../../config/config';
+
 function PublisherProfile(props) {
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+
+    const channel = pusher.subscribe('courses');
+    channel.bind('updated', function (data) {
+        console.log(JSON.stringify(data));
+    });
+
     const { userType } = props;
 
     const profileTabRef = createRef();

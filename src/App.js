@@ -12,6 +12,7 @@ import Course from './components/course/Course';
 import Cart from './components/Cart';
 import UserProfile from './components/user/UserProfile';
 import PublisherProfile from './components/publisher/PublisherProfile';
+import PublisherNotification from './components/notification/PublisherNotification';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Redux store and actions
@@ -56,6 +57,11 @@ function App() {
                             exact
                             path="/publisher/profile"
                             component={PublisherProfile}
+                        />
+                        <ProtectedRoute
+                            exact
+                            path="/publisher/notification"
+                            component={PublisherNotification}
                         />
                     </Switch>
                 </Router>

@@ -23,6 +23,9 @@ import {
     ADD_TO_CART,
     REMOVE_FROM_CART,
     CART_ERROR,
+    GET_PUBLISHER_NOTIFICATION,
+    ADD_PUBLISHER_NOTIFICATION,
+    PUBLISHER_NOTIFICATION_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -347,5 +350,16 @@ export const removeFromCart = (cartItemId) => {
     return {
         type: REMOVE_FROM_CART,
         payload: cartItemId,
+    };
+};
+
+export const addPublisherNotification = (notification) => {
+    // return async function(dispatch){
+
+    // }
+
+    return {
+        type: ADD_PUBLISHER_NOTIFICATION,
+        payload: notification,
     };
 };

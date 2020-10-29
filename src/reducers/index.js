@@ -20,6 +20,9 @@ import {
     ADD_TO_CART,
     REMOVE_FROM_CART,
     CART_ERROR,
+    GET_PUBLISHER_NOTIFICATION,
+    ADD_PUBLISHER_NOTIFICATION,
+    PUBLISHER_NOTIFICATION_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -270,6 +273,18 @@ const cartReducer = (state = initialCartState, action) => {
             };
         default:
             return state;
+    }
+};
+
+// Notification related reducer (publisher)
+const initialPublisherNotification = {
+    loading: true,
+    notifications: [],
+    error: false,
+};
+const publisherNotificationReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
     }
 };
 

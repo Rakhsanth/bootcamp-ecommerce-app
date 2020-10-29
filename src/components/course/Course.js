@@ -1,13 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // api calls
 import { getReviews } from '../../api';
 // actions
-import { getCourse } from '../../actions';
+import { getCourse, addToCart } from '../../actions';
 
 function Course(props) {
-    const { loading, course, getCourse } = props;
+    const { loading, course, getCourse, addToCart, cartItems } = props;
     const {
         match: {
             params: { courseId },
@@ -128,6 +129,57 @@ function Course(props) {
         setcurrentPage(currentPage + 1);
     };
 
+    const handleAddToCart = () => {
+        const entries = new Map([
+            ['id', course._id],
+            ['image', course.image],
+            ['title', course.title],
+            ['price', course.cost],
+            ['description', course.description],
+        ]);
+        const cartItem = Object.fromEntries(entries);
+        console.log(cartItem);
+        addToCart(cartItem);
+    };
+
+    const renderAddToCart = () => {
+        const inCart = cartItems.some((item) => item.id === course._id);
+        if (inCart) {
+            return (
+                <Link to="/cart" className="btn btn-primary btn-md btn-center">
+                    <span className="btn-text">Go to checkout</span>
+                </Link>
+            );
+        } else {
+            return (
+                <button
+                    className="btn btn-tertiary btn-md"
+                    onClick={handleAddToCart}
+                >
+                    Add to cart
+                </button>
+            );
+        }
+    };
+
+    const handleBuyNow = () => {};
+
+    const renderBuyNow = () => {
+        const inCart = cartItems.some((item) => item.id === course._id);
+        if (inCart) {
+            return null;
+        } else {
+            return (
+                <button
+                    className="btn btn-secondary btn-md"
+                    onClick={handleBuyNow}
+                >
+                    Buy now
+                </button>
+            );
+        }
+    };
+
     return !loading && course ? (
         <Fragment>
             <div className="main-conatiner-course">
@@ -154,12 +206,8 @@ function Course(props) {
                         <h4 className="course-payment-price">
                             &#8377; {course.cost}
                         </h4>
-                        <button className="btn btn-tertiary btn-md">
-                            Add to cart
-                        </button>
-                        <button className="btn btn-secondary btn-md">
-                            Buy now
-                        </button>
+                        {renderAddToCart()}
+                        {renderBuyNow()}
                     </div>
                 </div>
 
@@ -412,7 +460,8 @@ const mapStateToProps = (store) => {
     return {
         loading: store.course.loading,
         course: store.course.course,
+        cartItems: store.cart.cartItems,
     };
 };
 
-export default connect(mapStateToProps, { getCourse })(Course);
+export default connect(mapStateToProps, { getCourse, addToCart })(Course);

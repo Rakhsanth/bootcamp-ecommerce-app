@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+// custom
+import { apiBaseURL, razorpayAPIKeyId } from '../config/config';
 // actions
 import { addToCart, removeFromCart } from '../actions';
 
 function Cart(props) {
     const { loading, cartItems, addToCart, removeFromCart } = props;
+    const { history } = props;
 
     const getTotalPrice = () => {
         let totalPrice = 0;
@@ -17,6 +21,79 @@ function Cart(props) {
 
     const handleRemoveItem = (id) => {
         removeFromCart(id);
+    };
+
+    const handleCheckout = async () => {
+        const amount = getTotalPrice();
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        let data;
+        try {
+            const axiosConfig = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            };
+            const response = await axios.get(
+                `${apiBaseURL}/payment/order/${amount}`,
+                axiosConfig
+            );
+            data = response.data.data;
+        } catch (err) {
+            console.log(err.response.data);
+        }
+        const options = {
+            key: razorpayAPIKeyId,
+            currency: data.currency,
+            amount: data.amount,
+            name: 'Tech Network',
+            description: 'Payment processing to bootcamp bank account',
+            order_id: data.id,
+            handler: async (response) => {
+                const {
+                    razorpay_payment_id,
+                    razorpay_order_id,
+                    razorpay_signature,
+                } = response;
+                const body = {
+                    order_id: data.id,
+                    razorpay_payment_id,
+                    razorpay_order_id,
+                    razorpay_signature,
+                };
+                const axiosConfig = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                };
+                const confirmedResponse = await axios.post(
+                    `${apiBaseURL}/confirm`,
+                    body,
+                    axiosConfig
+                );
+                // console.log(confirmedResponse.data);
+                if (confirmedResponse.data.success) {
+                    props.setAlert(
+                        confirmedResponse.data.data.message,
+                        'success'
+                    );
+                } else {
+                    props.setAlert(confirmedResponse.data.data, 'danger');
+                }
+                history.replace('/');
+            },
+            theme: {
+                color: '#686CFD',
+            },
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
     };
 
     return !loading ? (
@@ -73,7 +150,10 @@ function Cart(props) {
                     <h4 className="cart-checkout-total-price">
                         Total : &#8377; {getTotalPrice()}
                     </h4>
-                    <button className="btn btn-lg btn-tertiary">
+                    <button
+                        className="btn btn-lg btn-tertiary"
+                        onClick={handleCheckout}
+                    >
                         Checkout
                     </button>
                 </div>
@@ -89,4 +169,6 @@ const mapStateToProps = (store) => ({
     cartItems: store.cart.cartItems,
 });
 
-export default connect(mapStateToProps, { addToCart, removeFromCart })(Cart);
+export default connect(mapStateToProps, { addToCart, removeFromCart })(
+    withRouter(Cart)
+);
