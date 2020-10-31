@@ -23,6 +23,8 @@ import {
     GET_PUBLISHER_NOTIFICATION,
     ADD_PUBLISHER_NOTIFICATION,
     PUBLISHER_NOTIFICATION_ERROR,
+    UPDATE_LOADED_COURSE,
+    UPDATE_LOADED_CART_ITEM,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -146,6 +148,17 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
                     : payload.data,
                 totalCount: payload.count,
             };
+        case UPDATE_LOADED_COURSE:
+            return {
+                ...state,
+                courses: state.courses.map((course) => {
+                    if (course._id === payload._id) {
+                        return payload;
+                    } else {
+                        return course;
+                    }
+                }),
+            };
         case GET_COURSES_ERROR:
             return {
                 ...state,
@@ -254,12 +267,25 @@ const cartReducer = (state = initialCartState, action) => {
     switch (type) {
         case ADD_TO_CART:
             return {
+                ...state,
                 loading: false,
                 cartItems: [payload, ...state.cartItems],
                 error: false,
             };
+        case UPDATE_LOADED_CART_ITEM:
+            return {
+                ...state,
+                cartItems: state.cartItems.map((item) => {
+                    if (item.id === payload.id) {
+                        return payload;
+                    } else {
+                        return item;
+                    }
+                }),
+            };
         case REMOVE_FROM_CART:
             return {
+                ...state,
                 loading: false,
                 cartItems: state.cartItems.filter(
                     (cartItem) => cartItem.id !== payload
@@ -268,6 +294,7 @@ const cartReducer = (state = initialCartState, action) => {
             };
         case CART_ERROR:
             return {
+                ...state,
                 loading: false,
                 error: true,
             };

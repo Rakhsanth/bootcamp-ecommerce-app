@@ -16,6 +16,10 @@ function CourseCard(props) {
         price,
         description,
         keyPointsList,
+        currentStudentsCount,
+        maxStudentsAllowed,
+        startDate,
+        endDate,
     } = props;
 
     const { cartItems, addToCart } = props;
@@ -63,6 +67,10 @@ function CourseCard(props) {
             ['title', title],
             ['price', price],
             ['description', description],
+            ['startDate', startDate],
+            ['endDate', endDate],
+            ['currentStudentsCount', currentStudentsCount],
+            ['maxStudentsAllowed', maxStudentsAllowed],
         ]);
         const cartItem = Object.fromEntries(entries);
         console.log(cartItem);
@@ -74,15 +82,28 @@ function CourseCard(props) {
         );
         console.log(thisCourse);
         if (thisCourse === undefined) {
-            return (
-                <Link
-                    to="/"
-                    className="btn btn-tertiary btn-lg btn-center"
-                    onClick={handleAddToCart}
-                >
-                    <span className="btn-text">Add to cart</span>
-                </Link>
-            );
+            console.log(currentStudentsCount, maxStudentsAllowed);
+            if (currentStudentsCount < maxStudentsAllowed) {
+                return (
+                    <button
+                        to="/"
+                        className="btn btn-tertiary btn-lg btn-center"
+                        onClick={handleAddToCart}
+                    >
+                        <span className="btn-text">Add to cart</span>
+                    </button>
+                );
+            } else {
+                return (
+                    <button
+                        to="/"
+                        className="btn btn-tertiary btn-lg btn-center"
+                        disabled
+                    >
+                        <span className="btn-text">Add to cart</span>
+                    </button>
+                );
+            }
         } else {
             return (
                 <Link to="/cart" className="btn btn-primary btn-lg btn-center">
@@ -112,7 +133,7 @@ function CourseCard(props) {
             </div>
             <span className="categories-card-price">&#8377; {price}</span>
             <div className="categories-card-details-container">
-                <div className="categories-card-details">
+                <Link to="" className="categories-card-details">
                     <h3 className="h3-heading categories-card-details-title">
                         {title}
                     </h3>
@@ -137,7 +158,15 @@ function CourseCard(props) {
                         ))}
                     </ul>
                     {getAddOrCheckButton()}
-                </div>
+                    {currentStudentsCount < maxStudentsAllowed ? null : (
+                        <span
+                            className="center"
+                            style={{ color: 'red', marginTop: '1rem' }}
+                        >
+                            Already maximum students have enrolled
+                        </span>
+                    )}
+                </Link>
             </div>
         </Link>
     );

@@ -14,7 +14,6 @@ function PublisherProfile(props) {
     const pusher = new Pusher(pusherApiKey, {
         cluster: pusherCluster,
     });
-
     const channel = pusher.subscribe('courses');
     channel.bind('updated', function (data) {
         console.log(JSON.stringify(data));

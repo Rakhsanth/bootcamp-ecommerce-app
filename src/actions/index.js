@@ -26,6 +26,8 @@ import {
     GET_PUBLISHER_NOTIFICATION,
     ADD_PUBLISHER_NOTIFICATION,
     PUBLISHER_NOTIFICATION_ERROR,
+    UPDATE_LOADED_COURSE,
+    UPDATE_LOADED_CART_ITEM,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -345,6 +347,13 @@ export const addToCart = (cartItem) => {
         payload: cartItem,
     };
 };
+// Update item in cart action (not async action as it is just payload sending and not API related)
+export const updateCartItem = (cartItem) => {
+    return {
+        type: UPDATE_LOADED_CART_ITEM,
+        payload: cartItem,
+    };
+};
 // Remove item from cart action (not async action as it is just payload sending and not API related)
 export const removeFromCart = (cartItemId) => {
     return {
@@ -361,5 +370,12 @@ export const addPublisherNotification = (notification) => {
     return {
         type: ADD_PUBLISHER_NOTIFICATION,
         payload: notification,
+    };
+};
+
+export const updateLoadedCourse = (courseDoc) => {
+    return {
+        type: UPDATE_LOADED_COURSE,
+        payload: courseDoc,
     };
 };

@@ -3,10 +3,13 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
+import Pusher from 'pusher-js';
 // actions
-import { getTaggedCourses } from '../../actions';
+import { getTaggedCourses, updateLoadedCourse } from '../../actions';
+// components
 import CourseResult from '../cards/coursesPage/CourseResult';
+// config values
+import { pusherApiKey, pusherCluster } from '../../config/config';
 
 const dropDownToggle = (event) => {
     const dropdownIcon = event.target.children[1];
@@ -28,6 +31,7 @@ function CourseResults(props) {
         location: { pathname, search },
         history,
         getTaggedCourses,
+        updateLoadedCourse,
     } = props;
     const { loading, totalCount, courses } = props;
 
@@ -39,6 +43,23 @@ function CourseResults(props) {
     });
     const [sortResult, setsortResult] = useState('-averageRating');
     const [filterQuery, setfilterQuery] = useState(null);
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('courses');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed');
+        if (courses.length !== 0) {
+            courses.forEach((course, index) => {
+                if (course._id === data.newUpdatedDoc._id) {
+                    console.log('Found the modefied doc in realtime');
+                    updateLoadedCourse(data.newUpdatedDoc);
+                }
+            });
+        }
+    });
 
     const filterContainer = createRef();
     const filterResults = createRef();
@@ -415,6 +436,8 @@ function CourseResults(props) {
                             averageRating,
                             ratings,
                             cost,
+                            currentStudentsCount,
+                            maxStudentsAllowed,
                         } = course;
                         return (
                             <CourseResult
@@ -428,6 +451,8 @@ function CourseResults(props) {
                                 ratingCount={ratings}
                                 price={cost}
                                 keyPointsList={contentList}
+                                currentStudentsCount={currentStudentsCount}
+                                maxStudentsAllowed={maxStudentsAllowed}
                             />
                         );
                     })
@@ -478,6 +503,7 @@ const mapStateToProps = (store) => {
     };
 };
 
-export default connect(mapStateToProps, { getTaggedCourses })(
-    withRouter(CourseResults)
-);
+export default connect(mapStateToProps, {
+    getTaggedCourses,
+    updateLoadedCourse,
+})(withRouter(CourseResults));

@@ -1,11 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import Pusher from 'pusher-js';
 // api calls
 import { getReviews } from '../../api';
 // actions
 import { getCourse, addToCart } from '../../actions';
+// config values
+import { pusherApiKey, pusherCluster } from '../../config/config';
 
 function Course(props) {
     const { loading, course, getCourse, addToCart, cartItems } = props;
@@ -13,6 +15,7 @@ function Course(props) {
         match: {
             params: { courseId },
         },
+        history,
     } = props;
 
     const [reviews, setreviews] = useState([]);
@@ -20,6 +23,21 @@ function Course(props) {
     const [currentPage, setcurrentPage] = useState(1);
     const [starPercents, setstarPercents] = useState({});
     const [filterQuery, setfilterQuery] = useState(null);
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('courses');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed');
+        if (course) {
+            if (course._id === data.newUpdatedDoc._id) {
+                console.log('Found the modefied doc in realtime');
+                getCourse(courseId);
+            }
+        }
+    });
 
     console.log(courseId, currentPage, starPercents);
 
@@ -136,6 +154,10 @@ function Course(props) {
             ['title', course.title],
             ['price', course.cost],
             ['description', course.description],
+            ['startDate', course.startDate],
+            ['endDate', course.endDate],
+            ['currentStudentsCount', course.currentStudentsCount],
+            ['maxStudentsAllowed', course.maxStudentsAllowed],
         ]);
         const cartItem = Object.fromEntries(entries);
         console.log(cartItem);
@@ -151,32 +173,51 @@ function Course(props) {
                 </Link>
             );
         } else {
-            return (
-                <button
-                    className="btn btn-tertiary btn-md"
-                    onClick={handleAddToCart}
-                >
-                    Add to cart
-                </button>
-            );
+            if (course.currentStudentsCount < course.maxStudentsAllowed) {
+                return (
+                    <button
+                        className="btn btn-tertiary btn-md"
+                        onClick={handleAddToCart}
+                    >
+                        Add to cart
+                    </button>
+                );
+            } else {
+                return (
+                    <button className="btn btn-tertiary btn-md" disabled>
+                        Add to cart
+                    </button>
+                );
+            }
         }
     };
 
-    const handleBuyNow = () => {};
+    const handleBuyNow = () => {
+        handleAddToCart();
+        history.push('/cart');
+    };
 
     const renderBuyNow = () => {
         const inCart = cartItems.some((item) => item.id === course._id);
         if (inCart) {
             return null;
         } else {
-            return (
-                <button
-                    className="btn btn-secondary btn-md"
-                    onClick={handleBuyNow}
-                >
-                    Buy now
-                </button>
-            );
+            if (course.currentStudentsCount < course.maxStudentsAllowed) {
+                return (
+                    <button
+                        className="btn btn-secondary btn-md"
+                        onClick={handleBuyNow}
+                    >
+                        Buy now
+                    </button>
+                );
+            } else {
+                return (
+                    <button className="btn btn-secondary btn-md" disabled>
+                        Buy now
+                    </button>
+                );
+            }
         }
     };
 
@@ -208,6 +249,19 @@ function Course(props) {
                         </h4>
                         {renderAddToCart()}
                         {renderBuyNow()}
+                        {course.currentStudentsCount <
+                        course.maxStudentsAllowed ? null : (
+                            <span
+                                className="center"
+                                style={{
+                                    color: 'red',
+                                    marginTop: '1rem',
+                                    padding: '0 1.5rem',
+                                }}
+                            >
+                                Already maximum students have enrolled
+                            </span>
+                        )}
                     </div>
                 </div>
 
@@ -464,4 +518,6 @@ const mapStateToProps = (store) => {
     };
 };
 
-export default connect(mapStateToProps, { getCourse, addToCart })(Course);
+export default connect(mapStateToProps, { getCourse, addToCart })(
+    withRouter(Course)
+);

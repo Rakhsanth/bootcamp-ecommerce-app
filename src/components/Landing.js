@@ -3,11 +3,18 @@ import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroller';
+import Pusher from 'pusher-js';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
 // actions imports
-import { getTaggedBootcamps, getTaggedCourses, resetLoading } from '../actions';
+import {
+    getTaggedBootcamps,
+    getTaggedCourses,
+    resetLoading,
+    updateLoadedCourse,
+} from '../actions';
+// Config values
+import { pusherApiKey, pusherCluster } from '../config/config';
 
 const defaultTab = 'design';
 
@@ -28,7 +35,7 @@ function Landing(props) {
     const { history } = props;
 
     // action creators
-    const { getTaggedBootcamps, getTaggedCourses } = props;
+    const { getTaggedBootcamps, getTaggedCourses, updateLoadedCourse } = props;
 
     const [activeCourseTab, setactiveCourseTab] = useState(defaultTab);
     const [activeBootcampTab, setactiveBootcampTab] = useState(defaultTab);
@@ -41,6 +48,23 @@ function Landing(props) {
         end: 0,
     });
     const [scrollNextPage, setscrollNextPage] = useState(null);
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('courses');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed');
+        if (taggedCourses.length !== 0) {
+            taggedCourses.forEach((course, index) => {
+                if (course._id === data.newUpdatedDoc._id) {
+                    console.log('Found the modefied doc in realtime');
+                    updateLoadedCourse(data.newUpdatedDoc);
+                }
+            });
+        }
+    });
 
     const courseDesignTab = useRef();
     const courseDevelopmentTab = useRef();
@@ -389,6 +413,10 @@ function Landing(props) {
                         price={course.cost}
                         rating={course.averageRating}
                         userCount={course.ratings}
+                        currentStudentsCount={course.currentStudentsCount}
+                        maxStudentsAllowed={course.maxStudentsAllowed}
+                        startDate={course.startDate}
+                        endDate={course.endDate}
                     />
                 ));
             }
@@ -414,6 +442,10 @@ function Landing(props) {
                             averageRating,
                             ratings,
                             cost,
+                            currentStudentsCount,
+                            maxStudentsAllowed,
+                            startDate,
+                            endDate,
                         } = course;
                         cardList.push(
                             <CourseCard
@@ -427,6 +459,10 @@ function Landing(props) {
                                 price={cost}
                                 rating={averageRating}
                                 userCount={ratings}
+                                currentStudentsCount={currentStudentsCount}
+                                maxStudentsAllowed={maxStudentsAllowed}
+                                startDate={startDate}
+                                endDate={endDate}
                             />
                         );
                     }
@@ -455,6 +491,10 @@ function Landing(props) {
                             averageRating,
                             ratings,
                             cost,
+                            currentStudentsCount,
+                            maxStudentsAllowed,
+                            startDate,
+                            endDate,
                         } = course;
                         cardList.push(
                             <CourseCard
@@ -468,6 +508,10 @@ function Landing(props) {
                                 price={cost}
                                 rating={averageRating}
                                 userCount={ratings}
+                                currentStudentsCount={currentStudentsCount}
+                                maxStudentsAllowed={maxStudentsAllowed}
+                                startDate={startDate}
+                                endDate={endDate}
                             />
                         );
                     }
@@ -496,6 +540,10 @@ function Landing(props) {
                             averageRating,
                             ratings,
                             cost,
+                            currentStudentsCount,
+                            maxStudentsAllowed,
+                            startDate,
+                            endDate,
                         } = course;
                         cardList.push(
                             <CourseCard
@@ -509,6 +557,10 @@ function Landing(props) {
                                 price={cost}
                                 rating={averageRating}
                                 userCount={ratings}
+                                currentStudentsCount={currentStudentsCount}
+                                maxStudentsAllowed={maxStudentsAllowed}
+                                startDate={startDate}
+                                endDate={endDate}
                             />
                         );
                     }
@@ -762,4 +814,5 @@ export default connect(mapStateToProps, {
     getTaggedBootcamps,
     getTaggedCourses,
     resetLoading,
+    updateLoadedCourse,
 })(withRouter(Landing));

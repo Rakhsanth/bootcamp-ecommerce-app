@@ -47,6 +47,7 @@ body {
 
 a {
     text-decoration: none;
+    color: inherit;
 }
 a:hover {
     color: inherit;
@@ -803,6 +804,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    cursor: default;
 }
 .categories-card-details-description {
     font-size: 1.3rem;
@@ -3043,12 +3045,13 @@ a:hover {
     flex-direction: column;
 }
 .cart-items-container .cart-items-card {
-    height: 10rem;
+    height: 15rem;
     display: flex;
     margin: 1rem 0;
 }
 .cart-items-container .cart-items-card-img {
     width: 20rem;
+    cursor: pointer;
 }
 .cart-items-container .cart-items-card-text {
     margin-left: 1rem;

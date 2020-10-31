@@ -170,7 +170,7 @@ function Header(props) {
                 >
                     <use xlinkHref="img/sprite.svg#icon-menu"></use>
                 </svg>
-                <div className="top-header-logo"></div>
+                <Link to="/" className="top-header-logo"></Link>
                 <Link to="/cart" className="small-header-cart">
                     <svg className="small-header-cart-icon">
                         <use xlinkHref="img/sprite.svg#icon-cart"></use>

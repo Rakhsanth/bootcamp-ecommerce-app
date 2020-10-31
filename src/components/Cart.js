@@ -1,15 +1,42 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import Pusher from 'pusher-js';
 // custom
 import { apiBaseURL, razorpayAPIKeyId } from '../config/config';
 // actions
-import { addToCart, removeFromCart } from '../actions';
+import { updateCartItem, removeFromCart } from '../actions';
+// config values
+import { pusherApiKey, pusherCluster } from '../config/config';
 
 function Cart(props) {
-    const { loading, cartItems, addToCart, removeFromCart } = props;
+    const { loading, cartItems, updateCartItem, removeFromCart } = props;
     const { history } = props;
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('courses');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed');
+        if (cartItems.length !== 0) {
+            cartItems.forEach((item, index) => {
+                if (item.id === data.newUpdatedDoc._id) {
+                    console.log('Found the modified doc in realtime');
+                    const updatedItem = {
+                        ...item,
+                        currentStudentsCount:
+                            data.newUpdatedDoc.currentStudentsCount,
+                        maxStudentsAllowed:
+                            data.newUpdatedDoc.maxStudentsAllowed,
+                    };
+                    updateCartItem(updatedItem);
+                }
+            });
+        }
+    });
 
     const getTotalPrice = () => {
         let totalPrice = 0;
@@ -21,6 +48,50 @@ function Cart(props) {
 
     const handleRemoveItem = (id) => {
         removeFromCart(id);
+    };
+
+    const isFilledCoursesPresent = () => {
+        return cartItems.some(
+            (item) => item.currentStudentsCount >= item.maxStudentsAllowed
+        );
+    };
+    const checkDateConflicts = () => {
+        const startDates = cartItems.map((item) => item.startDate);
+        const endDates = cartItems.map((item) => item.endDate);
+
+        if (startDates.length === 0 || endDates.length === 0) {
+            return false;
+        }
+        const lookUp = [];
+        startDates.forEach((startDate, index) => {
+            const pair = [];
+            pair.push(startDate, endDates[index]);
+            lookUp.push(pair);
+        });
+        console.log(lookUp);
+        return startDates.every((startDate, outerIndex) => {
+            // every behaves as break when returned false
+            return lookUp.every(([start, end], innerIndex) => {
+                console.log('evaluating inside shit');
+                if (outerIndex !== innerIndex) {
+                    console.log('evaluating inside');
+                    const dateToCheck = new Date(startDate);
+                    const strtDate = new Date(start);
+                    const endDate = new Date(end);
+                    if (dateToCheck >= strtDate && dateToCheck <= endDate) {
+                        console.log('Confliting');
+                        // every behaves as break when returned false
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            });
+        });
+        // console.log(isConflicting);
+        // return isConflicting;
     };
 
     const handleCheckout = async () => {
@@ -117,6 +188,11 @@ function Cart(props) {
                                         src={cartItem.image}
                                         alt="mockdemy-cart-item"
                                         className="cart-items-card-img"
+                                        onClick={() =>
+                                            history.push(
+                                                `/courses/${cartItem.id}`
+                                            )
+                                        }
                                     />
                                     <div className="cart-items-card-text">
                                         <h5 className="cart-items-card-text-title">
@@ -153,9 +229,37 @@ function Cart(props) {
                     <button
                         className="btn btn-lg btn-tertiary"
                         onClick={handleCheckout}
+                        disabled={
+                            !(checkDateConflicts() && !isFilledCoursesPresent())
+                        }
                     >
                         Checkout
                     </button>
+                    {!checkDateConflicts() ? (
+                        <span
+                            className="center"
+                            style={{
+                                display: 'inline-block',
+                                color: 'red',
+                                marginTop: '1rem',
+                            }}
+                        >
+                            Some courses in cart have conflicting course period
+                            !
+                        </span>
+                    ) : null}
+                    {isFilledCoursesPresent() ? (
+                        <span
+                            className="center"
+                            style={{
+                                display: 'inline-block',
+                                color: 'red',
+                                marginTop: '1rem',
+                            }}
+                        >
+                            Already maximum students have enrolled
+                        </span>
+                    ) : null}
                 </div>
             ) : null}
         </div>
@@ -169,6 +273,6 @@ const mapStateToProps = (store) => ({
     cartItems: store.cart.cartItems,
 });
 
-export default connect(mapStateToProps, { addToCart, removeFromCart })(
+export default connect(mapStateToProps, { updateCartItem, removeFromCart })(
     withRouter(Cart)
 );
