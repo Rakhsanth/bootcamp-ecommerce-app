@@ -87,6 +87,20 @@ export const createEditBootcamp = async (formValues, createOrEdit, history) => {
     }
 };
 
+export const updateCourse = async (courseId, data) => {
+    let postURL = `${apiBaseURL}/courses/${courseId}`;
+    try {
+        const response = await axios.put(
+            postURL,
+            data,
+            getPostConfig('application/json', true, true)
+        );
+        console.log(response.data.data);
+    } catch (err) {
+        console.log(err.response);
+    }
+};
+
 export const getReviews = async (courseId, pageNum, percents, query) => {
     let getURL = `${apiBaseURL}/courses/${courseId}/reviews?sort=-createdAt`;
     if (pageNum) {

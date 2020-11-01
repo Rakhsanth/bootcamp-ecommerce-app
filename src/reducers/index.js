@@ -19,6 +19,7 @@ import {
     GET_COURSE_ERROR,
     ADD_TO_CART,
     REMOVE_FROM_CART,
+    CLEAR_CART,
     CART_ERROR,
     GET_PUBLISHER_NOTIFICATION,
     ADD_PUBLISHER_NOTIFICATION,
@@ -291,6 +292,11 @@ const cartReducer = (state = initialCartState, action) => {
                     (cartItem) => cartItem.id !== payload
                 ),
                 error: false,
+            };
+        case CLEAR_CART:
+            return {
+                ...state,
+                cartItems: payload,
             };
         case CART_ERROR:
             return {

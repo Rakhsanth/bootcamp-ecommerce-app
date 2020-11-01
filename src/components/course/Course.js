@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
+import ReactPlayer from 'react-player/lazy';
 // api calls
 import { getReviews } from '../../api';
 // actions
@@ -242,7 +243,25 @@ function Course(props) {
                 </div>
 
                 <div className="course-payment">
-                    <div className="course-video"></div>
+                    <div className="course-video">
+                        {course.video !== 'no-video' ? (
+                            <ReactPlayer
+                                width="100%"
+                                height="100%"
+                                url={course.video}
+                                controls
+                            />
+                        ) : (
+                            <h2
+                                style={{
+                                    margin: '0 auto',
+                                    marginTop: '50%',
+                                }}
+                            >
+                                No intro video from the course owner
+                            </h2>
+                        )}
+                    </div>
                     <div className="course-payment-details">
                         <h4 className="course-payment-price">
                             &#8377; {course.cost}

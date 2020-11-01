@@ -22,6 +22,7 @@ import {
     GET_COURSE_ERROR,
     ADD_TO_CART,
     REMOVE_FROM_CART,
+    CLEAR_CART,
     CART_ERROR,
     GET_PUBLISHER_NOTIFICATION,
     ADD_PUBLISHER_NOTIFICATION,
@@ -359,6 +360,13 @@ export const removeFromCart = (cartItemId) => {
     return {
         type: REMOVE_FROM_CART,
         payload: cartItemId,
+    };
+};
+// Clear cart action (not async action as it is just payload sending and not API related)
+export const clearCart = () => {
+    return {
+        type: CLEAR_CART,
+        payload: [],
     };
 };
 

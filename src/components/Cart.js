@@ -6,12 +6,20 @@ import Pusher from 'pusher-js';
 // custom
 import { apiBaseURL, razorpayAPIKeyId } from '../config/config';
 // actions
-import { updateCartItem, removeFromCart } from '../actions';
+import { updateCartItem, removeFromCart, clearCart } from '../actions';
+// API calls
+import { updateCourse } from '../api';
 // config values
 import { pusherApiKey, pusherCluster } from '../config/config';
 
 function Cart(props) {
-    const { loading, cartItems, updateCartItem, removeFromCart } = props;
+    const {
+        loading,
+        cartItems,
+        updateCartItem,
+        removeFromCart,
+        clearCart,
+    } = props;
     const { history } = props;
 
     // Pusher related stuff for realtime DB related updations
@@ -72,14 +80,11 @@ function Cart(props) {
         return startDates.every((startDate, outerIndex) => {
             // every behaves as break when returned false
             return lookUp.every(([start, end], innerIndex) => {
-                console.log('evaluating inside shit');
                 if (outerIndex !== innerIndex) {
-                    console.log('evaluating inside');
                     const dateToCheck = new Date(startDate);
                     const strtDate = new Date(start);
                     const endDate = new Date(end);
                     if (dateToCheck >= strtDate && dateToCheck <= endDate) {
-                        console.log('Confliting');
                         // every behaves as break when returned false
                         return false;
                     } else {
@@ -90,8 +95,16 @@ function Cart(props) {
                 }
             });
         });
-        // console.log(isConflicting);
-        // return isConflicting;
+    };
+
+    const updateCourseEnrollmentCount = () => {
+        cartItems.forEach(async (item) => {
+            const dataToUpdate = {
+                currentStudentsCount: item.currentStudentsCount + 1,
+            };
+            await updateCourse(item.id, dataToUpdate);
+        });
+        clearCart();
     };
 
     const handleCheckout = async () => {
@@ -144,18 +157,21 @@ function Cart(props) {
                     withCredentials: true,
                 };
                 const confirmedResponse = await axios.post(
-                    `${apiBaseURL}/confirm`,
+                    `${apiBaseURL}/payment/confirm`,
                     body,
                     axiosConfig
                 );
-                // console.log(confirmedResponse.data);
+                console.log(confirmedResponse.data);
                 if (confirmedResponse.data.success) {
-                    props.setAlert(
-                        confirmedResponse.data.data.message,
-                        'success'
-                    );
+                    // props.setAlert(
+                    //     confirmedResponse.data.data.message,
+                    //     'success'
+                    // );
+                    console.log('Payment succeeded');
+                    await updateCourseEnrollmentCount();
                 } else {
-                    props.setAlert(confirmedResponse.data.data, 'danger');
+                    // props.setAlert(confirmedResponse.data.data, 'danger');
+                    console.log('user or bank workflow rejected');
                 }
                 history.replace('/');
             },
@@ -273,6 +289,8 @@ const mapStateToProps = (store) => ({
     cartItems: store.cart.cartItems,
 });
 
-export default connect(mapStateToProps, { updateCartItem, removeFromCart })(
-    withRouter(Cart)
-);
+export default connect(mapStateToProps, {
+    updateCartItem,
+    removeFromCart,
+    clearCart,
+})(withRouter(Cart));
