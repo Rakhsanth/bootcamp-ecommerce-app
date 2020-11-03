@@ -31,8 +31,12 @@ const getPostConfig = (contentType, withCreds, authNeeded) => {
     return postConfig;
 };
 
-export const createEditBootcamp = async (formValues, createOrEdit, history) => {
-    const postURL = `${apiBaseURL}/bootcamps`;
+export const createEditBootcamp = async (
+    formValues,
+    createOrEdit,
+    bootcampId
+) => {
+    let postURL = `${apiBaseURL}/bootcamps`;
     const config = getPostConfig('application/json', true, true);
 
     const { image, ...restData } = formValues;
@@ -50,6 +54,7 @@ export const createEditBootcamp = async (formValues, createOrEdit, history) => {
                 );
                 break;
             case 'edit':
+                postURL += `/${bootcampId}`;
                 bootcampResponse = await axios.put(
                     postURL,
                     { ...restData },
@@ -84,6 +89,18 @@ export const createEditBootcamp = async (formValues, createOrEdit, history) => {
         ) {
             console.log('please endter a valid pincode / zipcode');
         }
+    }
+};
+
+export const deleteBootcamp = async (bootcampId) => {
+    const deleteURL = `${apiBaseURL}/bootcamps/${bootcampId}`;
+    try {
+        const response = axios.delete(
+            deleteURL,
+            getPostConfig('application/json', true, true)
+        );
+    } catch (err) {
+        console.log(err.response);
     }
 };
 

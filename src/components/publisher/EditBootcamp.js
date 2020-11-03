@@ -10,7 +10,12 @@ import { resetLoading, getBootcamp } from '../../actions';
 import { validateImageFileSize } from '../utils/utilFunctions';
 
 function EditBootcamp(props) {
-    const { resetLoading, bootcampId } = props;
+    const {
+        resetLoading,
+        bootcampId,
+        renderThisBootcamp,
+        causeReRender,
+    } = props;
     const { loading, bootcamp, getBootcamp } = props;
 
     useEffect(() => {
@@ -78,8 +83,10 @@ function EditBootcamp(props) {
     });
 
     const onSubmit = (values, submitProps) => {
-        createEditBootcamp(values, 'edit');
+        createEditBootcamp(values, 'edit', bootcampId);
         resetLoading('taggedBootcamps');
+        causeReRender();
+        renderThisBootcamp(false);
     };
 
     // Tab refs

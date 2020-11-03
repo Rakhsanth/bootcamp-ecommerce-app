@@ -14,7 +14,7 @@ import { validateImageFileSize } from '../utils/utilFunctions';
 import { resetLoading } from '../../actions';
 
 function BootcampForm(props) {
-    const { history, removeForm, resetLoading } = props;
+    const { history, removeForm, resetLoading, causeReRender } = props;
 
     let img = 'no-photo.jpg';
 
@@ -107,7 +107,8 @@ function BootcampForm(props) {
     });
 
     const onSubmit = (values, submitProps) => {
-        createEditBootcamp(values, 'create', history);
+        createEditBootcamp(values, 'create');
+        causeReRender();
         removeForm();
         resetLoading('taggedBootcamps');
     };

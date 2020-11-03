@@ -16,6 +16,7 @@ function Bootcamps(props) {
     const [displayBootcampList, setdisplayBootcampList] = useState(true);
     const [editBootcampId, seteditBootcampId] = useState(null);
     const [query, setquery] = useState(`user=${userId}`);
+    const [reRender, setreRender] = useState(false);
 
     useEffect(() => {
         getTaggedBootcamps(
@@ -30,20 +31,47 @@ function Bootcamps(props) {
             query,
             null
         );
-    }, [getTaggedBootcamps, loading]);
+    }, [getTaggedBootcamps, loading, reRender]);
 
     const removeForm = () => {
         setdisplayBootcampForm(false);
     };
 
     const renderThisBootcamp = (bootcampId) => {
-        setdisplayBootcampList(false);
-        seteditBootcampId(bootcampId);
+        if (bootcampId) {
+            setdisplayBootcampList(false);
+            seteditBootcampId(bootcampId);
+        } else {
+            console.log('render the list thing');
+            setdisplayBootcampList(true);
+            seteditBootcampId(bootcampId);
+        }
+    };
+
+    const causeReRender = () => {
+        console.log('causing re-render');
+        getTaggedBootcamps(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            query,
+            null
+        );
     };
 
     const renderBootcampsOrForm = () => {
         if (displayBootcampForm) {
-            return <BootcampForm removeForm={removeForm} />;
+            return (
+                <BootcampForm
+                    removeForm={removeForm}
+                    causeReRender={causeReRender}
+                />
+            );
         } else {
             if (displayBootcampList) {
                 return !loading ? (
@@ -52,7 +80,7 @@ function Bootcamps(props) {
                             <Fragment>
                                 {bootcamps.map((bootcamp, index) => (
                                     <BootcampCard
-                                        key={bootcamp._id}
+                                        key={index}
                                         id={bootcamp._id}
                                         image={bootcamp.photo}
                                         name={bootcamp.name}
@@ -63,6 +91,7 @@ function Bootcamps(props) {
                                                 : null
                                         }
                                         renderThisBootcamp={renderThisBootcamp}
+                                        causeReRender={causeReRender}
                                     />
                                 ))}
                             </Fragment>
@@ -75,7 +104,13 @@ function Bootcamps(props) {
                 );
             } else {
                 if (editBootcampId) {
-                    return <EditBootcamp bootcampId={editBootcampId} />;
+                    return (
+                        <EditBootcamp
+                            bootcampId={editBootcampId}
+                            causeReRender={causeReRender}
+                            renderThisBootcamp={renderThisBootcamp}
+                        />
+                    );
                 }
             }
         }
