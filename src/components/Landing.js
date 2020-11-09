@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
+import MapView from './mapView/MapView';
 // actions imports
 import {
     getTaggedBootcamps,
@@ -723,6 +724,9 @@ function Landing(props) {
                     isTabletLandscape,
                     isDesktopOrLaptop
                 )} */}
+            </div>
+            <div className="map-view">
+                <MapView />
             </div>
             <div className="top-catagories-container">
                 <h3 className="h3-heading top-catagories-heading">
