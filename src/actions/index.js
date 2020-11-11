@@ -29,6 +29,8 @@ import {
     PUBLISHER_NOTIFICATION_ERROR,
     UPDATE_LOADED_COURSE,
     UPDATE_LOADED_CART_ITEM,
+    GET_MAP_BOOTCAMPS,
+    MAP_BOOTCAMPS_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -205,6 +207,43 @@ export const getTaggedBootcamps = (
                 console.log(err.response.data);
             }
             dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response.data });
+        }
+    };
+};
+
+// Async action to get bootcamps for map view
+export const getMapBootcamps = (filter, state, zipcode, radialDistance) => {
+    return async function (dispatch) {
+        try {
+            let response;
+            if (filter === 'all') {
+                response = await axios.get(
+                    `${apiBaseURL}/bootcamps?populate=false&limit=all`
+                );
+            }
+            if (filter === 'state') {
+                response = await axios.get(
+                    `${apiBaseURL}/bootcamps?populate=false&state=${state}&limit=all`
+                );
+            }
+            if (filter === 'near') {
+                response = await axios.get(
+                    `${apiBaseURL}/bootcamps/radius/${zipcode}/${radialDistance}`
+                );
+            }
+            const bootcamps = response.data.data;
+            const bootcampsData = bootcamps.map((bootcamp, index) => {
+                return {
+                    name: bootcamp.name,
+                    longitude: bootcamp.location.coordinates[0],
+                    latitude: bootcamp.location.coordinates[1],
+                    address: bootcamp.address,
+                    rating: bootcamp.averageRating,
+                };
+            });
+            dispatch({ type: GET_MAP_BOOTCAMPS, payload: bootcampsData });
+        } catch (err) {
+            console.log(err);
         }
     };
 };

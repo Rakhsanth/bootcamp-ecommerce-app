@@ -521,6 +521,9 @@ function EditBootcamp(props) {
                                                                             name={`offerings[${index}]`}
                                                                             class="pubProfile-form-control-input"
                                                                             placeholder="Cool place to learn with cool guiders, fee incudes food!"
+                                                                            value={
+                                                                                offering
+                                                                            }
                                                                         />
                                                                         {offerings.length >
                                                                         2 ? (

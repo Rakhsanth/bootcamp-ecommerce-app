@@ -26,6 +26,8 @@ import {
     PUBLISHER_NOTIFICATION_ERROR,
     UPDATE_LOADED_COURSE,
     UPDATE_LOADED_CART_ITEM,
+    GET_MAP_BOOTCAMPS,
+    MAP_BOOTCAMPS_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -111,6 +113,38 @@ const taggedBootcampsReducer = (
                 error: true,
                 bootcamps: [],
                 totalCount: payload.count,
+            };
+        default:
+            return state;
+    }
+};
+
+// reducer to get bootcamps for map view
+const initialMapBootcampsState = {
+    loading: true,
+    bootcamps: [],
+    error: false,
+};
+const mapBootcampsReducer = (state = initialMapBootcampsState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case RESET_LOADING:
+            if (payload === 'mapBootcamps') {
+                return { ...state, loading: true, bootcamps: [] };
+            } else {
+                return state;
+            }
+        case GET_MAP_BOOTCAMPS:
+            return {
+                loading: false,
+                bootcamps: payload,
+                error: false,
+            };
+        case MAP_BOOTCAMPS_ERROR:
+            return {
+                loading: false,
+                bootcamps: [],
+                error: true,
             };
         default:
             return state;
@@ -324,6 +358,7 @@ const publisherNotificationReducer = (state, action) => {
 export default combineReducers({
     auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
+    mapBootcamps: mapBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
     bootcamp: bootcampReducer,
     course: courseReducer,
