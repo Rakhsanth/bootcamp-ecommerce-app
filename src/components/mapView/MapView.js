@@ -40,6 +40,12 @@ function MapView(props) {
         { key: 'show-state', value: 'state', text: 'Bootamps in my state' },
         { key: 'show-near', value: 'near', text: 'Bootcamps near me' },
     ];
+    const selectInputs = [
+        { key: '10KMs', value: '10', text: '10KMs' },
+        { key: '20KMs', value: '20', text: '20KMs' },
+        { key: '30KMs', value: '30', text: '30KMs' },
+        { key: '600KMs', value: '600', text: '600KMs' },
+    ];
 
     const isMobile = useMediaQuery({ query: '(max-width: 37.5em)' });
     const isTabletPortrait = useMediaQuery({ query: '(max-width: 56.25em)' });
@@ -100,7 +106,7 @@ function MapView(props) {
             .attr('fill', cssColors.primaryBtnColor);
 
         let markers;
-        const markerWidthHeight = 20;
+        const markerWidthHeight = 30;
         // This is to populate D3s current data dynamically for global use
         let currentData;
         // This is to render tooltip inside this div dynamically
@@ -111,8 +117,8 @@ function MapView(props) {
                 .selectAll('image')
                 .data(bootcamps)
                 .enter()
-                .append('image')
-                .attr('xlink:href', 'img/map_marker_icon.png')
+                .append('use')
+                .attr('xlink:href', 'img/sprite.svg#icon-map-marker')
                 .attr('x', function (data) {
                     currentData = data;
                     return mapProjection([data.longitude, data.latitude])[0];
@@ -126,9 +132,9 @@ function MapView(props) {
                 .attr('class', 'map-marker')
                 .attr(
                     'transform',
-                    `translate(-${markerWidthHeight / 2}, -${
+                    `translate(-${
                         markerWidthHeight / 2
-                    })`
+                    }, -${markerWidthHeight})`
                 );
         }
     }, [
@@ -143,9 +149,21 @@ function MapView(props) {
         getMapBootcamps('all');
     }, [getMapBootcamps]);
 
+    useEffect(() => {
+        const selectionBox = document.querySelector('.ui.selection.dropdown');
+        console.log(selectionBox);
+        console.log(renderDistanceDropdown);
+        if (renderDistanceDropdown) {
+            selectionBox.style = 'display:block;';
+        } else {
+            selectionBox.style = 'display:none;';
+        }
+        console.log(selectionBox);
+    });
+
     const initialValues = {
         filter: radioInputs[0].value,
-        radialDistance: '',
+        radialDistance: selectInputs[0].value,
     };
 
     const validationSchema = Yup.object({
@@ -165,7 +183,12 @@ function MapView(props) {
         }
         if (values.filter === 'near') {
             resetLoading('mapBootcamps');
-            getMapBootcamps(values.filter, 'Tamil Nadu', 600056, 10);
+            getMapBootcamps(
+                values.filter,
+                'Tamil Nadu',
+                600056,
+                values.radialDistance
+            );
         }
     };
 
@@ -181,16 +204,18 @@ function MapView(props) {
                     console.log(formik);
                     if (formik.values.filter === radioInputs[2].value) {
                         console.log('display');
-                        if (dropDownRef.current !== null) {
-                            dropDownRef.current.parentElement.style =
-                                'display:block;';
-                        }
+                        setrenderDistanceDropdown(true);
+                        // if (dropDownRef.current !== null) {
+                        //     dropDownRef.current.parentElement.style =
+                        //         'display:block;';
+                        // }
                     } else {
                         console.log('do not display');
-                        if (dropDownRef.current !== null) {
-                            dropDownRef.current.parentElement.style =
-                                'display:none;';
-                        }
+                        setrenderDistanceDropdown(false);
+                        // if (dropDownRef.current !== null) {
+                        //     dropDownRef.current.parentElement.style =
+                        //         'display:none;';
+                        // }
                     }
                     return (
                         <Form class="map-view-form">
@@ -212,28 +237,20 @@ function MapView(props) {
                                     </label>
                                 </div>
                             ))}
-                            <select
-                                ref={dropDownRef}
+                            <Field
+                                as="select"
+                                name="radialDistance"
                                 class="ui compact selection dropdown map-select"
                             >
-                                <i class="dropdown icon map-select-icon"></i>
-                                <div class="menu">
-                                    <div class="item">
-                                        <option value="">
-                                            Radial Distance
+                                {selectInputs.map(
+                                    ({ key, value, text }, index) => (
+                                        <option key={key} value={value}>
+                                            {text}
                                         </option>
-                                    </div>
-                                    <div class="item">
-                                        <option value="10">10 KMs</option>
-                                    </div>
-                                    <div class="item">
-                                        <option value="20">20 KMs</option>
-                                    </div>
-                                    <div class="item">
-                                        <option value="30">30 KMs</option>
-                                    </div>
-                                </div>
-                            </select>
+                                    )
+                                )}
+                                <i class="dropdown icon map-select-icon"></i>
+                            </Field>
                         </Form>
                     );
                 }}
