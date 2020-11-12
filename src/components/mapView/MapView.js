@@ -26,10 +26,11 @@ function MapView(props) {
         getMapBootcamps,
         bootcamps,
         causeReRender,
+        history,
     } = props;
 
     const [renderDistanceDropdown, setrenderDistanceDropdown] = useState(false);
-    const [currentMapType, setcurrentMapType] = useState('all');
+    // const [currentMapType, setcurrentMapType] = useState('all');
 
     const dropDownRef = createRef();
 
@@ -80,6 +81,36 @@ function MapView(props) {
         mapHeight = 400;
     }
 
+    const generateStars = (stars) => {
+        const wholeStars = Math.floor(stars);
+        console.log(wholeStars);
+        let starSvgs = '';
+        for (let star = 1; star <= wholeStars; star++) {
+            starSvgs = starSvgs.concat(`<svg
+            class="course-feedback-top-rating-stars-star"
+        >
+            <use xlink:href="img/sprite.svg#icon-star-full"></use>
+        </svg>`);
+        }
+        if (wholeStars < stars) {
+            starSvgs = starSvgs.concat(`<svg
+            class="course-feedback-top-rating-stars-star"
+        >
+            <use xlink:href="img/sprite.svg#icon-star-half"></use>
+        </svg>`);
+        }
+        if (Math.ceil(stars) < 5) {
+            for (let index = Math.ceil(stars) + 1; index <= 5; index++) {
+                starSvgs = starSvgs.concat(`<svg
+                class="course-feedback-top-rating-stars-star"
+            >
+                <use xlink:href="img/sprite.svg#icon-star-empty"></use>
+            </svg>`);
+            }
+        }
+        console.log(starSvgs);
+        return starSvgs;
+    };
     let mapSvg;
     useEffect(() => {
         console.log(mapWidth, mapHeight);
@@ -107,10 +138,6 @@ function MapView(props) {
 
         let markers;
         const markerWidthHeight = 30;
-        // This is to populate D3s current data dynamically for global use
-        let currentData;
-        // This is to render tooltip inside this div dynamically
-        d3.select('body').append('div').attr('class', 'marker-tool-tip');
         if (bootcamps.length > 0) {
             markers = mapSvg
                 .select('g')
@@ -120,7 +147,6 @@ function MapView(props) {
                 .append('use')
                 .attr('xlink:href', 'img/sprite.svg#icon-map-marker')
                 .attr('x', function (data) {
-                    currentData = data;
                     return mapProjection([data.longitude, data.latitude])[0];
                 })
                 .attr('y', function (data) {
@@ -129,13 +155,73 @@ function MapView(props) {
                 .attr('width', markerWidthHeight)
                 .attr('height', markerWidthHeight)
                 .attr('fill', cssColors.tertiaryColor)
-                .attr('class', 'map-marker')
                 .attr(
                     'transform',
                     `translate(-${
                         markerWidthHeight / 2
                     }, -${markerWidthHeight})`
-                );
+                )
+                .style('cursor', 'pointer')
+                .on('mouseover', function (event, d) {
+                    console.log(this);
+                    d3.select('.top-level-toop-tip').remove();
+                    d3.select(this)
+                        .attr('width', `${markerWidthHeight * 1.25}`)
+                        .attr('height', `${markerWidthHeight * 1.25}`)
+                        .attr(
+                            'transform',
+                            `translate(-${(markerWidthHeight * 1.25) / 2},-${
+                                markerWidthHeight * 1.25
+                            })`
+                        )
+                        .transition()
+                        .duration(500);
+                    d3.select('body')
+                        .append('div')
+                        .attr('class', 'top-level-toop-tip')
+                        .html(
+                            `<h3 class="tool-tip-head">${
+                                d.name
+                            }</h3><p class="tool-tip-desc">${
+                                d.address
+                            }</p><div class="course-feedback-top-rating-stars">${generateStars(
+                                d.rating ? d.rating : 0
+                            )}<p class="tool-tip-text">${
+                                d.rating ? d.rating : 'No ratings yet !!!'
+                            }</p></div>`
+                        )
+                        .attr(
+                            'style',
+                            `top: ${event.pageY - 150}px; left: ${
+                                event.pageX - 100
+                            }px; opacity: 1; pointer-events: default;`
+                        );
+                })
+                .on('click', function (event, d) {
+                    history.push(`/bootcamps/${d.id}`);
+                    d3.select('.top-level-toop-tip').attr(
+                        'style',
+                        `opacity: 0; pointer-events: none;`
+                    );
+                })
+                .on('mouseout', function (event) {
+                    console.log(this);
+                    d3.select('.top-level-toop-tip').attr(
+                        'style',
+                        `opacity: 0; pointer-events: none;`
+                    );
+                    d3.select(this)
+                        .attr('width', `${markerWidthHeight}`)
+                        .attr('height', `${markerWidthHeight}`)
+                        .attr(
+                            'transform',
+                            `translate(-${
+                                markerWidthHeight / 2
+                            },-${markerWidthHeight})`
+                        )
+                        .transition()
+                        .duration(500);
+                });
         }
     }, [
         isMobile,
@@ -154,9 +240,9 @@ function MapView(props) {
         console.log(selectionBox);
         console.log(renderDistanceDropdown);
         if (renderDistanceDropdown) {
-            selectionBox.style = 'display:block;';
+            selectionBox.style = 'display:block !important;';
         } else {
-            selectionBox.style = 'display:none;';
+            selectionBox.style = 'display:none !important;';
         }
         console.log(selectionBox);
     });
@@ -267,5 +353,5 @@ const mapStateToProps = (store) => ({
 });
 
 export default connect(mapStateToProps, { resetLoading, getMapBootcamps })(
-    MapView
+    withRouter(MapView)
 );

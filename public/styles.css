@@ -117,6 +117,27 @@ a:hover {
     border: 1px solid;
 }
 
+.top-level-toop-tip {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    background-color: #525252;
+    color: white;
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    max-height: 150px;
+    max-width: 200px;
+}
+.top-level-toop-tip .tool-tip-head {
+    font-size: 1.75rem;
+}
+.top-level-toop-tip .tool-tip-text {
+    display: inline;
+}
+
 .btn {
     font-size: 1.2rem;
     font-weight: bold;
@@ -1226,9 +1247,10 @@ a:hover {
     padding: 0 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows:
-        50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
-        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
+            20rem,
+            min-content
+        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1237,12 +1259,10 @@ a:hover {
 @media (max-width: 56.25em) {
     .main-conatiner-course {
         margin-top: 4rem;
-        grid-template-rows:
-            50vh min-content minmax(15rem, min-content) minmax(
+        grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
                 20rem,
                 min-content
-            )
-            minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+            ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     }
 }
 @media (max-width: 56.25em) {
@@ -1255,9 +1275,10 @@ a:hover {
 .main-conatiner-home {
     margin-top: 10rem;
     display: grid;
-    grid-template-rows:
-        65vh 5rem minmax(40vh, min-content) 5rem minmax(40vh, min-content)
-        repeat(3, min-content) 25vh;
+    grid-template-rows: 65vh 5rem minmax(40vh, min-content) 5rem minmax(
+            40vh,
+            min-content
+        ) repeat(3, min-content) 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1314,9 +1335,10 @@ a:hover {
     padding: 0 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows:
-        50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
-        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
+            20rem,
+            min-content
+        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1467,11 +1489,15 @@ a:hover {
 }
 .map-view-form .map-select {
     width: 16%;
-    display: none;
+    display: none !important;
 }
-.ui.selection.dropdown {
-    display: none;
+
+.map-marker:hover {
+    width: 1rem;
+    height: 1rem;
+    transform: translate(-5rem, -1rem);
 }
+
 .ui.selection.dropdown .menu > .item {
     font-size: 1.5rem;
 }

@@ -234,6 +234,7 @@ export const getMapBootcamps = (filter, state, zipcode, radialDistance) => {
             const bootcamps = response.data.data;
             const bootcampsData = bootcamps.map((bootcamp, index) => {
                 return {
+                    id: bootcamp._id,
                     name: bootcamp.name,
                     longitude: bootcamp.location.coordinates[0],
                     latitude: bootcamp.location.coordinates[1],
