@@ -31,6 +31,9 @@ import {
     UPDATE_LOADED_CART_ITEM,
     GET_MAP_BOOTCAMPS,
     MAP_BOOTCAMPS_ERROR,
+    GET_NOTIFICATION_COUNT,
+    RESET_NOTIFICATION_COUNT,
+    NOTIFICATION_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -137,38 +140,38 @@ export const getTaggedBootcamps = (
         }
         if (averageCost) {
             const { filter, value } = averageCost;
-            if (getURL.includes('?')) {
-                getURL = getURL + `&averageCost[${filter}]=${value}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `averageCost[${filter}]=${value}`;
+            } else {
+                getURL = getURL + `&averageCost[${filter}]=${value}`;
             }
         }
         if (select) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&select=${select}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `select=${select}`;
+            } else {
+                getURL = getURL + `&select=${select}`;
             }
         }
         if (sort) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&sort=${sort}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `sort=${sort}`;
+            } else {
+                getURL = getURL + `&sort=${sort}`;
             }
         }
         if (page) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&page=${page}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `page=${page}`;
+            } else {
+                getURL = getURL + `&page=${page}`;
             }
         }
         if (limit) {
-            if (getURL.includes('?')) {
-                getURL = getURL + `&limit=${limit}`;
-            } else {
+            if (getURL.endsWith('?')) {
                 getURL = getURL + `limit=${limit}`;
+            } else {
+                getURL = getURL + `&limit=${limit}`;
             }
         }
         if (otherQuery) {
@@ -180,7 +183,7 @@ export const getTaggedBootcamps = (
         }
         try {
             const response = await axios.get(getURL);
-            if (history) history.push('/courseResults');
+            if (history) history.push('/bootcampResults');
             if (append) {
                 dispatch({
                     type: GET_TAG_FILTERED_BOOTCAMPS,
@@ -425,5 +428,40 @@ export const updateLoadedCourse = (courseDoc) => {
     return {
         type: UPDATE_LOADED_COURSE,
         payload: courseDoc,
+    };
+};
+
+// Action for getting the unread notification count
+export const getNotificationCount = (notificationCount) => {
+    return {
+        type: GET_NOTIFICATION_COUNT,
+        payload: notificationCount,
+    };
+};
+// Async action for resetting the unread notification count
+export const resetNotificationCount = (id) => {
+    return async function (dispatch) {
+        let resetURL = `${apiBaseURL}/profiles/${id}`;
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const body = { unReadCount: 0 };
+            const response = await axios.put(resetURL, body, config);
+            console.log(response.data.data);
+            dispatch({
+                type: RESET_NOTIFICATION_COUNT,
+                payload: response.data.data.unReadCount,
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
 };

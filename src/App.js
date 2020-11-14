@@ -22,6 +22,7 @@ import { loadUser } from './actions';
 
 // Redux presist related
 import { PersistGate } from 'redux-persist/integration/react';
+import UserNotification from './components/notification/UserNotification';
 
 function App() {
     useEffect(() => {
@@ -60,8 +61,8 @@ function App() {
                         />
                         <ProtectedRoute
                             exact
-                            path="/publisher/notification"
-                            component={PublisherNotification}
+                            path="/notifications/:profileId"
+                            component={UserNotification}
                         />
                     </Switch>
                 </Router>

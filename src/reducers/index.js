@@ -28,6 +28,9 @@ import {
     UPDATE_LOADED_CART_ITEM,
     GET_MAP_BOOTCAMPS,
     MAP_BOOTCAMPS_ERROR,
+    GET_NOTIFICATION_COUNT,
+    NOTIFICATION_ERROR,
+    RESET_NOTIFICATION_COUNT,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -343,15 +346,32 @@ const cartReducer = (state = initialCartState, action) => {
     }
 };
 
-// Notification related reducer (publisher)
-const initialPublisherNotification = {
+// Notification related reducer
+const initialNotification = {
     loading: true,
-    notifications: [],
+    count: 0,
+    // notifications: [],
     error: false,
 };
-const publisherNotificationReducer = (state, action) => {
+const notificationReducer = (state = initialNotification, action) => {
     const { type, payload } = action;
     switch (type) {
+        case GET_NOTIFICATION_COUNT:
+            return {
+                ...state,
+                loading: false,
+                count: payload,
+                error: false,
+            };
+        case RESET_NOTIFICATION_COUNT:
+            return {
+                ...state,
+                loading: false,
+                count: payload,
+                error: false,
+            };
+        default:
+            return state;
     }
 };
 
@@ -363,4 +383,5 @@ export default combineReducers({
     bootcamp: bootcampReducer,
     course: courseReducer,
     cart: cartReducer,
+    notification: notificationReducer,
 });

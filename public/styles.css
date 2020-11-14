@@ -397,7 +397,7 @@ a:hover {
 }
 @media (max-width: 56.25em) {
     .top-header-logo {
-        margin-left: 40%;
+        margin-left: 10%;
     }
 }
 .top-header-search {
@@ -458,7 +458,9 @@ a:hover {
 .top-header-search:active {
     border: 2px solid #2896a9;
 }
-.top-header-cart {
+.top-header-cart,
+.top-header-notify,
+.top-header-user {
     position: relative;
     width: 5rem;
     height: 50%;
@@ -466,12 +468,16 @@ a:hover {
     align-items: center;
     cursor: pointer;
 }
-.top-header-cart-icon {
+.top-header-cart-icon,
+.top-header-notify-icon,
+.top-header-user-icon {
     width: 3rem;
     height: 3rem;
     fill: #0f7c90;
 }
-.top-header-cart-count {
+.top-header-cart-count,
+.top-header-notify-count,
+.top-header-user-count {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -484,7 +490,9 @@ a:hover {
     justify-content: center;
     align-items: center;
 }
-.top-header-cart-count-text {
+.top-header-cart-count-text,
+.top-header-notify-count-text,
+.top-header-user-count-text {
     font-size: 1rem;
 }
 
@@ -507,23 +515,31 @@ a:hover {
 }
 .small-header-icon-menu,
 .small-header-icon-search,
-.small-header-cart-icon {
+.small-header-cart-icon,
+.small-header-notify-icon,
+.small-header-user-icon {
     width: 2.5rem;
     height: 2.5rem;
 }
 .small-header-icon-menu {
     margin-left: 4rem;
 }
-.small-header-cart {
+.small-header-cart,
+.small-header-notify,
+.small-header-user {
     margin-left: auto;
     margin-right: 5rem;
     position: relative;
     cursor: pointer;
 }
-.small-header-cart-icon {
+.small-header-cart-icon,
+.small-header-notify-icon,
+.small-header-user-icon {
     fill: #0f7c90;
 }
-.small-header-cart-count {
+.small-header-cart-count,
+.small-header-notify-count,
+.small-header-user-count {
     position: absolute;
     top: 50%;
     left: 60%;

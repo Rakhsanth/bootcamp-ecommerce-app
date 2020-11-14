@@ -1,16 +1,34 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Pusher from 'pusher-js';
 // action creator
-import { logout } from '../actions';
+import { logout, getNotificationCount } from '../actions';
+// API calls
+import { getProfileDetails } from '../api';
+// Config values
+import { pusherApiKey, pusherCluster } from '../config/config';
 
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const { loading, isLoggedIn, cartCount } = props;
-    const { logout } = props;
+    const { loading, isLoggedIn, cartCount, user, notificationCount } = props;
+    const { logout, getNotificationCount } = props;
+
+    const [userProfile, setuserProfile] = useState(null);
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('notifications');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed notification change');
+        console.log(data);
+        getNotificationCount(data.doc.unReadCount);
+    });
 
     const openMenu = () => {
         const sidenav = document.querySelector('.sidenav');
@@ -27,6 +45,17 @@ function Header(props) {
             sidenav.style.width = '0vw';
         }
     };
+    const getProfileDetailsUtil = async () => {
+        const profile = await getProfileDetails(user._id);
+        console.log(profile);
+        getNotificationCount(profile.unReadCount);
+        setuserProfile(profile);
+    };
+    useEffect(() => {
+        if (!loading) {
+            getProfileDetailsUtil();
+        }
+    }, [loading]);
 
     const searchInputFocus = () => {
         const headerSearchArea = document.querySelector('.top-header-search');
@@ -138,14 +167,38 @@ function Header(props) {
                 </Link>
                 <Fragment>
                     {isLoggedIn ? (
-                        <Link to="/">
-                            <button
-                                className="btn btn-secondary btn-md"
-                                onClick={handleLogout}
+                        <Fragment>
+                            <Link
+                                to={`/notifications/${
+                                    userProfile ? userProfile._id : ''
+                                }`}
+                                class="top-header-notify"
                             >
-                                Log out
-                            </button>
-                        </Link>
+                                <svg class="top-header-notify-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                                </svg>
+                                {notificationCount > 0 ? (
+                                    <span class="top-header-notify-count">
+                                        <span class="top-header-notify-count-text">
+                                            {notificationCount}
+                                        </span>
+                                    </span>
+                                ) : null}
+                            </Link>
+                            <Link to="/profile" class="top-header-user">
+                                <svg class="top-header-user-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
+                                </svg>
+                            </Link>
+                            <Link to="/">
+                                <button
+                                    className="btn btn-secondary btn-md"
+                                    onClick={handleLogout}
+                                >
+                                    Log out
+                                </button>
+                            </Link>
+                        </Fragment>
                     ) : (
                         <Fragment>
                             <Link to="/login">
@@ -180,6 +233,26 @@ function Header(props) {
                             {cartCount}
                         </span>
                     </span>
+                </Link>
+                <Link
+                    to={`/notifications/${userProfile ? userProfile._id : ''}`}
+                    class="small-header-notify"
+                >
+                    <svg class="small-header-notify-icon">
+                        <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                    </svg>
+                    {notificationCount > 0 ? (
+                        <span class="small-header-notify-count">
+                            <span class="top-header-notify-count-text">
+                                {notificationCount}
+                            </span>
+                        </span>
+                    ) : null}
+                </Link>
+                <Link tp="/profile" class="small-header-user">
+                    <svg class="small-header-user-icon">
+                        <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
+                    </svg>
                 </Link>
             </header>
 
@@ -296,8 +369,12 @@ const mapStateToProps = (store) => {
     return {
         loading: store.auth.loading,
         isLoggedIn: store.auth.loggedIn,
+        user: store.auth.user,
         cartCount: store.cart.cartItems.length,
+        notificationCount: store.notification.count,
     };
 };
 
-export default connect(mapStateToProps, { logout })(Header);
+export default connect(mapStateToProps, { logout, getNotificationCount })(
+    Header
+);

@@ -136,3 +136,20 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
         console.log(err);
     }
 };
+
+// get profile along with notifications
+export const getProfileDetails = async (userId) => {
+    let getURL = `${apiBaseURL}/profiles?user=${userId}`;
+
+    try {
+        const response = await axios.get(
+            getURL,
+            getPostConfig('application/json', true, true)
+        );
+        console.log(response.data.data[0]);
+        return response.data.data[0];
+    } catch (err) {
+        console.log(err);
+        console.log('create a profile 1st');
+    }
+};
