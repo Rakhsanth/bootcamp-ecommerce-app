@@ -185,7 +185,10 @@ function EditBootcamp(props) {
                                             <img
                                                 src={
                                                     bootcamp
-                                                        ? bootcamp.photo
+                                                        ? bootcamp.photo !==
+                                                          'no-photo.jpg'
+                                                            ? bootcamp.photo
+                                                            : '/bootcamp_logo.jpg'
                                                         : '/bootcamp_logo.jpg'
                                                 }
                                                 alt=""
