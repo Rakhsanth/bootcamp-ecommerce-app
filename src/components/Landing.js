@@ -1,6 +1,6 @@
 // react related imports
 import React, { useState, useEffect, useRef, createRef } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
@@ -23,6 +23,9 @@ function Landing(props) {
     const scrollTriggerThreshold = 600;
 
     const {
+        authLoading,
+        loggedIn,
+        userRole,
         resetLoading,
         taggedBootcamps,
         taggedCourses,
@@ -91,38 +94,54 @@ function Landing(props) {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 75em)' });
 
     useEffect(() => {
-        courseDesignTab.current.classList.add('focus-tab');
-        bootcampDesignTab.current.classList.add('focus-tab');
-        getTaggedCourses(
-            defaultTab,
-            null,
-            null,
-            null,
-            null,
-            10,
-            null,
-            null,
-            null,
-            false
-        );
-        getTaggedBootcamps(
-            defaultTab,
-            null,
-            null,
-            null,
-            null,
-            10,
-            null,
-            null,
-            null,
-            false
-        );
-    }, [getTaggedBootcamps, getTaggedCourses]);
+        if (
+            !loggedIn ||
+            !(loggedIn && !authLoading && userRole === 'publisher')
+        ) {
+            courseDesignTab.current.classList.add('focus-tab');
+            bootcampDesignTab.current.classList.add('focus-tab');
+            getTaggedCourses(
+                defaultTab,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+            getTaggedBootcamps(
+                defaultTab,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+        }
+    }, [getTaggedBootcamps, getTaggedCourses, loggedIn, authLoading, userRole]);
 
     useEffect(() => {
-        settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
-        settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
-    }, [taggedBootcampsCount, taggedCoursesCount]);
+        if (
+            !loggedIn ||
+            !(loggedIn && !authLoading && userRole === 'publisher')
+        ) {
+            settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
+            settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
+        }
+    }, [
+        taggedBootcampsCount,
+        taggedCoursesCount,
+        loggedIn,
+        authLoading,
+        userRole,
+    ]);
 
     console.log(taggedCourseIndex);
     console.log(taggedBootcampIndex);
@@ -577,7 +596,9 @@ function Landing(props) {
         }
     };
 
-    return (
+    return loggedIn && !authLoading && userRole === 'publisher' ? (
+        <Redirect to="/publisher/profile" />
+    ) : (
         <main className="main-conatiner-home">
             <section className="hero-section">
                 <img
@@ -802,6 +823,9 @@ function Landing(props) {
 
 const mapStateToProps = (store) => {
     return {
+        authLoading: store.auth.loading,
+        loggedIn: store.auth.loggedIn,
+        userRole: store.auth.user.role,
         taggedBootcampsLoading: store.taggedBootcamps.loading,
         taggedCoursesLoading: store.taggedCourses.loading,
         taggedBootcamps: store.taggedBootcamps.bootcamps,

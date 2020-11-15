@@ -146,10 +146,67 @@ export const getProfileDetails = async (userId) => {
             getURL,
             getPostConfig('application/json', true, true)
         );
-        console.log(response.data.data[0]);
-        return response.data.data[0];
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data[0];
+        }
     } catch (err) {
         console.log(err);
-        console.log('create a profile 1st');
+        // console.log('create a profile 1st');
+    }
+};
+
+// Create or update a profile
+export const createOrEditProfileDetails = async (
+    profileId,
+    createOrEdit,
+    body
+) => {
+    console.log('API called');
+    let postURL = `${apiBaseURL}/profiles`;
+    let profileResponse;
+    let imageResponse;
+    let fileResponse;
+
+    const { picture, resume, ...rest } = body;
+    try {
+        if (createOrEdit === 'edit') {
+            postURL = `${apiBaseURL}/profiles/${profileId}`;
+            profileResponse = await axios.put(
+                postURL,
+                { ...rest },
+                getPostConfig('application/json', true, true)
+            );
+        } else {
+            profileResponse = await axios.post(
+                postURL,
+                { ...rest },
+                getPostConfig('application/json', true, true)
+            );
+        }
+        if (typeof picture !== 'string') {
+            const imageUploadURL = `${apiBaseURL}/profiles/image/${profileResponse.data.data._id}`;
+            const formData = new FormData();
+            formData.append('file', picture);
+            imageResponse = await axios.put(
+                imageUploadURL,
+                formData,
+                getPostConfig('multipart/form-data', true, true)
+            );
+        }
+        if (typeof resume !== 'string') {
+            const fileUploadURL = `${apiBaseURL}/profiles/file/${profileResponse.data.data._id}`;
+            const formData = new FormData();
+            formData.append('file', resume);
+            fileResponse = await axios.put(
+                fileUploadURL,
+                formData,
+                getPostConfig('multipart/form-data', true, true)
+            );
+        }
+    } catch (err) {
+        console.log(err.response);
+        // console.log('create a profile 1st');
     }
 };

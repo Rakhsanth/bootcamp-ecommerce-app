@@ -14,7 +14,14 @@ const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const { loading, isLoggedIn, cartCount, user, notificationCount } = props;
+    const {
+        loading,
+        isLoggedIn,
+        cartCount,
+        user,
+        userRole,
+        notificationCount,
+    } = props;
     const { logout, getNotificationCount } = props;
 
     const [userProfile, setuserProfile] = useState(null);
@@ -48,7 +55,11 @@ function Header(props) {
     const getProfileDetailsUtil = async () => {
         const profile = await getProfileDetails(user._id);
         console.log(profile);
-        getNotificationCount(profile.unReadCount);
+        if (profile) {
+            getNotificationCount(profile.unReadCount);
+        } else {
+            getNotificationCount(0);
+        }
         setuserProfile(profile);
     };
     useEffect(() => {
@@ -224,16 +235,19 @@ function Header(props) {
                     <use xlinkHref="img/sprite.svg#icon-menu"></use>
                 </svg>
                 <Link to="/" className="top-header-logo"></Link>
-                <Link to="/cart" className="small-header-cart">
-                    <svg className="small-header-cart-icon">
-                        <use xlinkHref="img/sprite.svg#icon-cart"></use>
-                    </svg>
-                    <span className="small-header-cart-count">
-                        <span className="top-header-cart-count-text">
-                            {cartCount}
+                {userRole === 'user' ? (
+                    <Link to="/cart" className="small-header-cart">
+                        <svg className="small-header-cart-icon">
+                            <use xlinkHref="img/sprite.svg#icon-cart"></use>
+                        </svg>
+                        <span className="small-header-cart-count">
+                            <span className="top-header-cart-count-text">
+                                {cartCount}
+                            </span>
                         </span>
-                    </span>
-                </Link>
+                    </Link>
+                ) : null}
+
                 <Link
                     to={`/notifications/${userProfile ? userProfile._id : ''}`}
                     class="small-header-notify"
@@ -370,6 +384,7 @@ const mapStateToProps = (store) => {
         loading: store.auth.loading,
         isLoggedIn: store.auth.loggedIn,
         user: store.auth.user,
+        userRole: store.auth.user.role,
         cartCount: store.cart.cartItems.length,
         notificationCount: store.notification.count,
     };

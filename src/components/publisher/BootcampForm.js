@@ -8,15 +8,27 @@ import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import { createEditBootcamp } from '../../api';
 
 // custom utils
-import { validateImageFileSize } from '../utils/utilFunctions';
+import {
+    validateImageFileSize,
+    validateMobileNumber,
+} from '../utils/utilFunctions';
 
 // actions
-import { resetLoading } from '../../actions';
+import { resetLoading, getTaggedBootcamps } from '../../actions';
 
 function BootcampForm(props) {
-    const { history, removeForm, resetLoading, causeReRender } = props;
+    const {
+        history,
+        removeForm,
+        resetLoading,
+        getTaggedBootcamps,
+        causeReRender,
+        userId,
+    } = props;
 
     let img = 'no-photo.jpg';
+
+    let query = `user=${userId}`;
 
     const [formValues, setformValues] = useState({
         image: '',
@@ -98,7 +110,11 @@ function BootcampForm(props) {
             .required('Bootcamp description is mandatory'),
         website: Yup.string().url().optional(),
         email: Yup.string().email().required('Email for contact is mandatory'),
-        phone: Yup.number().required('Mobile number for cantact is mandatory'),
+        phone: Yup.string().test(
+            'testMobileNum',
+            'Mobile number must have 10 numeric charaters',
+            (value) => validateMobileNumber(value)
+        ),
         offerings: Yup.array().test(
             'offeringsLengthTest',
             'Please provide atleast 2 offerings',
@@ -106,9 +122,20 @@ function BootcampForm(props) {
         ),
     });
 
-    const onSubmit = (values, submitProps) => {
-        createEditBootcamp(values, 'create');
-        causeReRender();
+    const onSubmit = async (values, submitProps) => {
+        await createEditBootcamp(values, 'create');
+        getTaggedBootcamps(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            query,
+            null
+        );
         removeForm();
         resetLoading('taggedBootcamps');
     };
@@ -691,6 +718,6 @@ function BootcampForm(props) {
 
 const mapStateTopProps = (store) => ({});
 
-export default connect(mapStateTopProps, { resetLoading })(
+export default connect(mapStateTopProps, { resetLoading, getTaggedBootcamps })(
     withRouter(BootcampForm)
 );

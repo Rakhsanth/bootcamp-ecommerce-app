@@ -68,6 +68,7 @@ function Bootcamps(props) {
         if (displayBootcampForm) {
             return (
                 <BootcampForm
+                    userId={userId}
                     removeForm={removeForm}
                     causeReRender={causeReRender}
                 />

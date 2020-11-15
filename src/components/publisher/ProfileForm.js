@@ -1,23 +1,73 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { connect } from 'react-redux';
+// APIs
+import { getProfileDetails, createOrEditProfileDetails } from '../../api';
+// utils
+import {
+    validateImageFileSize,
+    validateDocFileSize,
+    validateMobileNumber,
+} from '../utils/utilFunctions';
 
 function ProfileForm(props) {
     let valuesFromBackend;
-    let image = 'no-photo.jpg';
+    // let image = 'no-photo.jpg';
+
+    const { loading, user } = props;
+
+    const [profile, setprofile] = useState(null);
+
+    const getProfileDetailsUtil = async () => {
+        const profile = await getProfileDetails(user._id);
+        setprofile(profile);
+    };
+    useEffect(() => {
+        if (!loading) {
+            getProfileDetailsUtil();
+        }
+    }, [loading]);
 
     const initialValues = {
-        picture: '',
-        name: '',
-        resume: '',
-        websiteLink: '',
+        picture: profile ? profile.picture : '',
+        name: profile ? profile.name : '',
+        resume: profile ? profile.resume : '',
+        websiteLink: profile ? profile.websiteLink : '',
+        mobile: profile ? profile.mobile : '',
     };
     const validationSchema = Yup.object({
+        picture: Yup.mixed().test(
+            'testImageSize',
+            'Please provide image less than 5 MB',
+            (value) => validateImageFileSize(value, 5)
+        ),
         name: Yup.string().required(),
+        resume: Yup.mixed().test(
+            'testFileTypeAndSize',
+            'Resume or certificate must me a PDF and less than 5 MB',
+            (value) => validateDocFileSize(value)
+        ),
         websiteLink: Yup.string().url('Please provide a valid URL').optional(),
+        mobile: Yup.string().test(
+            'testMobileNum',
+            'Mobile number needs to be a 10 digit number',
+            (value) => validateMobileNumber(value)
+        ),
     });
-    const onSubmit = (values, submitProps) => {
+    const onSubmit = async (values, submitProps) => {
         console.log(values);
+        let result;
+        if (profile) {
+            result = await createOrEditProfileDetails(
+                profile._id,
+                'edit',
+                values
+            );
+        } else {
+            result = await createOrEditProfileDetails(null, 'create', values);
+        }
+        getProfileDetailsUtil();
     };
 
     return (
@@ -26,6 +76,7 @@ function ProfileForm(props) {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
+                enableReinitialize
             >
                 {(formik) => {
                     console.log(formik);
@@ -33,9 +84,12 @@ function ProfileForm(props) {
                         <Form>
                             <div class="pubProfile-tabContent-profile-image">
                                 <img
+                                    style={{ borderRadius: '50%' }}
                                     src={
-                                        image !== 'no-photo.jpg'
-                                            ? image
+                                        profile
+                                            ? profile.picture !== 'no-photo.jpg'
+                                                ? profile.picture
+                                                : '/bootcamp_logo.jpg'
                                             : '/bootcamp_logo.jpg'
                                     }
                                     alt="profile-picture"
@@ -136,6 +190,21 @@ function ProfileForm(props) {
                                     placeholder="www.foo_bar.com"
                                 />
                             </div>
+                            <div class="pubProfile-form-control">
+                                <label
+                                    for="mobile-number"
+                                    class="pubProfile-form-control-label"
+                                >
+                                    Mobile number
+                                </label>
+                                <Field
+                                    id="mobile-number"
+                                    name="mobile"
+                                    type="text"
+                                    class="pubProfile-form-control-input"
+                                    placeholder="9087654321"
+                                />
+                            </div>
                             <input
                                 type="submit"
                                 class="btn btn-secondary pubProfile-form-submit"
@@ -149,4 +218,9 @@ function ProfileForm(props) {
     );
 }
 
-export default ProfileForm;
+const mapStateToProps = (store) => ({
+    loading: store.auth.loading,
+    user: store.auth.user,
+});
+
+export default connect(mapStateToProps, {})(ProfileForm);
