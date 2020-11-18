@@ -14,14 +14,7 @@ const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const {
-        loading,
-        isLoggedIn,
-        cartCount,
-        user,
-        userRole,
-        notificationCount,
-    } = props;
+    const { loading, isLoggedIn, cartCount, user, notificationCount } = props;
     const { logout, getNotificationCount } = props;
 
     const [userProfile, setuserProfile] = useState(null);
@@ -63,10 +56,10 @@ function Header(props) {
         setuserProfile(profile);
     };
     useEffect(() => {
-        if (!loading) {
+        if (!loading && isLoggedIn) {
             getProfileDetailsUtil();
         }
-    }, [loading]);
+    }, [loading, isLoggedIn]);
 
     const searchInputFocus = () => {
         const headerSearchArea = document.querySelector('.top-header-search');
@@ -166,16 +159,21 @@ function Header(props) {
                         </svg>
                     </div>
                 </div>
-                <Link to="/cart" className="top-header-cart">
-                    <svg className="top-header-cart-icon">
-                        <use xlinkHref="img/sprite.svg#icon-cart"></use>
-                    </svg>
-                    <span className="top-header-cart-count">
-                        <span className="top-header-cart-count-text">
-                            {cartCount}
+                {user === null ||
+                user.role === 'user' ||
+                user.role === 'unknown' ? (
+                    <Link to="/cart" className="top-header-cart">
+                        <svg className="top-header-cart-icon">
+                            <use xlinkHref="img/sprite.svg#icon-cart"></use>
+                        </svg>
+                        <span className="top-header-cart-count">
+                            <span className="top-header-cart-count-text">
+                                {cartCount}
+                            </span>
                         </span>
-                    </span>
-                </Link>
+                    </Link>
+                ) : null}
+
                 <Fragment>
                     {isLoggedIn ? (
                         <Fragment>
@@ -235,7 +233,9 @@ function Header(props) {
                     <use xlinkHref="img/sprite.svg#icon-menu"></use>
                 </svg>
                 <Link to="/" className="top-header-logo"></Link>
-                {userRole === 'user' ? (
+                {user === null ||
+                user.role === 'user' ||
+                user.role === 'unknown' ? (
                     <Link to="/cart" className="small-header-cart">
                         <svg className="small-header-cart-icon">
                             <use xlinkHref="img/sprite.svg#icon-cart"></use>
@@ -384,7 +384,6 @@ const mapStateToProps = (store) => {
         loading: store.auth.loading,
         isLoggedIn: store.auth.loggedIn,
         user: store.auth.user,
-        userRole: store.auth.user.role,
         cartCount: store.cart.cartItems.length,
         notificationCount: store.notification.count,
     };

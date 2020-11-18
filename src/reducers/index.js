@@ -37,7 +37,7 @@ const initialLoginStatus = {
     loading: true,
     loggedIn: false,
     token: null,
-    user: null,
+    user: { role: 'unknown' },
     error: false,
 };
 // reducer to register a user
@@ -68,7 +68,7 @@ const userLoginRegisterReducer = (state = initialLoginStatus, action) => {
                 loading: false,
                 loggedIn: false,
                 token: null,
-                user: null,
+                user: { role: 'unknown' },
             };
         default:
             return state;

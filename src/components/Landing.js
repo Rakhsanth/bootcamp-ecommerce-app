@@ -25,7 +25,7 @@ function Landing(props) {
     const {
         authLoading,
         loggedIn,
-        userRole,
+        user,
         resetLoading,
         taggedBootcamps,
         taggedCourses,
@@ -96,7 +96,7 @@ function Landing(props) {
     useEffect(() => {
         if (
             !loggedIn ||
-            !(loggedIn && !authLoading && userRole === 'publisher')
+            !(loggedIn && !authLoading && user.role === 'publisher')
         ) {
             courseDesignTab.current.classList.add('focus-tab');
             bootcampDesignTab.current.classList.add('focus-tab');
@@ -125,23 +125,17 @@ function Landing(props) {
                 false
             );
         }
-    }, [getTaggedBootcamps, getTaggedCourses, loggedIn, authLoading, userRole]);
+    }, [getTaggedBootcamps, getTaggedCourses, loggedIn, authLoading, user]);
 
     useEffect(() => {
         if (
             !loggedIn ||
-            !(loggedIn && !authLoading && userRole === 'publisher')
+            !(loggedIn && !authLoading && user.role === 'publisher')
         ) {
             settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
             settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
         }
-    }, [
-        taggedBootcampsCount,
-        taggedCoursesCount,
-        loggedIn,
-        authLoading,
-        userRole,
-    ]);
+    }, [taggedBootcampsCount, taggedCoursesCount, loggedIn, authLoading, user]);
 
     console.log(taggedCourseIndex);
     console.log(taggedBootcampIndex);
@@ -435,6 +429,7 @@ function Landing(props) {
                         userCount={course.ratings}
                         currentStudentsCount={course.currentStudentsCount}
                         maxStudentsAllowed={course.maxStudentsAllowed}
+                        email={course.user.email}
                         startDate={course.startDate}
                         endDate={course.endDate}
                     />
@@ -481,6 +476,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -530,6 +526,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -579,6 +576,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -596,7 +594,7 @@ function Landing(props) {
         }
     };
 
-    return loggedIn && !authLoading && userRole === 'publisher' ? (
+    return loggedIn && !authLoading && user.role === 'publisher' ? (
         <Redirect to="/publisher/profile" />
     ) : (
         <main className="main-conatiner-home">
@@ -825,7 +823,7 @@ const mapStateToProps = (store) => {
     return {
         authLoading: store.auth.loading,
         loggedIn: store.auth.loggedIn,
-        userRole: store.auth.user.role,
+        user: store.auth.user,
         taggedBootcampsLoading: store.taggedBootcamps.loading,
         taggedCoursesLoading: store.taggedCourses.loading,
         taggedBootcamps: store.taggedBootcamps.bootcamps,

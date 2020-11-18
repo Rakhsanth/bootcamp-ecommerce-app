@@ -18,6 +18,7 @@ function CourseCard(props) {
         keyPointsList,
         currentStudentsCount,
         maxStudentsAllowed,
+        email,
         startDate,
         endDate,
     } = props;
@@ -69,6 +70,7 @@ function CourseCard(props) {
             ['description', description],
             ['startDate', startDate],
             ['endDate', endDate],
+            ['email', email],
             ['currentStudentsCount', currentStudentsCount],
             ['maxStudentsAllowed', maxStudentsAllowed],
         ]);

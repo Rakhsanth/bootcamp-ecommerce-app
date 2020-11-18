@@ -81,8 +81,8 @@ export const loginUser = (body, history) => {
             dispatch({ type: LOGIN_USER, payload: response.data });
             dispatch(loadUser());
         } catch (err) {
-            console.log(err.response.data);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+            console.log(err.response);
+            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response });
         }
     };
 };
