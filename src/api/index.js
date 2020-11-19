@@ -137,7 +137,7 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
     }
 };
 
-// get profile along with notifications
+// get profile along with notifications using UserId
 export const getProfileDetails = async (userId) => {
     let getURL = `${apiBaseURL}/profiles?user=${userId}`;
 
@@ -150,6 +150,46 @@ export const getProfileDetails = async (userId) => {
             return null;
         } else {
             return response.data.data[0];
+        }
+    } catch (err) {
+        console.log(err);
+        // console.log('create a profile 1st');
+    }
+};
+
+// Get profile notifications using profileId
+export const getProfileNotifications = async (profileId) => {
+    let getURL = `${apiBaseURL}/profiles/${profileId}`;
+
+    try {
+        const response = await axios.get(
+            getURL,
+            getPostConfig('application/json', true, true)
+        );
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data.notifications;
+        }
+    } catch (err) {
+        console.log(err);
+        // console.log('create a profile 1st');
+    }
+};
+
+// Delete a notifications using userId and notificationId
+export const deleteNotification = async (userId, notificationId) => {
+    let deleteURL = `${apiBaseURL}/profiles/notifications/${userId}/${notificationId}`;
+
+    try {
+        const response = await axios.delete(
+            deleteURL,
+            getPostConfig('application/json', true, true)
+        );
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data.notifications;
         }
     } catch (err) {
         console.log(err);

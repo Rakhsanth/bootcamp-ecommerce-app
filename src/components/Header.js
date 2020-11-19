@@ -18,6 +18,7 @@ function Header(props) {
     const { logout, getNotificationCount } = props;
 
     const [userProfile, setuserProfile] = useState(null);
+    console.log(userProfile);
 
     // Pusher related stuff for realtime DB related updations
     const pusher = new Pusher(pusherApiKey, {
@@ -179,8 +180,12 @@ function Header(props) {
                         <Fragment>
                             <Link
                                 to={`/notifications/${
-                                    userProfile ? userProfile._id : ''
-                                }`}
+                                    user.role === 'publisher'
+                                        ? 'publisher'
+                                        : user.role === 'user'
+                                        ? 'user'
+                                        : ''
+                                }/${userProfile ? userProfile._id : ''}`}
                                 class="top-header-notify"
                             >
                                 <svg class="top-header-notify-icon">
@@ -247,27 +252,36 @@ function Header(props) {
                         </span>
                     </Link>
                 ) : null}
-
-                <Link
-                    to={`/notifications/${userProfile ? userProfile._id : ''}`}
-                    class="small-header-notify"
-                >
-                    <svg class="small-header-notify-icon">
-                        <use xlinkHref="img/sprite.svg#icon-bell"></use>
-                    </svg>
-                    {notificationCount > 0 ? (
-                        <span class="small-header-notify-count">
-                            <span class="top-header-notify-count-text">
-                                {notificationCount}
-                            </span>
-                        </span>
-                    ) : null}
-                </Link>
-                <Link tp="/profile" class="small-header-user">
-                    <svg class="small-header-user-icon">
-                        <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
-                    </svg>
-                </Link>
+                {isLoggedIn ? (
+                    <Fragment>
+                        <Link
+                            to={`/notifications/${
+                                user.role === 'publisher'
+                                    ? 'publisher'
+                                    : user.role === 'user'
+                                    ? 'user'
+                                    : ''
+                            }/${userProfile ? userProfile._id : ''}`}
+                            class="small-header-notify"
+                        >
+                            <svg class="small-header-notify-icon">
+                                <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                            </svg>
+                            {notificationCount > 0 ? (
+                                <span class="small-header-notify-count">
+                                    <span class="top-header-notify-count-text">
+                                        {notificationCount}
+                                    </span>
+                                </span>
+                            ) : null}
+                        </Link>
+                        <Link to="/profile" class="small-header-user">
+                            <svg class="small-header-user-icon">
+                                <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
+                            </svg>
+                        </Link>
+                    </Fragment>
+                ) : null}
             </header>
 
             <section

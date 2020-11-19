@@ -290,6 +290,21 @@ a:hover {
     margin-top: 5.5rem;
 }
 
+.pubBootcampCard-btn {
+    align-self: center;
+    padding: 1.5rem;
+    background-color: #992337;
+}
+.pubBootcampCard-btn svg {
+    fill: white;
+}
+.pubBootcampCard-btn:hover {
+    background-color: white;
+}
+.pubBootcampCard-btn:hover svg {
+    fill: #992337;
+}
+
 .filter-sort-sort {
     width: 10rem;
     height: 4rem;
@@ -1670,6 +1685,21 @@ a:hover {
     margin-top: 5.5rem;
 }
 
+.pubBootcampCard-btn {
+    align-self: center;
+    padding: 1.5rem;
+    background-color: #992337;
+}
+.pubBootcampCard-btn svg {
+    fill: white;
+}
+.pubBootcampCard-btn:hover {
+    background-color: white;
+}
+.pubBootcampCard-btn:hover svg {
+    fill: #992337;
+}
+
 .login-container {
     display: flex;
     flex-direction: column;
@@ -2360,6 +2390,21 @@ a:hover {
 
 .home-categories-btn {
     margin-top: 5.5rem;
+}
+
+.pubBootcampCard-btn {
+    align-self: center;
+    padding: 1.5rem;
+    background-color: #992337;
+}
+.pubBootcampCard-btn svg {
+    fill: white;
+}
+.pubBootcampCard-btn:hover {
+    background-color: white;
+}
+.pubBootcampCard-btn:hover svg {
+    fill: #992337;
 }
 
 .signup-container {
