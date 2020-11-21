@@ -19,7 +19,7 @@ function PublisherProfile(props) {
         console.log(JSON.stringify(data));
     });
 
-    const { userType } = props;
+    const { loading, loggedIn, user } = props;
 
     const profileTabRef = createRef();
     const bankTabRef = createRef();
@@ -62,7 +62,9 @@ function PublisherProfile(props) {
         }
     };
 
-    return userType === 'publisher' || userType === 'admin' ? (
+    return !loading &&
+        loggedIn &&
+        (user.role === 'publisher' || user.role === 'admin') ? (
         <div class="main-conatiner-pubProfile">
             <div class="pubProfile-tabs">
                 <div class="ui top attached tabular menu grid three column row">
@@ -119,7 +121,9 @@ function PublisherProfile(props) {
 }
 
 const mapStateToProps = (store) => ({
-    userType: store.auth.user.role,
+    loading: store.auth.loading,
+    loggedIn: store.auth.loggedIn,
+    user: store.auth.user,
 });
 
 export default connect(mapStateToProps)(PublisherProfile);

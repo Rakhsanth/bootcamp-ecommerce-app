@@ -185,7 +185,10 @@ function EditBootcamp(props) {
                                             <img
                                                 src={
                                                     bootcamp
-                                                        ? bootcamp.photo
+                                                        ? bootcamp.photo !==
+                                                          'no-photo.jpg'
+                                                            ? bootcamp.photo
+                                                            : '/bootcamp_logo.jpg'
                                                         : '/bootcamp_logo.jpg'
                                                 }
                                                 alt=""
@@ -521,6 +524,9 @@ function EditBootcamp(props) {
                                                                             name={`offerings[${index}]`}
                                                                             class="pubProfile-form-control-input"
                                                                             placeholder="Cool place to learn with cool guiders, fee incudes food!"
+                                                                            value={
+                                                                                offering
+                                                                            }
                                                                         />
                                                                         {offerings.length >
                                                                         2 ? (

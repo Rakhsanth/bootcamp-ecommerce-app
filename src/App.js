@@ -13,6 +13,7 @@ import Cart from './components/Cart';
 import UserProfile from './components/user/UserProfile';
 import PublisherProfile from './components/publisher/PublisherProfile';
 import PublisherNotification from './components/notification/PublisherNotification';
+import UserNotification from './components/notification/UserNotification';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Redux store and actions
@@ -60,8 +61,13 @@ function App() {
                         />
                         <ProtectedRoute
                             exact
-                            path="/publisher/notification"
+                            path="/notifications/publisher/:profileId"
                             component={PublisherNotification}
+                        />
+                        <ProtectedRoute
+                            exact
+                            path="/notifications/user/:profileId"
+                            component={UserNotification}
                         />
                     </Switch>
                 </Router>

@@ -157,6 +157,7 @@ function Course(props) {
             ['description', course.description],
             ['startDate', course.startDate],
             ['endDate', course.endDate],
+            ['email', course.user.email],
             ['currentStudentsCount', course.currentStudentsCount],
             ['maxStudentsAllowed', course.maxStudentsAllowed],
         ]);

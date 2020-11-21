@@ -1,16 +1,35 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Pusher from 'pusher-js';
 // action creator
-import { logout } from '../actions';
+import { logout, getNotificationCount } from '../actions';
+// API calls
+import { getProfileDetails } from '../api';
+// Config values
+import { pusherApiKey, pusherCluster } from '../config/config';
 
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const { loading, isLoggedIn, cartCount } = props;
-    const { logout } = props;
+    const { loading, isLoggedIn, cartCount, user, notificationCount } = props;
+    const { logout, getNotificationCount } = props;
+
+    const [userProfile, setuserProfile] = useState(null);
+    console.log(userProfile);
+
+    // Pusher related stuff for realtime DB related updations
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('notifications');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed notification change');
+        console.log(data);
+        getNotificationCount(data.doc.unReadCount);
+    });
 
     const openMenu = () => {
         const sidenav = document.querySelector('.sidenav');
@@ -27,6 +46,21 @@ function Header(props) {
             sidenav.style.width = '0vw';
         }
     };
+    const getProfileDetailsUtil = async () => {
+        const profile = await getProfileDetails(user._id);
+        console.log(profile);
+        if (profile) {
+            getNotificationCount(profile.unReadCount);
+        } else {
+            getNotificationCount(0);
+        }
+        setuserProfile(profile);
+    };
+    useEffect(() => {
+        if (!loading && isLoggedIn) {
+            getProfileDetailsUtil();
+        }
+    }, [loading, isLoggedIn]);
 
     const searchInputFocus = () => {
         const headerSearchArea = document.querySelector('.top-header-search');
@@ -126,26 +160,59 @@ function Header(props) {
                         </svg>
                     </div>
                 </div>
-                <Link to="/cart" className="top-header-cart">
-                    <svg className="top-header-cart-icon">
-                        <use xlinkHref="img/sprite.svg#icon-cart"></use>
-                    </svg>
-                    <span className="top-header-cart-count">
-                        <span className="top-header-cart-count-text">
-                            {cartCount}
+                {user === null ||
+                user.role === 'user' ||
+                user.role === 'unknown' ? (
+                    <Link to="/cart" className="top-header-cart">
+                        <svg className="top-header-cart-icon">
+                            <use xlinkHref="img/sprite.svg#icon-cart"></use>
+                        </svg>
+                        <span className="top-header-cart-count">
+                            <span className="top-header-cart-count-text">
+                                {cartCount}
+                            </span>
                         </span>
-                    </span>
-                </Link>
+                    </Link>
+                ) : null}
+
                 <Fragment>
                     {isLoggedIn ? (
-                        <Link to="/">
-                            <button
-                                className="btn btn-secondary btn-md"
-                                onClick={handleLogout}
+                        <Fragment>
+                            <Link
+                                to={`/notifications/${
+                                    user.role === 'publisher'
+                                        ? 'publisher'
+                                        : user.role === 'user'
+                                        ? 'user'
+                                        : ''
+                                }/${userProfile ? userProfile._id : ''}`}
+                                class="top-header-notify"
                             >
-                                Log out
-                            </button>
-                        </Link>
+                                <svg class="top-header-notify-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                                </svg>
+                                {notificationCount > 0 ? (
+                                    <span class="top-header-notify-count">
+                                        <span class="top-header-notify-count-text">
+                                            {notificationCount}
+                                        </span>
+                                    </span>
+                                ) : null}
+                            </Link>
+                            <Link to="/profile" class="top-header-user">
+                                <svg class="top-header-user-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
+                                </svg>
+                            </Link>
+                            <Link to="/">
+                                <button
+                                    className="btn btn-secondary btn-md"
+                                    onClick={handleLogout}
+                                >
+                                    Log out
+                                </button>
+                            </Link>
+                        </Fragment>
                     ) : (
                         <Fragment>
                             <Link to="/login">
@@ -171,16 +238,50 @@ function Header(props) {
                     <use xlinkHref="img/sprite.svg#icon-menu"></use>
                 </svg>
                 <Link to="/" className="top-header-logo"></Link>
-                <Link to="/cart" className="small-header-cart">
-                    <svg className="small-header-cart-icon">
-                        <use xlinkHref="img/sprite.svg#icon-cart"></use>
-                    </svg>
-                    <span className="small-header-cart-count">
-                        <span className="top-header-cart-count-text">
-                            {cartCount}
+                {user === null ||
+                user.role === 'user' ||
+                user.role === 'unknown' ? (
+                    <Link to="/cart" className="small-header-cart">
+                        <svg className="small-header-cart-icon">
+                            <use xlinkHref="img/sprite.svg#icon-cart"></use>
+                        </svg>
+                        <span className="small-header-cart-count">
+                            <span className="top-header-cart-count-text">
+                                {cartCount}
+                            </span>
                         </span>
-                    </span>
-                </Link>
+                    </Link>
+                ) : null}
+                {isLoggedIn ? (
+                    <Fragment>
+                        <Link
+                            to={`/notifications/${
+                                user.role === 'publisher'
+                                    ? 'publisher'
+                                    : user.role === 'user'
+                                    ? 'user'
+                                    : ''
+                            }/${userProfile ? userProfile._id : ''}`}
+                            class="small-header-notify"
+                        >
+                            <svg class="small-header-notify-icon">
+                                <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                            </svg>
+                            {notificationCount > 0 ? (
+                                <span class="small-header-notify-count">
+                                    <span class="top-header-notify-count-text">
+                                        {notificationCount}
+                                    </span>
+                                </span>
+                            ) : null}
+                        </Link>
+                        <Link to="/profile" class="small-header-user">
+                            <svg class="small-header-user-icon">
+                                <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
+                            </svg>
+                        </Link>
+                    </Fragment>
+                ) : null}
             </header>
 
             <section
@@ -296,8 +397,12 @@ const mapStateToProps = (store) => {
     return {
         loading: store.auth.loading,
         isLoggedIn: store.auth.loggedIn,
+        user: store.auth.user,
         cartCount: store.cart.cartItems.length,
+        notificationCount: store.notification.count,
     };
 };
 
-export default connect(mapStateToProps, { logout })(Header);
+export default connect(mapStateToProps, { logout, getNotificationCount })(
+    Header
+);

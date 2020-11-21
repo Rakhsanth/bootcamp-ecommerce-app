@@ -136,3 +136,117 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
         console.log(err);
     }
 };
+
+// get profile along with notifications using UserId
+export const getProfileDetails = async (userId) => {
+    let getURL = `${apiBaseURL}/profiles?user=${userId}`;
+
+    try {
+        const response = await axios.get(
+            getURL,
+            getPostConfig('application/json', true, true)
+        );
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data[0];
+        }
+    } catch (err) {
+        console.log(err);
+        // console.log('create a profile 1st');
+    }
+};
+
+// Get profile notifications using profileId
+export const getProfileNotifications = async (profileId) => {
+    let getURL = `${apiBaseURL}/profiles/${profileId}`;
+
+    try {
+        const response = await axios.get(
+            getURL,
+            getPostConfig('application/json', true, true)
+        );
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data.notifications;
+        }
+    } catch (err) {
+        console.log(err);
+        // console.log('create a profile 1st');
+    }
+};
+
+// Delete a notifications using userId and notificationId
+export const deleteNotification = async (userId, notificationId) => {
+    let deleteURL = `${apiBaseURL}/profiles/notifications/${userId}/${notificationId}`;
+
+    try {
+        const response = await axios.delete(
+            deleteURL,
+            getPostConfig('application/json', true, true)
+        );
+        if (response.data.error) {
+            return null;
+        } else {
+            return response.data.data.notifications;
+        }
+    } catch (err) {
+        console.log(err);
+        // console.log('create a profile 1st');
+    }
+};
+
+// Create or update a profile
+export const createOrEditProfileDetails = async (
+    profileId,
+    createOrEdit,
+    body
+) => {
+    console.log('API called');
+    let postURL = `${apiBaseURL}/profiles`;
+    let profileResponse;
+    let imageResponse;
+    let fileResponse;
+
+    const { picture, resume, ...rest } = body;
+    try {
+        if (createOrEdit === 'edit') {
+            postURL = `${apiBaseURL}/profiles/${profileId}`;
+            profileResponse = await axios.put(
+                postURL,
+                { ...rest },
+                getPostConfig('application/json', true, true)
+            );
+        } else {
+            profileResponse = await axios.post(
+                postURL,
+                { ...rest },
+                getPostConfig('application/json', true, true)
+            );
+        }
+        if (typeof picture !== 'string') {
+            const imageUploadURL = `${apiBaseURL}/profiles/image/${profileResponse.data.data._id}`;
+            const formData = new FormData();
+            formData.append('file', picture);
+            imageResponse = await axios.put(
+                imageUploadURL,
+                formData,
+                getPostConfig('multipart/form-data', true, true)
+            );
+        }
+        if (typeof resume !== 'string') {
+            const fileUploadURL = `${apiBaseURL}/profiles/file/${profileResponse.data.data._id}`;
+            const formData = new FormData();
+            formData.append('file', resume);
+            fileResponse = await axios.put(
+                fileUploadURL,
+                formData,
+                getPostConfig('multipart/form-data', true, true)
+            );
+        }
+    } catch (err) {
+        console.log(err.response);
+        // console.log('create a profile 1st');
+    }
+};

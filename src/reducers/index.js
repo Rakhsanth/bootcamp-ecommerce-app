@@ -26,13 +26,18 @@ import {
     PUBLISHER_NOTIFICATION_ERROR,
     UPDATE_LOADED_COURSE,
     UPDATE_LOADED_CART_ITEM,
+    GET_MAP_BOOTCAMPS,
+    MAP_BOOTCAMPS_ERROR,
+    GET_NOTIFICATION_COUNT,
+    NOTIFICATION_ERROR,
+    RESET_NOTIFICATION_COUNT,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
     loading: true,
     loggedIn: false,
     token: null,
-    user: null,
+    user: { role: 'unknown' },
     error: false,
 };
 // reducer to register a user
@@ -63,7 +68,7 @@ const userLoginRegisterReducer = (state = initialLoginStatus, action) => {
                 loading: false,
                 loggedIn: false,
                 token: null,
-                user: null,
+                user: { role: 'unknown' },
             };
         default:
             return state;
@@ -111,6 +116,38 @@ const taggedBootcampsReducer = (
                 error: true,
                 bootcamps: [],
                 totalCount: payload.count,
+            };
+        default:
+            return state;
+    }
+};
+
+// reducer to get bootcamps for map view
+const initialMapBootcampsState = {
+    loading: true,
+    bootcamps: [],
+    error: false,
+};
+const mapBootcampsReducer = (state = initialMapBootcampsState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case RESET_LOADING:
+            if (payload === 'mapBootcamps') {
+                return { ...state, loading: true, bootcamps: [] };
+            } else {
+                return state;
+            }
+        case GET_MAP_BOOTCAMPS:
+            return {
+                loading: false,
+                bootcamps: payload,
+                error: false,
+            };
+        case MAP_BOOTCAMPS_ERROR:
+            return {
+                loading: false,
+                bootcamps: [],
+                error: true,
             };
         default:
             return state;
@@ -309,23 +346,42 @@ const cartReducer = (state = initialCartState, action) => {
     }
 };
 
-// Notification related reducer (publisher)
-const initialPublisherNotification = {
+// Notification related reducer
+const initialNotification = {
     loading: true,
-    notifications: [],
+    count: 0,
+    // notifications: [],
     error: false,
 };
-const publisherNotificationReducer = (state, action) => {
+const notificationReducer = (state = initialNotification, action) => {
     const { type, payload } = action;
     switch (type) {
+        case GET_NOTIFICATION_COUNT:
+            return {
+                ...state,
+                loading: false,
+                count: payload,
+                error: false,
+            };
+        case RESET_NOTIFICATION_COUNT:
+            return {
+                ...state,
+                loading: false,
+                count: payload,
+                error: false,
+            };
+        default:
+            return state;
     }
 };
 
 export default combineReducers({
     auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
+    mapBootcamps: mapBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
     bootcamp: bootcampReducer,
     course: courseReducer,
     cart: cartReducer,
+    notification: notificationReducer,
 });

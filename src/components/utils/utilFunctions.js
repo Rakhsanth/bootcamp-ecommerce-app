@@ -16,10 +16,32 @@ export const validatePassword = (password) => {
     return true;
 };
 
+export const validateMobileNumber = (mobileNum) => {
+    if (!mobileNum) {
+        return false;
+    }
+    if (mobileNum.length !== 10) {
+        return false;
+    }
+    if (!mobileNum.match(/\d{10}/)) {
+        return false;
+    }
+    return true;
+};
+
 export const validateImageFileSize = (file, fileSize) => {
+    if (typeof file === 'string') return true;
     if (file !== undefined) {
         if (file.size > fileSize * oneMB) return false;
         if (!file.type.includes('image')) return false;
+    }
+    return true;
+};
+export const validateDocFileSize = (file, fileSize) => {
+    if (typeof file === 'string') return true;
+    if (file !== undefined) {
+        if (file.size > fileSize * oneMB) return false;
+        if (!file.type.includes('pdf')) return false;
     }
     return true;
 };

@@ -15,6 +15,8 @@ import { pusherApiKey, pusherCluster } from '../config/config';
 function Cart(props) {
     const {
         loading,
+        isLoggedIn,
+        user,
         cartItems,
         updateCartItem,
         removeFromCart,
@@ -52,6 +54,16 @@ function Cart(props) {
             totalPrice += Number(item.price);
         });
         return totalPrice;
+    };
+
+    const getCourseEmails = () => {
+        const emailsList = cartItems.map((item, index) => item.email);
+        return emailsList;
+    };
+
+    const getCourseTitles = () => {
+        const courseTitles = cartItems.map((item, index) => item.title);
+        return courseTitles;
     };
 
     const handleRemoveItem = (id) => {
@@ -108,7 +120,13 @@ function Cart(props) {
     };
 
     const handleCheckout = async () => {
+        if (!isLoggedIn) {
+            history.push('/login');
+            return;
+        }
         const amount = getTotalPrice();
+        const courseEmails = getCourseEmails();
+        const courseTitles = getCourseTitles();
         let token;
         if (localStorage.token) {
             token = localStorage.getItem('token');
@@ -148,6 +166,9 @@ function Cart(props) {
                     razorpay_payment_id,
                     razorpay_order_id,
                     razorpay_signature,
+                    toEmails: courseEmails,
+                    courseTitles: courseTitles,
+                    userEmail: user.email,
                 };
                 const axiosConfig = {
                     headers: {
@@ -286,6 +307,8 @@ function Cart(props) {
 
 const mapStateToProps = (store) => ({
     loading: store.cart.loading,
+    isLoggedIn: store.auth.loggedIn,
+    user: store.auth.user,
     cartItems: store.cart.cartItems,
 });
 

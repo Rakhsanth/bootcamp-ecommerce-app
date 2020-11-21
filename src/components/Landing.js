@@ -1,11 +1,12 @@
 // react related imports
 import React, { useState, useEffect, useRef, createRef } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
+import MapView from './mapView/MapView';
 // actions imports
 import {
     getTaggedBootcamps,
@@ -22,6 +23,9 @@ function Landing(props) {
     const scrollTriggerThreshold = 600;
 
     const {
+        authLoading,
+        loggedIn,
+        user,
         resetLoading,
         taggedBootcamps,
         taggedCourses,
@@ -90,38 +94,48 @@ function Landing(props) {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 75em)' });
 
     useEffect(() => {
-        courseDesignTab.current.classList.add('focus-tab');
-        bootcampDesignTab.current.classList.add('focus-tab');
-        getTaggedCourses(
-            defaultTab,
-            null,
-            null,
-            null,
-            null,
-            10,
-            null,
-            null,
-            null,
-            false
-        );
-        getTaggedBootcamps(
-            defaultTab,
-            null,
-            null,
-            null,
-            null,
-            10,
-            null,
-            null,
-            null,
-            false
-        );
-    }, [getTaggedBootcamps, getTaggedCourses]);
+        if (
+            !loggedIn ||
+            !(loggedIn && !authLoading && user.role === 'publisher')
+        ) {
+            courseDesignTab.current.classList.add('focus-tab');
+            bootcampDesignTab.current.classList.add('focus-tab');
+            getTaggedCourses(
+                defaultTab,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+            getTaggedBootcamps(
+                defaultTab,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+        }
+    }, [getTaggedBootcamps, getTaggedCourses, loggedIn, authLoading, user]);
 
     useEffect(() => {
-        settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
-        settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
-    }, [taggedBootcampsCount, taggedCoursesCount]);
+        if (
+            !loggedIn ||
+            !(loggedIn && !authLoading && user.role === 'publisher')
+        ) {
+            settaggedCourseIndex({ start: 0, end: taggedCoursesCount });
+            settaggedBootcampIndex({ start: 0, end: taggedBootcampsCount });
+        }
+    }, [taggedBootcampsCount, taggedCoursesCount, loggedIn, authLoading, user]);
 
     console.log(taggedCourseIndex);
     console.log(taggedBootcampIndex);
@@ -415,6 +429,7 @@ function Landing(props) {
                         userCount={course.ratings}
                         currentStudentsCount={course.currentStudentsCount}
                         maxStudentsAllowed={course.maxStudentsAllowed}
+                        email={course.user.email}
                         startDate={course.startDate}
                         endDate={course.endDate}
                     />
@@ -461,6 +476,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -510,6 +526,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -559,6 +576,7 @@ function Landing(props) {
                                 userCount={ratings}
                                 currentStudentsCount={currentStudentsCount}
                                 maxStudentsAllowed={maxStudentsAllowed}
+                                email={course.user.email}
                                 startDate={startDate}
                                 endDate={endDate}
                             />
@@ -576,7 +594,9 @@ function Landing(props) {
         }
     };
 
-    return (
+    return loggedIn && !authLoading && user.role === 'publisher' ? (
+        <Redirect to="/publisher/profile" />
+    ) : (
         <main className="main-conatiner-home">
             <section className="hero-section">
                 <img
@@ -724,6 +744,9 @@ function Landing(props) {
                     isDesktopOrLaptop
                 )} */}
             </div>
+            <div className="map-view">
+                <MapView />
+            </div>
             <div className="top-catagories-container">
                 <h3 className="h3-heading top-catagories-heading">
                     Top Categories
@@ -798,6 +821,9 @@ function Landing(props) {
 
 const mapStateToProps = (store) => {
     return {
+        authLoading: store.auth.loading,
+        loggedIn: store.auth.loggedIn,
+        user: store.auth.user,
         taggedBootcampsLoading: store.taggedBootcamps.loading,
         taggedCoursesLoading: store.taggedCourses.loading,
         taggedBootcamps: store.taggedBootcamps.bootcamps,
