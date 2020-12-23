@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
 // component imports
 import CourseCard from './cards/homePage/CourseCard';
+import BootcampCard from './cards/homePage/BootcampCard';
 import MapView from './mapView/MapView';
 // actions imports
 import {
@@ -34,6 +35,7 @@ function Landing(props) {
         taggedBootcampsLoading,
         taggedCoursesLoading,
         taggedCoursesNextPage,
+        taggedBootcampsNextPage,
     } = props;
 
     const { history } = props;
@@ -78,6 +80,8 @@ function Landing(props) {
 
     const coursesLeftNav = useRef();
     const coursesRightNav = useRef();
+    const bootcampsLeftNav = useRef();
+    const bootcampsRightNav = useRef();
 
     const bootcampDesignTab = useRef();
     const bootcampDevelopmentTab = useRef();
@@ -241,7 +245,33 @@ function Landing(props) {
             bootcampFinanceTab.current.classList.add('focus-tab');
         }
         setactiveBootcampTab(category);
-        getTaggedBootcamps(category);
+        if (isMobile) {
+            getTaggedBootcamps(
+                category,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                null,
+                null,
+                false
+            );
+        } else {
+            getTaggedBootcamps(
+                category,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false
+            );
+        }
     };
 
     const handleCoursesLeftNavButton = () => {
@@ -594,6 +624,324 @@ function Landing(props) {
         }
     };
 
+    // Bootcamps related functions
+    const handleBootcampsLeftNavButton = () => {
+        let tempStartIndex;
+        if (isTabletPortrait) {
+            tempStartIndex = taggedBootcampIndex.start - 3;
+            if (tempStartIndex < 0) {
+                tempStartIndex = 0;
+            }
+        }
+        if (isTabletLandscape) {
+            tempStartIndex = taggedBootcampIndex.start - 4;
+            if (tempStartIndex < 0) {
+                tempStartIndex = 0;
+            }
+        }
+        if (isDesktopOrLaptop) {
+            tempStartIndex = taggedBootcampIndex.start - 5;
+            if (tempStartIndex < 0) {
+                tempStartIndex = 0;
+            }
+        }
+        settaggedBootcampIndex({
+            ...taggedBootcampIndex,
+            start: tempStartIndex,
+        });
+    };
+    const renderBootcampsLeftNavButton = () => {
+        if (isMobile) {
+            return null;
+        }
+        if (taggedBootcampIndex.start !== 0) {
+            return (
+                <button
+                    ref={bootcampsLeftNav}
+                    className="btn btn-secondary btn-circle btn-circle-lg home-categories-btn"
+                    onClick={handleBootcampsLeftNavButton}
+                >
+                    <svg className="btn-icon">
+                        <use xlinkHref="img/sprite.svg#icon-chevron-left"></use>
+                    </svg>
+                </button>
+            );
+        }
+    };
+    const handleBootcampsRightNavButton = () => {
+        let tempStartIndex;
+        if (isDesktopOrLaptop) {
+            tempStartIndex = taggedBootcampIndex.start + 5;
+            if (tempStartIndex >= taggedBootcampsCount) {
+                tempStartIndex = taggedBootcampsCount - 5;
+            }
+        }
+        if (isTabletLandscape) {
+            tempStartIndex = taggedBootcampIndex.start + 4;
+            if (tempStartIndex >= taggedBootcampsCount) {
+                tempStartIndex = taggedBootcampsCount - 4;
+            }
+        }
+        if (isTabletPortrait) {
+            tempStartIndex = taggedBootcampIndex.start + 3;
+            console.log(`current start index calculated = ${tempStartIndex}`);
+            if (tempStartIndex >= taggedBootcampsCount) {
+                tempStartIndex = taggedBootcampsCount - 3;
+            }
+        }
+        if (
+            taggedBootcampsNextPage !== null &&
+            taggedBootcamps.length < taggedBootcampsCount
+        ) {
+            resetLoading('taggedBootcamps');
+            getTaggedBootcamps(
+                activeBootcampTab,
+                null,
+                null,
+                null,
+                taggedBootcampsNextPage,
+                null,
+                null,
+                null,
+                null,
+                true
+            );
+        }
+        settaggedBootcampIndex({
+            ...taggedBootcampIndex,
+            start: tempStartIndex,
+        });
+    };
+    const renderBootcampsRightNavButton = () => {
+        if (isMobile) {
+            return null;
+        }
+        if (isTabletPortrait) {
+            if (taggedBootcampIndex.start + 3 < taggedBootcampsCount) {
+                return (
+                    <button
+                        ref={bootcampsRightNav}
+                        className="btn btn-secondary btn-circle btn-circle-lg home-categories-btn"
+                        onClick={handleBootcampsRightNavButton}
+                    >
+                        <svg className="btn-icon">
+                            <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
+                        </svg>
+                    </button>
+                );
+            }
+        }
+        if (isTabletLandscape) {
+            if (taggedBootcampIndex.start + 4 < taggedBootcampsCount) {
+                return (
+                    <button
+                        ref={bootcampsRightNav}
+                        className="btn btn-secondary btn-circle btn-circle-lg home-categories-btn"
+                        onClick={handleBootcampsRightNavButton}
+                    >
+                        <svg className="btn-icon">
+                            <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
+                        </svg>
+                    </button>
+                );
+            }
+        }
+        if (isDesktopOrLaptop) {
+            if (taggedBootcampIndex.start + 5 < taggedBootcampsCount) {
+                return (
+                    <button
+                        ref={bootcampsRightNav}
+                        className="btn btn-secondary btn-circle btn-circle-lg home-categories-btn"
+                        onClick={handleBootcampsRightNavButton}
+                    >
+                        <svg className="btn-icon">
+                            <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
+                        </svg>
+                    </button>
+                );
+            }
+        }
+    };
+
+    const handleBootcampsScroll = (event) => {
+        if (
+            // This makes sure that the API call is done only when we reach the sroll end
+            event.target.scrollWidth - Math.ceil(event.target.scrollLeft) <=
+                event.target.clientWidth &&
+            scrollNextPage !== taggedBootcampsNextPage &&
+            taggedBootcamps.length < taggedBootcampsCount
+        ) {
+            if (taggedBootcampsNextPage !== null) {
+                bootcampsCategoryContainerRef.current.scrollLeft =
+                    bootcampsCategoryContainerRef.current.scrollLeft -
+                    scrollTriggerThreshold;
+                resetLoading('taggedBootcamps');
+                getTaggedBootcamps(
+                    activeBootcampTab,
+                    null,
+                    null,
+                    null,
+                    taggedBootcampsNextPage,
+                    10,
+                    null,
+                    null,
+                    null,
+                    true
+                );
+            }
+            setscrollNextPage(taggedBootcampsNextPage);
+        }
+        return;
+    };
+
+    const renderBootcamps = (
+        isMobile,
+        isTabletPortrait,
+        isTabletLandscape,
+        isDesktopOrLaptop
+    ) => {
+        if (taggedBootcampsCount > 0) {
+            if (isMobile) {
+                return taggedBootcamps.map((bootcamp) => (
+                    <BootcampCard
+                        key={bootcamp._id}
+                        bootcampId={bootcamp._id}
+                        image={bootcamp.photo}
+                        title={bootcamp.name}
+                        description={bootcamp.description}
+                        offeringsList={bootcamp.offerings}
+                        avgPrice={bootcamp.averageCost}
+                        avgRating={bootcamp.averageRating}
+                        ratingCount={bootcamp.ratings}
+                    />
+                ));
+            }
+            if (isTabletPortrait) {
+                const cardList = [];
+                for (
+                    let index = taggedBootcampIndex.start;
+                    index < taggedBootcampIndex.start + 3 &&
+                    index < taggedBootcampsCount;
+                    index++
+                ) {
+                    console.log(taggedBootcamps);
+                    if (!taggedBootcampsLoading) {
+                        const bootcamp = taggedBootcamps[index];
+                        console.log(bootcamp, index);
+                        const {
+                            _id,
+                            photo,
+                            name,
+                            description,
+                            offerings,
+                            ratings,
+                            averageRating,
+                            averageCost,
+                        } = bootcamp;
+                        cardList.push(
+                            <BootcampCard
+                                key={_id}
+                                bootcampId={_id}
+                                image={photo}
+                                title={name}
+                                description={description}
+                                offeringsList={offerings}
+                                avgPrice={averageCost}
+                                avgRating={averageRating}
+                                ratingCount={ratings}
+                            />
+                        );
+                    }
+                }
+                return cardList;
+            }
+            if (isTabletLandscape) {
+                const cardList = [];
+                for (
+                    let index = taggedBootcampIndex.start;
+                    index < taggedBootcampIndex.start + 4 &&
+                    index < taggedBootcampsCount;
+                    index++
+                ) {
+                    console.log(taggedBootcamps);
+                    if (!taggedBootcampsLoading) {
+                        const bootcamp = taggedBootcamps[index];
+                        console.log(bootcamp, index);
+                        const {
+                            _id,
+                            photo,
+                            name,
+                            description,
+                            offerings,
+                            ratings,
+                            averageRating,
+                            averageCost,
+                        } = bootcamp;
+                        cardList.push(
+                            <BootcampCard
+                                key={_id}
+                                bootcampId={_id}
+                                image={photo}
+                                title={name}
+                                description={description}
+                                offeringsList={offerings}
+                                avgPrice={averageCost}
+                                avgRating={averageRating}
+                                ratingCount={ratings}
+                            />
+                        );
+                    }
+                }
+                return cardList;
+            }
+            if (isDesktopOrLaptop) {
+                const cardList = [];
+                for (
+                    let index = taggedBootcampIndex.start;
+                    index < taggedBootcampIndex.start + 5 &&
+                    index < taggedBootcampsCount;
+                    index++
+                ) {
+                    console.log(taggedBootcamps);
+                    if (!taggedBootcampsLoading) {
+                        const bootcamp = taggedBootcamps[index];
+                        console.log(bootcamp, index);
+                        const {
+                            _id,
+                            photo,
+                            name,
+                            description,
+                            offerings,
+                            ratings,
+                            averageRating,
+                            averageCost,
+                        } = bootcamp;
+                        cardList.push(
+                            <BootcampCard
+                                key={_id}
+                                bootcampId={_id}
+                                image={photo}
+                                title={name}
+                                description={description}
+                                offeringsList={offerings}
+                                avgPrice={averageCost}
+                                avgRating={averageRating}
+                                ratingCount={ratings}
+                            />
+                        );
+                    }
+                }
+                return cardList;
+            }
+        } else {
+            return (
+                <h2 className="center" style={{ marginTop: '10rem' }}>
+                    No Courses yet on this category
+                </h2>
+            );
+        }
+    };
+
     return loggedIn && !authLoading && user.role === 'publisher' ? (
         <Redirect to="/publisher/profile" />
     ) : (
@@ -735,14 +1083,19 @@ function Landing(props) {
                 </Link>
                 <h4 className="category-tabs-courses-title">Bootcamps</h4>
             </div>
-            <div className="categories-bootcamps">
-                {/* TO be populated by JS logic */}
-                {/* {renderBootcamps(
+            <div
+                ref={bootcampsCategoryContainerRef}
+                className="categories-bootcamps"
+                onScroll={(event) => handleBootcampsScroll(event)}
+            >
+                {renderBootcampsLeftNavButton()}
+                {renderBootcamps(
                     isMobile,
                     isTabletPortrait,
                     isTabletLandscape,
                     isDesktopOrLaptop
-                )} */}
+                )}
+                {renderBootcampsRightNavButton()}
             </div>
             <div className="map-view">
                 <MapView />

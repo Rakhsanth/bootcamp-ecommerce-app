@@ -6,20 +6,12 @@ import ReactPlayer from 'react-player/lazy';
 // api calls
 import { getReviews } from '../../api';
 // actions
-import { getCourse, addToCart, getCoursesByBootcamp } from '../../actions';
+import { getCourse, addToCart } from '../../actions';
 // config values
 import { pusherApiKey, pusherCluster } from '../../config/config';
 
 function Course(props) {
-    const {
-        loading,
-        course,
-        getCourse,
-        addToCart,
-        cartItems,
-        getCoursesByBootcamp,
-    } = props;
-    let { courses } = props;
+    const { loading, course, getCourse, addToCart, cartItems } = props;
     const {
         match: {
             params: { courseId },
@@ -101,10 +93,6 @@ function Course(props) {
         setStarPercerntsToState();
         setReviewToState();
         getCourse(courseId);
-        if (course !== null) {
-            getCoursesByBootcamp(course.bootcamp);
-            courses = courses.filter((item) => item._id !== course._id);
-        }
     }, [getCourse]);
 
     console.log(reviews, totalReviews);
@@ -347,54 +335,45 @@ function Course(props) {
                         Courses from same Bootcamp
                     </h2>
                     <div className="container-scrolly-main">
-                        {courses.length > 0 ? (
-                            courses.map((course) => (
-                                <div
-                                    key={course._id}
-                                    className="container-scrolly-main-item"
-                                >
-                                    <img
-                                        src={
-                                            course.picture !== 'no-photo.jpg'
-                                                ? course.picture
-                                                : './img/courseImages/courseCardImg.jpg'
-                                        }
-                                        alt="course"
-                                        className="container-scrolly-main-item-img"
-                                    />
-                                    <div className="container-scrolly-main-item-titledesc">
-                                        <h4 className="container-scrolly-main-item-titledesc-title">
-                                            {course.title}
-                                        </h4>
-                                        <p className="container-scrolly-main-item-titledesc-desc">
-                                            {course.description}
-                                        </p>
-                                    </div>
+                        <div className="container-scrolly-main-item">
+                            <img
+                                src="./img/courseImages/courseCardImg.jpg"
+                                alt="course"
+                                className="container-scrolly-main-item-img"
+                            />
+                            <div className="container-scrolly-main-item-titledesc">
+                                <h4 className="container-scrolly-main-item-titledesc-title">
+                                    Lorem ipsum dolor, sit amet consectetur
+                                    adipisicing elit. Quae, perferendis.
+                                </h4>
+                                <p className="container-scrolly-main-item-titledesc-desc">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Quisquam, ipsum laboriosam
+                                    in quo ipsa non recusandae autem culpa dicta
+                                    libero!
+                                </p>
+                            </div>
 
-                                    <div className="container-scrolly-main-item-rating">
-                                        <h5 className="container-scrolly-main-item-rating-text">
-                                            {course.averageRating}
-                                        </h5>
-                                        <svg className="container-scrolly-main-item-rating-icon">
-                                            <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                                        </svg>
-                                    </div>
-                                    <div className="container-scrolly-main-item-ratecount">
-                                        <svg className="container-scrolly-main-item-rating-icon">
-                                            <use xlinkHref="img/sprite.svg#icon-users"></use>
-                                        </svg>
-                                        <span className="container-scrolly-main-item-ratecount-text">
-                                            {course.ratings}
-                                        </span>
-                                    </div>
-                                    <span className="container-scrolly-main-item-price">
-                                        &#8377; {course.cost}
-                                    </span>
-                                </div>
-                            ))
-                        ) : (
-                            <h2>No other courses yet !!!</h2>
-                        )}
+                            <div className="container-scrolly-main-item-rating">
+                                <h5 className="container-scrolly-main-item-rating-text">
+                                    4.7
+                                </h5>
+                                <svg className="container-scrolly-main-item-rating-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-star-full"></use>
+                                </svg>
+                            </div>
+                            <div className="container-scrolly-main-item-ratecount">
+                                <svg className="container-scrolly-main-item-rating-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-users"></use>
+                                </svg>
+                                <span className="container-scrolly-main-item-ratecount-text">
+                                    11000
+                                </span>
+                            </div>
+                            <span className="container-scrolly-main-item-price">
+                                &#8377; 12000
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div className="course-feedback">
@@ -556,12 +535,9 @@ const mapStateToProps = (store) => {
         loading: store.course.loading,
         course: store.course.course,
         cartItems: store.cart.cartItems,
-        courses: store.bootcampCourses.courses,
     };
 };
 
-export default connect(mapStateToProps, {
-    getCourse,
-    addToCart,
-    getCoursesByBootcamp,
-})(withRouter(Course));
+export default connect(mapStateToProps, { getCourse, addToCart })(
+    withRouter(Course)
+);

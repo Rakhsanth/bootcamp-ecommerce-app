@@ -15,6 +15,7 @@ import {
     GET_TAG_FILTERED_BOOTCAMPS,
     GET_BOOTCAMPS_ERROR,
     GET_TAG_FILTERED_COURSES,
+    GET_COURSES_BY_BOOTCAMP,
     GET_COURSES_ERROR,
     GET_BOOTCAMP,
     GET_BOOTCAMP_ERROR,
@@ -348,6 +349,22 @@ export const getTaggedCourses = (
         } catch (err) {
             console.log(err);
             dispatch({ type: GET_COURSES_ERROR, payload: err.response });
+        }
+    };
+};
+
+export const getCoursesByBootcamp = (bootcampId) => {
+    return async function (dispatch) {
+        const getURL = `${apiBaseURL}/bootcamps/${bootcampId}/courses`;
+        try {
+            const response = await axios.get(getURL);
+            dispatch({
+                type: GET_COURSES_BY_BOOTCAMP,
+                payload: response.data.data,
+            });
+        } catch (err) {
+            console.log(err);
+            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
         }
     };
 };
