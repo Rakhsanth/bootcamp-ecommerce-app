@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Component, Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
@@ -6,9 +6,14 @@ import Pusher from 'pusher-js';
 // custom
 import { apiBaseURL, razorpayAPIKeyId } from '../config/config';
 // actions
-import { updateCartItem, removeFromCart, clearCart } from '../actions';
+import {
+    updateCartItem,
+    removeFromCart,
+    getUserProfile,
+    clearCart,
+} from '../actions';
 // API calls
-import { updateCourse } from '../api';
+import { updateCourse, createOrEditProfileDetails } from '../api';
 // config values
 import { pusherApiKey, pusherCluster } from '../config/config';
 
@@ -17,6 +22,8 @@ function Cart(props) {
         loading,
         isLoggedIn,
         user,
+        profile,
+        getUserProfile,
         cartItems,
         updateCartItem,
         removeFromCart,
@@ -48,6 +55,15 @@ function Cart(props) {
         }
     });
 
+    useEffect(() => {
+        if (!isLoggedIn) {
+            history.replace('/login');
+        }
+        if (user !== null) {
+            getUserProfile(user._id);
+        }
+    }, [user]);
+
     const getTotalPrice = () => {
         let totalPrice = 0;
         cartItems.forEach((item) => {
@@ -74,6 +90,15 @@ function Cart(props) {
         return cartItems.some(
             (item) => item.currentStudentsCount >= item.maxStudentsAllowed
         );
+    };
+    const hasPendingCourses = () => {
+        if (profile === null) {
+            return true;
+        }
+        if (profile.enrolledCourses.length !== 0) {
+            return true;
+        }
+        return false;
     };
     const checkDateConflicts = () => {
         const startDates = cartItems.map((item) => item.startDate);
@@ -117,6 +142,20 @@ function Cart(props) {
             await updateCourse(item.id, dataToUpdate);
         });
         clearCart();
+    };
+
+    const addCoursesToUserProfile = async () => {
+        const enrolledCourses = cartItems.map((item) => {
+            const detail = {};
+            detail.courseId = item.id;
+            detail.title = item.title;
+            detail.description = item.description;
+            return detail;
+        });
+        await createOrEditProfileDetails(profile._id, 'edit', {
+            enrolledCourses,
+        });
+        getUserProfile(user._id);
     };
 
     const handleCheckout = async () => {
@@ -190,6 +229,7 @@ function Cart(props) {
                     // );
                     console.log('Payment succeeded');
                     await updateCourseEnrollmentCount();
+                    await addCoursesToUserProfile();
                 } else {
                     // props.setAlert(confirmedResponse.data.data, 'danger');
                     console.log('user or bank workflow rejected');
@@ -204,7 +244,7 @@ function Cart(props) {
         rzp.open();
     };
 
-    return !loading ? (
+    return (
         <div className="main-conatiner-cart">
             <section className="shoping-header">
                 <h2 className="shoping-header-text">Shoping Cart</h2>
@@ -267,7 +307,11 @@ function Cart(props) {
                         className="btn btn-lg btn-tertiary"
                         onClick={handleCheckout}
                         disabled={
-                            !(checkDateConflicts() && !isFilledCoursesPresent())
+                            !(
+                                checkDateConflicts() &&
+                                !isFilledCoursesPresent() &&
+                                !hasPendingCourses()
+                            )
                         }
                     >
                         Checkout
@@ -297,11 +341,22 @@ function Cart(props) {
                             Already maximum students have enrolled
                         </span>
                     ) : null}
+                    {hasPendingCourses() ? (
+                        <span
+                            className="center"
+                            style={{
+                                display: 'inline-block',
+                                color: 'red',
+                                marginTop: '1rem',
+                            }}
+                        >
+                            You have not completed your profile details or you
+                            have incomplete enrolled courses
+                        </span>
+                    ) : null}
                 </div>
             ) : null}
         </div>
-    ) : (
-        <h1>Loading ...</h1>
     );
 }
 
@@ -309,11 +364,13 @@ const mapStateToProps = (store) => ({
     loading: store.cart.loading,
     isLoggedIn: store.auth.loggedIn,
     user: store.auth.user,
+    profile: store.profile.profile,
     cartItems: store.cart.cartItems,
 });
 
 export default connect(mapStateToProps, {
     updateCartItem,
     removeFromCart,
+    getUserProfile,
     clearCart,
 })(withRouter(Cart));

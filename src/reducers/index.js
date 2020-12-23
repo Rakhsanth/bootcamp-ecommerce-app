@@ -31,6 +31,8 @@ import {
     GET_NOTIFICATION_COUNT,
     NOTIFICATION_ERROR,
     RESET_NOTIFICATION_COUNT,
+    GET_PROFILE,
+    PROFILE_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -346,6 +348,24 @@ const cartReducer = (state = initialCartState, action) => {
     }
 };
 
+// Profile related reducer
+const initialProfile = {
+    loading: true,
+    profile: null,
+    error: false
+}
+const profileReducer = (state = initialProfile, action) => {
+    const {type, payload} = action;
+    switch(type){
+        case GET_PROFILE:
+            return {...state, loading: false, profile: payload, error: false}
+        case PROFILE_ERROR:
+            return {...state, loading: false, profile: payload, error: true}
+        default:
+            return state;
+    }
+}
+
 // Notification related reducer
 const initialNotification = {
     loading: true,
@@ -383,5 +403,6 @@ export default combineReducers({
     bootcamp: bootcampReducer,
     course: courseReducer,
     cart: cartReducer,
+    profile: profileReducer,
     notification: notificationReducer,
 });

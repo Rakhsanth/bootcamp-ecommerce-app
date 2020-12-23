@@ -31,6 +31,8 @@ import {
     UPDATE_LOADED_CART_ITEM,
     GET_MAP_BOOTCAMPS,
     MAP_BOOTCAMPS_ERROR,
+    GET_PROFILE,
+    PROFILE_ERROR,
     GET_NOTIFICATION_COUNT,
     RESET_NOTIFICATION_COUNT,
     NOTIFICATION_ERROR,
@@ -431,6 +433,39 @@ export const updateLoadedCourse = (courseDoc) => {
     };
 };
 
+// Action for getting a user's profile detail
+export const getUserProfile = (userId) => {
+    return async function (dispatch) {
+        let getURL = `${apiBaseURL}/profiles?user=${userId}`;
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const response = await axios.get(getURL, config);
+            if (response.data.error) {
+                dispatch({
+                    type: PROFILE_ERROR,
+                    payload: null,
+                });
+            } else {
+                console.log(response.data.data[0]);
+                dispatch({
+                    type: GET_PROFILE,
+                    payload: response.data.data[0],
+                });
+            }
+        } catch (err) {
+            console.log(err.response.data);
+        }
+    };
+};
 // Action for getting the unread notification count
 export const getNotificationCount = (notificationCount) => {
     return {
