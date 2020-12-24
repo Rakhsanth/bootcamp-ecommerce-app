@@ -251,12 +251,17 @@ function Course(props) {
                 <div className="course-top-details">
                     <h2 className="course-top-details-title">{course.title}</h2>
                     <h5 className="course-top-details-bootcamp">
-                        Lorem ipsum dolor sit amet.
+                        {course.description}
                     </h5>
                 </div>
 
                 <div className="course-payment">
-                    <div className="course-video">
+                    <div
+                        className="course-video"
+                        style={{
+                            height: course.video === 'no-video' ? '5%' : '50%',
+                        }}
+                    >
                         {course.video !== 'no-video' ? (
                             <ReactPlayer
                                 width="100%"
@@ -268,7 +273,7 @@ function Course(props) {
                             <h2
                                 style={{
                                     margin: '0 auto',
-                                    marginTop: '50%',
+                                    marginTop: '0%',
                                 }}
                             >
                                 No intro video from the course owner
@@ -294,6 +299,13 @@ function Course(props) {
                                 Already maximum students have enrolled
                             </span>
                         )}
+                        <Link
+                            className="btn btn-primary btn-md btn-center"
+                            style={{ margin: '1rem 0' }}
+                            to={`/bootcamps/${course.bootcamp}`}
+                        >
+                            Viwe Bootcamp
+                        </Link>
                     </div>
                 </div>
 
@@ -324,14 +336,22 @@ function Course(props) {
                         <h2 className="course-req-desc-req-heading">
                             Requirements
                         </h2>
-                        <li className="course-req-desc-req-list-item">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Earum, tenetur.
-                        </li>
-                        <li className="course-req-desc-req-list-item">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Earum, tenetur.
-                        </li>
+                        {course.basicRequirements &&
+                        course.basicRequirements.length > 0 ? (
+                            course.basicRequirements.map((req, index) => (
+                                <li
+                                    key={index}
+                                    className="course-req-desc-req-list-item"
+                                >
+                                    {req}
+                                </li>
+                            ))
+                        ) : (
+                            <h2>
+                                No basic requirements mentioned by the course
+                                provider
+                            </h2>
+                        )}
                     </div>
                     <div className="course-req-desc-desc">
                         <h2 className="course-req-desc-desc-heading">

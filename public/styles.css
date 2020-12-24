@@ -1278,10 +1278,9 @@ a:hover {
     padding: 0 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
-            20rem,
-            min-content
-        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-rows:
+        50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
+        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1290,10 +1289,12 @@ a:hover {
 @media (max-width: 56.25em) {
     .main-conatiner-course {
         margin-top: 4rem;
-        grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
+        grid-template-rows:
+            50vh min-content minmax(15rem, min-content) minmax(
                 20rem,
                 min-content
-            ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+            )
+            minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     }
 }
 @media (max-width: 56.25em) {
@@ -1306,10 +1307,9 @@ a:hover {
 .main-conatiner-home {
     margin-top: 10rem;
     display: grid;
-    grid-template-rows: 65vh 5rem minmax(40vh, min-content) 5rem minmax(
-            40vh,
-            min-content
-        ) repeat(3, min-content) 25vh;
+    grid-template-rows:
+        65vh 5rem minmax(40vh, min-content) 5rem minmax(40vh, min-content)
+        repeat(3, min-content) 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1366,10 +1366,9 @@ a:hover {
     padding: 0 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows: 50vh min-content minmax(15rem, min-content) minmax(
-            20rem,
-            min-content
-        ) minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+    grid-template-rows:
+        50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
+        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1961,7 +1960,7 @@ a:hover {
     left: 75vw;
     transform: translateY(-50%);
     width: 20rem;
-    height: 40rem;
+    height: 50rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -2002,6 +2001,13 @@ a:hover {
     .course-payment {
         top: 3rem;
         left: 0;
+    }
+}
+@media (max-width: 56.25em) {
+    .course-payment .course-video {
+        width: 60%;
+        height: 50%;
+        cursor: pointer;
     }
 }
 

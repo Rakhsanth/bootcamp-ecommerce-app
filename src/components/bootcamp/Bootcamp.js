@@ -1,20 +1,23 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Pusher from 'pusher-js';
-import ReactPlayer from 'react-player/lazy';
 // api calls
-import { getReviews } from '../../api';
+import { getBootcampReviews } from '../../api';
 // actions
-import { getCourse, addToCart } from '../../actions';
+import { getBootcamp, getCoursesByBootcamp } from '../../actions';
 // config values
-import { pusherApiKey, pusherCluster } from '../../config/config';
 
-function Course(props) {
-    const { loading, course, getCourse, addToCart, cartItems } = props;
+function Bootcamp(props) {
+    const {
+        loading,
+        bootcamp,
+        courses,
+        getBootcamp,
+        getCoursesByBootcamp,
+    } = props;
     const {
         match: {
-            params: { courseId },
+            params: { bootcampId },
         },
         history,
     } = props;
@@ -25,22 +28,7 @@ function Course(props) {
     const [starPercents, setstarPercents] = useState({});
     const [filterQuery, setfilterQuery] = useState(null);
 
-    // Pusher related stuff for realtime DB related updations
-    const pusher = new Pusher(pusherApiKey, {
-        cluster: pusherCluster,
-    });
-    const channel = pusher.subscribe('courses');
-    channel.bind('updated', function (data) {
-        console.log('Pusher subscribed');
-        if (course) {
-            if (course._id === data.newUpdatedDoc._id) {
-                console.log('Found the modefied doc in realtime');
-                getCourse(courseId);
-            }
-        }
-    });
-
-    console.log(courseId, currentPage, starPercents);
+    console.log(bootcampId, currentPage, starPercents);
 
     const classes = {
         five: {
@@ -63,15 +51,15 @@ function Course(props) {
     const setReviewToState = async (pageNum, query) => {
         let reviewList;
         if (pageNum) {
-            reviewList = await getReviews(
-                courseId,
+            reviewList = await getBootcampReviews(
+                bootcampId,
                 pageNum,
                 true,
                 query ? query : filterQuery
             );
         } else {
-            reviewList = await getReviews(
-                courseId,
+            reviewList = await getBootcampReviews(
+                bootcampId,
                 currentPage,
                 true,
                 query ? query : filterQuery
@@ -85,15 +73,16 @@ function Course(props) {
         settotalReviews(reviewList.count);
     };
     const setStarPercerntsToState = async () => {
-        const review = await getReviews(courseId, null, true);
+        const review = await getBootcampReviews(bootcampId, null, true);
         setstarPercents(review.percents);
     };
 
     useEffect(() => {
         setStarPercerntsToState();
         setReviewToState();
-        getCourse(courseId);
-    }, [getCourse]);
+        getBootcamp(bootcampId);
+        getCoursesByBootcamp(bootcampId);
+    }, [getBootcamp, getCoursesByBootcamp]);
 
     console.log(reviews, totalReviews);
 
@@ -148,149 +137,34 @@ function Course(props) {
         setcurrentPage(currentPage + 1);
     };
 
-    const handleAddToCart = () => {
-        const entries = new Map([
-            ['id', course._id],
-            ['image', course.image],
-            ['title', course.title],
-            ['price', course.cost],
-            ['description', course.description],
-            ['startDate', course.startDate],
-            ['endDate', course.endDate],
-            ['email', course.user.email],
-            ['currentStudentsCount', course.currentStudentsCount],
-            ['maxStudentsAllowed', course.maxStudentsAllowed],
-        ]);
-        const cartItem = Object.fromEntries(entries);
-        console.log(cartItem);
-        addToCart(cartItem);
-    };
-
-    const renderAddToCart = () => {
-        const inCart = cartItems.some((item) => item.id === course._id);
-        if (inCart) {
-            return (
-                <Link to="/cart" className="btn btn-primary btn-md btn-center">
-                    <span className="btn-text">Go to checkout</span>
-                </Link>
-            );
-        } else {
-            if (course.currentStudentsCount < course.maxStudentsAllowed) {
-                return (
-                    <button
-                        className="btn btn-tertiary btn-md"
-                        onClick={handleAddToCart}
-                    >
-                        Add to cart
-                    </button>
-                );
-            } else {
-                return (
-                    <button className="btn btn-tertiary btn-md" disabled>
-                        Add to cart
-                    </button>
-                );
-            }
-        }
-    };
-
-    const handleBuyNow = () => {
-        handleAddToCart();
-        history.push('/cart');
-    };
-
-    const renderBuyNow = () => {
-        const inCart = cartItems.some((item) => item.id === course._id);
-        if (inCart) {
-            return null;
-        } else {
-            if (course.currentStudentsCount < course.maxStudentsAllowed) {
-                return (
-                    <button
-                        className="btn btn-secondary btn-md"
-                        onClick={handleBuyNow}
-                    >
-                        Buy now
-                    </button>
-                );
-            } else {
-                return (
-                    <button className="btn btn-secondary btn-md" disabled>
-                        Buy now
-                    </button>
-                );
-            }
-        }
-    };
-
-    return !loading && course ? (
+    return !loading && bootcamp ? (
         <Fragment>
             <div className="main-conatiner-course">
                 <img
                     src={
-                        course.picture !== 'no-photo.jpg'
-                            ? course.picture
+                        bootcamp.photo !== 'no-photo.jpg'
+                            ? bootcamp.photo
                             : '/bootcamp_logo.jpg'
                     }
-                    alt="course-image"
+                    alt="bootcamp-pic"
                     className="course-image"
                 />
                 <span className="image-overlay course-image-overlay"></span>
                 <div className="course-top-details">
-                    <h2 className="course-top-details-title">{course.title}</h2>
+                    <h2 className="course-top-details-title">
+                        {bootcamp.name}
+                    </h2>
                     <h5 className="course-top-details-bootcamp">
-                        Lorem ipsum dolor sit amet.
+                        {bootcamp.description}
                     </h5>
                 </div>
 
-                <div className="course-payment">
-                    <div className="course-video">
-                        {course.video !== 'no-video' ? (
-                            <ReactPlayer
-                                width="100%"
-                                height="100%"
-                                url={course.video}
-                                controls
-                            />
-                        ) : (
-                            <h2
-                                style={{
-                                    margin: '0 auto',
-                                    marginTop: '50%',
-                                }}
-                            >
-                                No intro video from the course owner
-                            </h2>
-                        )}
-                    </div>
-                    <div className="course-payment-details">
-                        <h4 className="course-payment-price">
-                            &#8377; {course.cost}
-                        </h4>
-                        {renderAddToCart()}
-                        {renderBuyNow()}
-                        {course.currentStudentsCount <
-                        course.maxStudentsAllowed ? null : (
-                            <span
-                                className="center"
-                                style={{
-                                    color: 'red',
-                                    marginTop: '1rem',
-                                    padding: '0 1.5rem',
-                                }}
-                            >
-                                Already maximum students have enrolled
-                            </span>
-                        )}
-                    </div>
-                </div>
-
-                <div className="course-maindesc">
+                <div className="course-maindesc" style={{ width: '100%' }}>
                     <h2 className="course-maindesc-title">
-                        What you will learn
+                        What you will get from our bootcamp
                     </h2>
                     <ul className="course-maindesc-list">
-                        {course.contentList.map((content, index) => (
+                        {bootcamp.offerings.map((content, index) => (
                             <li
                                 key={index}
                                 className="course-maindesc-list-item"
@@ -307,84 +181,108 @@ function Course(props) {
                     <span className="course-maindesc-fade1"></span>
                     <span className="course-maindesc-fade2"></span>
                 </div>
-                <div className="course-req-desc">
+                <div className="course-req-desc" style={{ width: '100%' }}>
                     <div className="course-req-desc-req">
                         <h2 className="course-req-desc-req-heading">
-                            Requirements
+                            Location details
                         </h2>
                         <li className="course-req-desc-req-list-item">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Earum, tenetur.
+                            {bootcamp.address}
                         </li>
                         <li className="course-req-desc-req-list-item">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Earum, tenetur.
+                            {bootcamp.district}
+                        </li>
+                        <li className="course-req-desc-req-list-item">
+                            {bootcamp.state}
+                            {` - ${bootcamp.zipcode}`}
                         </li>
                     </div>
                     <div className="course-req-desc-desc">
                         <h2 className="course-req-desc-desc-heading">
-                            Description
+                            Other details
                         </h2>
-                        <p className="course-req-desc-desctext">
-                            {course.requirementDescription}
-                        </p>
+                        <li className="course-req-desc-req-list-item">
+                            {bootcamp.jobAssistance
+                                ? 'Job assistance provided'
+                                : 'Job assistance not provided'}
+                        </li>
+                        <li className="course-req-desc-req-list-item">
+                            {bootcamp.jobGuarantee
+                                ? 'Job guarantee assured'
+                                : 'Job guarantee not assured'}
+                        </li>
+                        <li className="course-req-desc-req-list-item">
+                            {bootcamp.housing
+                                ? 'Housing / hostel facility is available'
+                                : 'Housing / hostel facility is not available'}
+                        </li>
                     </div>
                 </div>
-                <div className="container-scrolly">
+                <div className="container-scrolly" style={{ width: '100%' }}>
                     <h2 className="container-scrolly-heading">
-                        Courses from same Bootcamp
+                        Courses from this Bootcamp
                     </h2>
                     <div className="container-scrolly-main">
-                        <div className="container-scrolly-main-item">
-                            <img
-                                src="./img/courseImages/courseCardImg.jpg"
-                                alt="course"
-                                className="container-scrolly-main-item-img"
-                            />
-                            <div className="container-scrolly-main-item-titledesc">
-                                <h4 className="container-scrolly-main-item-titledesc-title">
-                                    Lorem ipsum dolor, sit amet consectetur
-                                    adipisicing elit. Quae, perferendis.
-                                </h4>
-                                <p className="container-scrolly-main-item-titledesc-desc">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Quisquam, ipsum laboriosam
-                                    in quo ipsa non recusandae autem culpa dicta
-                                    libero!
-                                </p>
-                            </div>
+                        {courses.length > 0 ? (
+                            courses.map((course) => (
+                                <Link
+                                    key={course._id}
+                                    to={`/courses/${course._id}`}
+                                    className="container-scrolly-main-item"
+                                >
+                                    <img
+                                        src={
+                                            course.picture !== 'no-photo.jpg'
+                                                ? course.picture
+                                                : './img/courseImages/courseCardImg.jpg'
+                                        }
+                                        alt="course"
+                                        className="container-scrolly-main-item-img"
+                                    />
+                                    <div className="container-scrolly-main-item-titledesc">
+                                        <h4 className="container-scrolly-main-item-titledesc-title">
+                                            {course.title}
+                                        </h4>
+                                        <p className="container-scrolly-main-item-titledesc-desc">
+                                            {course.description}
+                                        </p>
+                                    </div>
 
-                            <div className="container-scrolly-main-item-rating">
-                                <h5 className="container-scrolly-main-item-rating-text">
-                                    4.7
-                                </h5>
-                                <svg className="container-scrolly-main-item-rating-icon">
-                                    <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                                </svg>
-                            </div>
-                            <div className="container-scrolly-main-item-ratecount">
-                                <svg className="container-scrolly-main-item-rating-icon">
-                                    <use xlinkHref="img/sprite.svg#icon-users"></use>
-                                </svg>
-                                <span className="container-scrolly-main-item-ratecount-text">
-                                    11000
-                                </span>
-                            </div>
-                            <span className="container-scrolly-main-item-price">
-                                &#8377; 12000
-                            </span>
-                        </div>
+                                    <div className="container-scrolly-main-item-rating">
+                                        <h5 className="container-scrolly-main-item-rating-text">
+                                            {course.averageRating}
+                                        </h5>
+                                        <svg className="container-scrolly-main-item-rating-icon">
+                                            <use xlinkHref="img/sprite.svg#icon-star-full"></use>
+                                        </svg>
+                                    </div>
+                                    <div className="container-scrolly-main-item-ratecount">
+                                        <svg className="container-scrolly-main-item-rating-icon">
+                                            <use xlinkHref="img/sprite.svg#icon-users"></use>
+                                        </svg>
+                                        <span className="container-scrolly-main-item-ratecount-text">
+                                            {course.ratings}
+                                        </span>
+                                    </div>
+                                    <span className="container-scrolly-main-item-price">
+                                        &#8377; {course.cost}
+                                    </span>
+                                </Link>
+                            ))
+                        ) : (
+                            <h2>New bootcamp, courses yet to be added</h2>
+                        )}
                     </div>
                 </div>
-                <div className="course-feedback">
+                <div className="course-feedback" style={{ width: '100%' }}>
                     <h2 className="course-feedback-heading">User Feedback</h2>
                     <div className="course-feedback-top">
                         <div className="course-feedback-top-rating">
                             <h3 className="course-feedback-top-rating-text">
-                                {course.averageRating}
+                                {bootcamp.averageRating}
                             </h3>
                             <div className="course-feedback-top-rating-stars">
-                                {renderStars(course.averageRating)}
+                                {renderStars(bootcamp.averageRating)}
                             </div>
                         </div>
                         <div className="course-feedback-top-percents">
@@ -533,11 +431,11 @@ function Course(props) {
 const mapStateToProps = (store) => {
     return {
         loading: store.course.loading,
-        course: store.course.course,
-        cartItems: store.cart.cartItems,
+        bootcamp: store.bootcamp.bootcamp,
+        courses: store.bootcampCourses.courses,
     };
 };
 
-export default connect(mapStateToProps, { getCourse, addToCart })(
-    withRouter(Course)
+export default connect(mapStateToProps, { getBootcamp, getCoursesByBootcamp })(
+    withRouter(Bootcamp)
 );

@@ -137,6 +137,30 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
     }
 };
 
+export const getBootcampReviews = async (
+    bootcampId,
+    pageNum,
+    percents,
+    query
+) => {
+    let getURL = `${apiBaseURL}/bootcamps/${bootcampId}/reviews?sort=-createdAt`;
+    if (pageNum) {
+        getURL = getURL + `&page=${pageNum}`;
+    }
+    if (percents) {
+        getURL = getURL + `&percents=${percents}`;
+    }
+    if (query) {
+        getURL = getURL + `&${query}`;
+    }
+    try {
+        const response = await axios.get(getURL);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 // get profile along with notifications using UserId
 export const getProfileDetails = async (userId) => {
     let getURL = `${apiBaseURL}/profiles?user=${userId}`;
