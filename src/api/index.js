@@ -62,7 +62,7 @@ export const createEditBootcamp = async (
                 );
         }
 
-        if (image) {
+        if (typeof image !== 'string' && image !== undefined) {
             const imageUploadURL = `${apiBaseURL}/bootcamps/${bootcampResponse.data.data._id}/photo`;
             const imageConfig = getPostConfig(
                 'multipart/form-data',
@@ -120,6 +120,30 @@ export const updateCourse = async (courseId, data) => {
 
 export const getReviews = async (courseId, pageNum, percents, query) => {
     let getURL = `${apiBaseURL}/courses/${courseId}/reviews?sort=-createdAt`;
+    if (pageNum) {
+        getURL = getURL + `&page=${pageNum}`;
+    }
+    if (percents) {
+        getURL = getURL + `&percents=${percents}`;
+    }
+    if (query) {
+        getURL = getURL + `&${query}`;
+    }
+    try {
+        const response = await axios.get(getURL);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const getBootcampReviews = async (
+    bootcampId,
+    pageNum,
+    percents,
+    query
+) => {
+    let getURL = `${apiBaseURL}/bootcamps/${bootcampId}/reviews?sort=-createdAt`;
     if (pageNum) {
         getURL = getURL + `&page=${pageNum}`;
     }
@@ -225,7 +249,7 @@ export const createOrEditProfileDetails = async (
                 getPostConfig('application/json', true, true)
             );
         }
-        if (typeof picture !== 'string') {
+        if (typeof picture !== 'string' && picture !== undefined) {
             const imageUploadURL = `${apiBaseURL}/profiles/image/${profileResponse.data.data._id}`;
             const formData = new FormData();
             formData.append('file', picture);
@@ -235,7 +259,7 @@ export const createOrEditProfileDetails = async (
                 getPostConfig('multipart/form-data', true, true)
             );
         }
-        if (typeof resume !== 'string') {
+        if (typeof resume !== 'string' && resume !== undefined) {
             const fileUploadURL = `${apiBaseURL}/profiles/file/${profileResponse.data.data._id}`;
             const formData = new FormData();
             formData.append('file', resume);

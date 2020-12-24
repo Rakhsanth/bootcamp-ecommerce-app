@@ -15,6 +15,7 @@ import {
     GET_TAG_FILTERED_BOOTCAMPS,
     GET_BOOTCAMPS_ERROR,
     GET_TAG_FILTERED_COURSES,
+    GET_COURSES_BY_BOOTCAMP,
     GET_COURSES_ERROR,
     GET_BOOTCAMP,
     GET_BOOTCAMP_ERROR,
@@ -31,6 +32,8 @@ import {
     UPDATE_LOADED_CART_ITEM,
     GET_MAP_BOOTCAMPS,
     MAP_BOOTCAMPS_ERROR,
+    GET_PROFILE,
+    PROFILE_ERROR,
     GET_NOTIFICATION_COUNT,
     RESET_NOTIFICATION_COUNT,
     NOTIFICATION_ERROR,
@@ -350,6 +353,22 @@ export const getTaggedCourses = (
     };
 };
 
+export const getCoursesByBootcamp = (bootcampId) => {
+    return async function (dispatch) {
+        const getURL = `${apiBaseURL}/bootcamps/${bootcampId}/courses`;
+        try {
+            const response = await axios.get(getURL);
+            dispatch({
+                type: GET_COURSES_BY_BOOTCAMP,
+                payload: response.data.data,
+            });
+        } catch (err) {
+            console.log(err);
+            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
+        }
+    };
+};
+
 // get a single bootcamp by id
 export const getBootcamp = (bootcampId) => {
     return async function (dispatch) {
@@ -431,6 +450,39 @@ export const updateLoadedCourse = (courseDoc) => {
     };
 };
 
+// Action for getting a user's profile detail
+export const getUserProfile = (userId) => {
+    return async function (dispatch) {
+        let getURL = `${apiBaseURL}/profiles?user=${userId}`;
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const response = await axios.get(getURL, config);
+            if (response.data.error) {
+                dispatch({
+                    type: PROFILE_ERROR,
+                    payload: null,
+                });
+            } else {
+                console.log(response.data.data[0]);
+                dispatch({
+                    type: GET_PROFILE,
+                    payload: response.data.data[0],
+                });
+            }
+        } catch (err) {
+            console.log(err.response.data);
+        }
+    };
+};
 // Action for getting the unread notification count
 export const getNotificationCount = (notificationCount) => {
     return {

@@ -31,6 +31,9 @@ import {
     GET_NOTIFICATION_COUNT,
     NOTIFICATION_ERROR,
     RESET_NOTIFICATION_COUNT,
+    GET_PROFILE,
+    PROFILE_ERROR,
+    GET_COURSES_BY_BOOTCAMP,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -212,6 +215,25 @@ const taggedCoursesReducer = (state = initialTaggedCoursesState, action) => {
     }
 };
 
+// To get courses by using bootcamp ID
+const initialBootcampCourses = {
+    loading: true,
+    courses: [],
+    error: false,
+};
+
+const bootcampCoursesReducer = (state = initialBootcampCourses, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case GET_COURSES_BY_BOOTCAMP:
+            return { ...state, loading: false, courses: payload, error: false };
+        case GET_COURSES_ERROR:
+            return { ...state, loading: false, courses: payload, error: true };
+        default:
+            return state;
+    }
+};
+
 // reducer to get a single bootcamp
 const initialBootcampState = {
     loading: true,
@@ -346,6 +368,24 @@ const cartReducer = (state = initialCartState, action) => {
     }
 };
 
+// Profile related reducer
+const initialProfile = {
+    loading: true,
+    profile: null,
+    error: false,
+};
+const profileReducer = (state = initialProfile, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case GET_PROFILE:
+            return { ...state, loading: false, profile: payload, error: false };
+        case PROFILE_ERROR:
+            return { ...state, loading: false, profile: payload, error: true };
+        default:
+            return state;
+    }
+};
+
 // Notification related reducer
 const initialNotification = {
     loading: true,
@@ -380,8 +420,10 @@ export default combineReducers({
     taggedBootcamps: taggedBootcampsReducer,
     mapBootcamps: mapBootcampsReducer,
     taggedCourses: taggedCoursesReducer,
+    bootcampCourses: bootcampCoursesReducer,
     bootcamp: bootcampReducer,
     course: courseReducer,
     cart: cartReducer,
+    profile: profileReducer,
     notification: notificationReducer,
 });

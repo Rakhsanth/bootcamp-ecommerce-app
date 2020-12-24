@@ -199,7 +199,7 @@ function Header(props) {
                                     </span>
                                 ) : null}
                             </Link>
-                            <Link to="/profile" class="top-header-user">
+                            <Link to="/user/profile" class="top-header-user">
                                 <svg class="top-header-user-icon">
                                     <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
                                 </svg>
@@ -275,7 +275,7 @@ function Header(props) {
                                 </span>
                             ) : null}
                         </Link>
-                        <Link to="/profile" class="small-header-user">
+                        <Link to="/user/profile" class="small-header-user">
                             <svg class="small-header-user-icon">
                                 <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
                             </svg>

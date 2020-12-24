@@ -9,6 +9,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import CourseResults from './components/course/CourseResults';
 import Course from './components/course/Course';
+import Bootcamp from './components/bootcamp/Bootcamp';
 import Cart from './components/Cart';
 import UserProfile from './components/user/UserProfile';
 import PublisherProfile from './components/publisher/PublisherProfile';
@@ -47,6 +48,11 @@ function App() {
                             exact
                             path="/courses/:courseId"
                             component={Course}
+                        />
+                        <Route
+                            exact
+                            path="/bootcamps/:bootcampId"
+                            component={Bootcamp}
                         />
                         <Route exact path="/cart" component={Cart} />
                         <ProtectedRoute
