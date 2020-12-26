@@ -1,24 +1,49 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Pusher from 'pusher-js';
+// 3ed party Auths
+import { useGoogleLogout } from 'react-google-login';
 // action creator
 import { logout, getNotificationCount } from '../actions';
 // API calls
 import { getProfileDetails } from '../api';
 // Config values
-import { pusherApiKey, pusherCluster } from '../config/config';
+import {
+    googleSignInClientId,
+    pusherApiKey,
+    pusherCluster,
+} from '../config/config';
 
 // Global variables
 const btnBorderBlueLight = 'rgb(40, 150, 169)';
 const lightGreySearchBarBorder = 'rgb(152, 149, 134)';
 
 function Header(props) {
-    const { loading, isLoggedIn, cartCount, user, notificationCount } = props;
+    const {
+        history,
+        loading,
+        isLoggedIn,
+        cartCount,
+        user,
+        notificationCount,
+    } = props;
     const { logout, getNotificationCount } = props;
+
+    const [searchText, setsearchText] = useState(null);
 
     const [userProfile, setuserProfile] = useState(null);
     console.log(userProfile);
+
+    const googleLogoutHandler = (response) => {
+        console.log(response);
+    };
+    const { signOut, loaded } = useGoogleLogout({
+        onFailure: googleLogoutHandler,
+        clientId: googleSignInClientId,
+        cookiePolicy: 'single_host_origin',
+        onLogoutSuccess: googleLogoutHandler,
+    });
 
     // Pusher related stuff for realtime DB related updations
     const pusher = new Pusher(pusherApiKey, {
@@ -79,7 +104,21 @@ function Header(props) {
         headerSearchIcon.style.fill = `${lightGreySearchBarBorder}`;
     };
 
+    const handleSearchBox = (event) => {
+        setsearchText(event.target.value);
+    };
+
+    const handleSearch = (event) => {
+        if (searchText !== null && searchText !== '') {
+            console.log(searchText);
+            history.push(`/courseResults/all/${searchText}`);
+        }
+    };
+
     const handleLogout = () => {
+        if (user.thirdParty) {
+            signOut();
+        }
         logout();
     };
 
@@ -93,7 +132,7 @@ function Header(props) {
                         <ul className="top-header-navbar-dropdown-list">
                             <li className="top-header-navbar-dropdown-list-item">
                                 <Link
-                                    to="/"
+                                    to="/courseResults/development"
                                     className="top-header-navbar-dropdown-list-item-link"
                                 >
                                     <span className="top-header-navbar-dropdown-list-item-link-text">
@@ -103,7 +142,7 @@ function Header(props) {
                             </li>
                             <li className="top-header-navbar-dropdown-list-item">
                                 <Link
-                                    to="/"
+                                    to="/courseResults/design"
                                     className="top-header-navbar-dropdown-list-item-link"
                                 >
                                     <span className="top-header-navbar-dropdown-list-item-link-text">
@@ -113,7 +152,7 @@ function Header(props) {
                             </li>
                             <li className="top-header-navbar-dropdown-list-item">
                                 <Link
-                                    to="/"
+                                    to="/courseResults/data science"
                                     className="top-header-navbar-dropdown-list-item-link"
                                 >
                                     <span className="top-header-navbar-dropdown-list-item-link-text">
@@ -123,7 +162,7 @@ function Header(props) {
                             </li>
                             <li className="top-header-navbar-dropdown-list-item">
                                 <Link
-                                    to="/"
+                                    to="/courseResults/digital marketing"
                                     className="top-header-navbar-dropdown-list-item-link"
                                 >
                                     <span className="top-header-navbar-dropdown-list-item-link-text">
@@ -133,7 +172,7 @@ function Header(props) {
                             </li>
                             <li className="top-header-navbar-dropdown-list-item">
                                 <Link
-                                    to="/"
+                                    to="/courseResults/finance"
                                     className="top-header-navbar-dropdown-list-item-link"
                                 >
                                     <span className="top-header-navbar-dropdown-list-item-link-text">
@@ -152,9 +191,13 @@ function Header(props) {
                             placeholder="Search Courses or Bootcamps"
                             onFocus={searchInputFocus}
                             onBlur={searchInputFocusOut}
+                            onChange={(event) => handleSearchBox(event)}
                         />
                     </div>
-                    <div className="top-header-search-icons">
+                    <div
+                        className="top-header-search-icons"
+                        onClick={handleSearch}
+                    >
                         <svg className="top-header-search-icons-icon">
                             <use xlinkHref="img/sprite.svg#icon-search"></use>
                         </svg>
@@ -296,9 +339,13 @@ function Header(props) {
                                 type="text"
                                 className="top-header-search-bar-input"
                                 placeholder="Search Courses or Bootcamps"
+                                onChange={(event) => handleSearchBox(event)}
                             />
                         </div>
-                        <div className="top-header-search-icons">
+                        <div
+                            className="top-header-search-icons"
+                            onClick={handleSearch}
+                        >
                             <svg className="top-header-search-icons-icon">
                                 <use xlinkHref="img/sprite.svg#icon-search"></use>
                             </svg>
@@ -337,7 +384,12 @@ function Header(props) {
                             Categories
                         </h3>
                         <ul className="sidenav-main-categories-list">
-                            <li className="sidenav-main-categories-list-item">
+                            <li
+                                className="sidenav-main-categories-list-item"
+                                onClick={() =>
+                                    history.push('/courseResults/development')
+                                }
+                            >
                                 <span className="sidenav-main-categories-list-item-text">
                                     Development
                                 </span>
@@ -345,7 +397,12 @@ function Header(props) {
                                     <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
                                 </svg>
                             </li>
-                            <li className="sidenav-main-categories-list-item">
+                            <li
+                                className="sidenav-main-categories-list-item"
+                                onClick={() =>
+                                    history.push('/courseResults/design')
+                                }
+                            >
                                 <span className="sidenav-main-categories-list-item-text">
                                     Design
                                 </span>
@@ -353,7 +410,12 @@ function Header(props) {
                                     <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
                                 </svg>
                             </li>
-                            <li className="sidenav-main-categories-list-item">
+                            <li
+                                className="sidenav-main-categories-list-item"
+                                onClick={() =>
+                                    history.push('/courseResults/data science')
+                                }
+                            >
                                 <span className="sidenav-main-categories-list-item-text">
                                     Data Science
                                 </span>
@@ -361,7 +423,14 @@ function Header(props) {
                                     <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
                                 </svg>
                             </li>
-                            <li className="sidenav-main-categories-list-item">
+                            <li
+                                className="sidenav-main-categories-list-item"
+                                onClick={() =>
+                                    history.push(
+                                        '/courseResults/digital marketing'
+                                    )
+                                }
+                            >
                                 <span className="sidenav-main-categories-list-item-text">
                                     Digital Marketing
                                 </span>
@@ -369,7 +438,12 @@ function Header(props) {
                                     <use xlinkHref="img/sprite.svg#icon-chevron-right"></use>
                                 </svg>
                             </li>
-                            <li className="sidenav-main-categories-list-item">
+                            <li
+                                className="sidenav-main-categories-list-item"
+                                onClick={() =>
+                                    history.push('/courseResults/finance')
+                                }
+                            >
                                 <span className="sidenav-main-categories-list-item-text">
                                     Finance
                                 </span>
@@ -404,5 +478,5 @@ const mapStateToProps = (store) => {
 };
 
 export default connect(mapStateToProps, { logout, getNotificationCount })(
-    Header
+    withRouter(Header)
 );

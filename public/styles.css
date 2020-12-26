@@ -1729,6 +1729,14 @@ a:hover {
     flex-direction: column;
     justify-items: center;
 }
+.google-signin-provider,
+.kep-login-facebook {
+    padding: 0 16% !important;
+    width: 350px;
+    height: 5rem;
+    margin-bottom: 1rem;
+    border: 1px solid black !important;
+}
 .login-container-form {
     display: flex;
     position: relative;
