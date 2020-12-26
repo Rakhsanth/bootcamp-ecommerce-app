@@ -72,20 +72,37 @@ function CourseResults(props) {
 
     const category =
         pathname.split('/')[2] !== undefined ? pathname.split('/')[2] : null;
+    const searchParam =
+        pathname.split('/')[3] !== undefined ? pathname.split('/')[3] : null;
 
     useEffect(() => {
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            null,
-            10,
-            sortResult,
-            null,
-            null,
-            false
-        );
+        if (searchParam === null) {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                null,
+                10,
+                sortResult,
+                null,
+                null,
+                false
+            );
+        } else {
+            getTaggedCourses(
+                null,
+                null,
+                null,
+                null,
+                null,
+                10,
+                sortResult,
+                null,
+                `search=${searchParam}`,
+                false
+            );
+        }
     }, [getTaggedCourses, pathname]);
     useEffect(() => {
         if (totalCount !== 0) {
@@ -148,18 +165,34 @@ function CourseResults(props) {
         console.log(values);
 
         setsortResult(values.sortBy);
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            null,
-            10,
-            values.sortBy,
-            null,
-            filterQuery,
-            false
-        );
+        if (searchParam === null) {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                null,
+                10,
+                values.sortBy,
+                null,
+                filterQuery,
+                false
+            );
+        } else {
+            filterQuery += `&search=${searchParam}`;
+            getTaggedCourses(
+                null,
+                null,
+                null,
+                null,
+                null,
+                10,
+                values.sortBy,
+                null,
+                filterQuery,
+                false
+            );
+        }
     };
     const onSubmitCheckboxes = (values) => {
         console.log(values);
@@ -203,18 +236,34 @@ function CourseResults(props) {
         console.log(query);
 
         setfilterQuery(query);
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            null,
-            10,
-            sortResult,
-            null,
-            query,
-            false
-        );
+        if (searchParam === null) {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                null,
+                10,
+                sortResult,
+                null,
+                query,
+                false
+            );
+        } else {
+            query += `&search=${searchParam}`;
+            getTaggedCourses(
+                null,
+                null,
+                null,
+                null,
+                null,
+                10,
+                sortResult,
+                null,
+                query,
+                false
+            );
+        }
     };
 
     const handlePrev = () => {
@@ -225,18 +274,34 @@ function CourseResults(props) {
     };
     const handlePageNumber = (pageNum) => {
         setcurrentPage(pageNum);
-        getTaggedCourses(
-            category,
-            null,
-            null,
-            null,
-            pageNum,
-            10,
-            sortResult,
-            null,
-            filterQuery,
-            false
-        );
+        if (searchParam === null) {
+            getTaggedCourses(
+                category,
+                null,
+                null,
+                null,
+                pageNum,
+                10,
+                sortResult,
+                null,
+                filterQuery,
+                false
+            );
+        } else {
+            filterQuery += `&search=${searchParam}`;
+            getTaggedCourses(
+                null,
+                null,
+                null,
+                null,
+                pageNum,
+                10,
+                sortResult,
+                null,
+                filterQuery,
+                false
+            );
+        }
     };
     const renderPageNumbers = () => {
         let pageNumbers = [];
@@ -282,7 +347,8 @@ function CourseResults(props) {
         <div className="main-conatiner-courses">
             <div className="search-title">
                 <h2 className="h2-heading">
-                    {totalCount} results for “unreal game programming”
+                    {totalCount} results for “
+                    {searchParam !== null ? searchParam : category}”
                 </h2>
             </div>
             <div className="filter-sort">

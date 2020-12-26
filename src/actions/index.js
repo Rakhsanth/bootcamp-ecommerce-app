@@ -186,6 +186,7 @@ export const getTaggedBootcamps = (
         }
         try {
             const response = await axios.get(getURL);
+            console.log(response.data);
             if (history) history.push('/bootcampResults');
             if (append) {
                 dispatch({
@@ -209,10 +210,14 @@ export const getTaggedBootcamps = (
                 });
             }
         } catch (err) {
-            if (err.response.data) {
+            if (err.response !== undefined) {
                 console.log(err.response.data);
+                dispatch({
+                    type: GET_BOOTCAMPS_ERROR,
+                    payload: err.response.data,
+                });
             }
-            dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response.data });
+            dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response });
         }
     };
 };
