@@ -104,6 +104,101 @@ export const deleteBootcamp = async (bootcampId) => {
     }
 };
 
+export const createEditCourse = async (
+    formValues,
+    createOrEdit,
+    courseId,
+    bootcampId
+) => {
+    let postURL = `${apiBaseURL}/courses`;
+    let postCreateUrl = `${apiBaseURL}/bootcamps/${bootcampId}/courses`;
+    const config = getPostConfig('application/json', true, true);
+
+    const { image, video, ...restData } = formValues;
+
+    try {
+        let courseResponse;
+        let uploadResponse;
+
+        switch (createOrEdit) {
+            case 'create':
+                postURL = postCreateUrl;
+                courseResponse = await axios.post(
+                    postURL,
+                    { ...restData },
+                    config
+                );
+                break;
+            case 'edit':
+                postURL += `/${courseId}`;
+                courseResponse = await axios.put(
+                    postURL,
+                    { ...restData },
+                    config
+                );
+        }
+
+        if (typeof image !== 'string' && image !== undefined) {
+            const imageUploadURL = `${apiBaseURL}/courses/${courseResponse.data.data._id}/photo`;
+            const imageConfig = getPostConfig(
+                'multipart/form-data',
+                true,
+                true
+            );
+            const formData = new FormData();
+            formData.append('file', image);
+            try {
+                uploadResponse = await axios.put(
+                    imageUploadURL,
+                    formData,
+                    imageConfig
+                );
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        if (typeof video !== 'string' && video !== undefined) {
+            const videoUploadURL = `${apiBaseURL}/courses/${courseResponse.data.data._id}/video`;
+            const videoConfig = getPostConfig(
+                'multipart/form-data',
+                true,
+                true
+            );
+            const formData = new FormData();
+            formData.append('file', video);
+            try {
+                uploadResponse = await axios.put(
+                    videoUploadURL,
+                    formData,
+                    videoConfig
+                );
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    } catch (err) {
+        console.log(err.response.data);
+        if (
+            err.response.data.data ===
+            "Cannot read property 'longitude' of undefined"
+        ) {
+            console.log('please endter a valid pincode / zipcode');
+        }
+    }
+};
+
+export const deleteCourse = async (courseId) => {
+    const deleteURL = `${apiBaseURL}/courses/${courseId}`;
+    try {
+        const response = axios.delete(
+            deleteURL,
+            getPostConfig('application/json', true, true)
+        );
+    } catch (err) {
+        console.log(err.response);
+    }
+};
+
 export const updateCourse = async (courseId, data) => {
     let postURL = `${apiBaseURL}/courses/${courseId}`;
     try {

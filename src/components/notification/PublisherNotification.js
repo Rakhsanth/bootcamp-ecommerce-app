@@ -49,7 +49,7 @@ function PublisherNotification(props) {
         <div class="main-conatiner-pubProfile">
             <div
                 class="ui bottom attached tab segment active pubProfile-tabContent"
-                style={{ maxHeight: '80vh', overflowY: 'auto' }}
+                style={{ maxHeight: '80vh', width: '90vw', overflowY: 'auto' }}
             >
                 <div
                     class="pubProfile-tabContent-profile"

@@ -37,6 +37,14 @@ export const validateImageFileSize = (file, fileSize) => {
     }
     return true;
 };
+export const validateVideoFileSize = (file, fileSize) => {
+    if (typeof file === 'string') return true;
+    if (file !== undefined) {
+        if (file.size > fileSize * oneMB) return false;
+        if (!file.type.includes('video')) return false;
+    }
+    return true;
+};
 export const validateDocFileSize = (file, fileSize) => {
     if (typeof file === 'string') return true;
     if (file !== undefined) {
