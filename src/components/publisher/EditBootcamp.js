@@ -8,6 +8,7 @@ import { createEditBootcamp } from '../../api';
 import { resetLoading, getBootcamp } from '../../actions';
 // custom utils
 import { validateImageFileSize } from '../utils/utilFunctions';
+import Courses from './Courses';
 
 function EditBootcamp(props) {
     const {
@@ -624,7 +625,9 @@ function EditBootcamp(props) {
                     <div
                         ref={courseTabContentRef}
                         class="bootcamp-form-content-tech"
-                    ></div>
+                    >
+                        <Courses bootcampId={bootcampId} />
+                    </div>
                 </div>
             </div>
         </div>

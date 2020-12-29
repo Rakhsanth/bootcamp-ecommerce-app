@@ -2545,6 +2545,13 @@ a:hover {
     flex-direction: column;
 }
 .pubProfile-form-control input {
+    margin-bottom: 1rem;
+    height: 3rem;
+    width: 100%;
+    outline: none;
+    border-radius: 0.5rem;
+    text-indent: 1rem;
+    border: 1px solid #989586;
     cursor: pointer;
 }
 .pubProfile-form-control-label {
@@ -2554,6 +2561,7 @@ a:hover {
 .pubProfile-form-control-input {
     margin-bottom: 1rem;
     height: 3rem;
+    width: 100%;
     outline: none;
     border-radius: 0.5rem;
     text-indent: 1rem;

@@ -221,27 +221,29 @@ function Header(props) {
                 <Fragment>
                     {isLoggedIn ? (
                         <Fragment>
-                            <Link
-                                to={`/notifications/${
-                                    user.role === 'publisher'
-                                        ? 'publisher'
-                                        : user.role === 'user'
-                                        ? 'user'
-                                        : ''
-                                }/${userProfile ? userProfile._id : ''}`}
-                                class="top-header-notify"
-                            >
-                                <svg class="top-header-notify-icon">
-                                    <use xlinkHref="img/sprite.svg#icon-bell"></use>
-                                </svg>
-                                {notificationCount > 0 ? (
-                                    <span class="top-header-notify-count">
-                                        <span class="top-header-notify-count-text">
-                                            {notificationCount}
+                            {user.role === 'publisher' ? (
+                                <Link
+                                    to={`/notifications/${
+                                        user.role === 'publisher'
+                                            ? 'publisher'
+                                            : user.role === 'user'
+                                            ? 'user'
+                                            : ''
+                                    }/${userProfile ? userProfile._id : ''}`}
+                                    class="top-header-notify"
+                                >
+                                    <svg class="top-header-notify-icon">
+                                        <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                                    </svg>
+                                    {notificationCount > 0 ? (
+                                        <span class="top-header-notify-count">
+                                            <span class="top-header-notify-count-text">
+                                                {notificationCount}
+                                            </span>
                                         </span>
-                                    </span>
-                                ) : null}
-                            </Link>
+                                    ) : null}
+                                </Link>
+                            ) : null}
                             <Link to="/user/profile" class="top-header-user">
                                 <svg class="top-header-user-icon">
                                     <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
@@ -297,27 +299,29 @@ function Header(props) {
                 ) : null}
                 {isLoggedIn ? (
                     <Fragment>
-                        <Link
-                            to={`/notifications/${
-                                user.role === 'publisher'
-                                    ? 'publisher'
-                                    : user.role === 'user'
-                                    ? 'user'
-                                    : ''
-                            }/${userProfile ? userProfile._id : ''}`}
-                            class="small-header-notify"
-                        >
-                            <svg class="small-header-notify-icon">
-                                <use xlinkHref="img/sprite.svg#icon-bell"></use>
-                            </svg>
-                            {notificationCount > 0 ? (
-                                <span class="small-header-notify-count">
-                                    <span class="top-header-notify-count-text">
-                                        {notificationCount}
+                        {user.role === 'publisher' ? (
+                            <Link
+                                to={`/notifications/${
+                                    user.role === 'publisher'
+                                        ? 'publisher'
+                                        : user.role === 'user'
+                                        ? 'user'
+                                        : ''
+                                }/${userProfile ? userProfile._id : ''}`}
+                                class="small-header-notify"
+                            >
+                                <svg class="small-header-notify-icon">
+                                    <use xlinkHref="img/sprite.svg#icon-bell"></use>
+                                </svg>
+                                {notificationCount > 0 ? (
+                                    <span class="small-header-notify-count">
+                                        <span class="top-header-notify-count-text">
+                                            {notificationCount}
+                                        </span>
                                     </span>
-                                </span>
-                            ) : null}
-                        </Link>
+                                ) : null}
+                            </Link>
+                        ) : null}
                         <Link to="/user/profile" class="small-header-user">
                             <svg class="small-header-user-icon">
                                 <use xlinkHref="img/sprite.svg#icon-user-circle-o"></use>
