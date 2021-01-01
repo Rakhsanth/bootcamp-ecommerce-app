@@ -1,6 +1,5 @@
 // react related
 import { combineReducers } from 'redux';
-import { resetLoading } from '../actions';
 // action types
 import {
     RESET_LOADING,
@@ -47,6 +46,12 @@ const initialLoginStatus = {
 const userLoginRegisterReducer = (state = initialLoginStatus, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'auth') {
+                return { ...state, loading: true };
+            } else {
+                return state;
+            }
         case REGISTER_USER:
         case LOGIN_USER:
             localStorage.setItem('token', payload.token);
@@ -225,6 +230,12 @@ const initialBootcampCourses = {
 const bootcampCoursesReducer = (state = initialBootcampCourses, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'bootcampCourses') {
+                return { ...state, loading: true, courses: [], error: false };
+            } else {
+                return state;
+            }
         case GET_COURSES_BY_BOOTCAMP:
             return { ...state, loading: false, courses: payload, error: false };
         case GET_COURSES_ERROR:
@@ -377,6 +388,12 @@ const initialProfile = {
 const profileReducer = (state = initialProfile, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'profile') {
+                return { ...state, loading: true, profile: null, error: false };
+            } else {
+                return state;
+            }
         case GET_PROFILE:
             return { ...state, loading: false, profile: payload, error: false };
         case PROFILE_ERROR:
@@ -396,6 +413,12 @@ const initialNotification = {
 const notificationReducer = (state = initialNotification, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'notification') {
+                return { ...state, loading: true, error: false };
+            } else {
+                return state;
+            }
         case GET_NOTIFICATION_COUNT:
             return {
                 ...state,

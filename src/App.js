@@ -16,6 +16,7 @@ import PublisherProfile from './components/publisher/PublisherProfile';
 import PublisherNotification from './components/notification/PublisherNotification';
 import UserNotification from './components/notification/UserNotification';
 import ProtectedRoute from './components/ProtectedRoute';
+import Alert from './components/utils/Alert';
 
 // Redux store and actions
 import { Provider } from 'react-redux';
@@ -35,6 +36,11 @@ function App() {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Header />
+                    <div className="tempAlert-container">
+                        <Alert color="red" message="Otha Oombu da Shit" />
+                        <Alert color="black" message="Otha Shit" />
+                        <Alert color="green" message="Otha Shit" />
+                    </div>
                     <Route exact path="/" component={Landing} />
                     <Switch>
                         {/* Other specific dynamic routes and pages goes here */}

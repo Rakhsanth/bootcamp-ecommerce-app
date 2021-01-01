@@ -72,14 +72,16 @@ function Header(props) {
         }
     };
     const getProfileDetailsUtil = async () => {
-        const profile = await getProfileDetails(user._id);
-        console.log(profile);
-        if (profile) {
-            getNotificationCount(profile.unReadCount);
-        } else {
-            getNotificationCount(0);
+        if (user._id) {
+            const profile = await getProfileDetails(user._id);
+            console.log(profile);
+            if (profile) {
+                getNotificationCount(profile.unReadCount);
+            } else {
+                getNotificationCount(0);
+            }
+            setuserProfile(profile);
         }
-        setuserProfile(profile);
     };
     useEffect(() => {
         if (!loading && isLoggedIn) {

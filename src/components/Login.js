@@ -1,10 +1,10 @@
-import React, { createRef } from 'react';
+import React, { createRef, Fragment } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { connect } from 'react-redux';
 import * as Yup from 'yup';
 // action creators
-import { loginUser } from '../actions';
+import { resetLoading, loginUser } from '../actions';
 // 3rd party logins
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
@@ -12,10 +12,11 @@ import FacebookLogin from 'react-facebook-login';
 import { googleSignInClientId, facebookSignInAppId } from '../config/config';
 // utils
 import { validatePassword } from '../components/utils/utilFunctions';
+import Spinner from './utils/Spinner';
 
 function Login(props) {
     const { loading, loggedIn } = props;
-    const { loginUser, history } = props;
+    const { resetLoading, loginUser, history } = props;
 
     const initialValues = {
         email: '',
@@ -30,6 +31,7 @@ function Login(props) {
     const onSubmit = (values, onSubmitProps) => {
         console.log(values);
         const body = values;
+        resetLoading('auth');
         loginUser(body, history);
     };
 
@@ -72,6 +74,7 @@ function Login(props) {
         body.email = email;
         body.imageUrl = imageUrl;
         console.log(body);
+        resetLoading('auth');
         loginUser(body, history);
     };
 
@@ -95,14 +98,15 @@ function Login(props) {
         body.email = email;
         body.imageUrl = url;
         console.log(body);
+        resetLoading('auth');
         loginUser(body, history);
     };
 
-    return !loading ? (
-        loggedIn ? (
-            <Redirect to="/" />
-        ) : (
-            <div class="login-container">
+    return loggedIn ? (
+        <Redirect to="/" />
+    ) : (
+        <Fragment>
+            <div class="login-container" style={{ position: 'relative' }}>
                 <div class="pubProfile-tabs">
                     <div class="ui top attached tabular menu grid two column row">
                         <div
@@ -130,10 +134,8 @@ function Login(props) {
                             style={{ margin: '0 auto' }}
                         >
                             <div class="login-container-message">
-                                <strong>
-                                    {' '}
-                                    Login with your Bootcamp account{' '}
-                                </strong>
+                                {' '}
+                                Login with your Bootcamp account{' '}
                             </div>
                             <div
                                 ref={thirdPartyRef}
@@ -218,10 +220,10 @@ function Login(props) {
                         </div>
                     </div>
                 </div>
+                {loading ? <Spinner size="lg" /> : null}
+                {/* <Spinner size="lg" /> */}
             </div>
-        )
-    ) : (
-        <h1>Loading ...</h1>
+        </Fragment>
     );
 }
 
@@ -229,4 +231,6 @@ const mapStateToProps = (store) => {
     return { loading: store.auth.loading, loggedIn: store.auth.loggedIn };
 };
 
-export default connect(mapStateToProps, { loginUser })(withRouter(Login));
+export default connect(mapStateToProps, { resetLoading, loginUser })(
+    withRouter(Login)
+);

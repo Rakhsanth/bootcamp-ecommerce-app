@@ -17,6 +17,8 @@ import {
 } from '../actions';
 // Config values
 import { pusherApiKey, pusherCluster } from '../config/config';
+// Utils
+import Spinner from './utils/Spinner';
 
 const defaultTab = 'design';
 
@@ -27,7 +29,6 @@ function Landing(props) {
         authLoading,
         loggedIn,
         user,
-        resetLoading,
         taggedBootcamps,
         taggedCourses,
         taggedBootcampsCount,
@@ -41,7 +42,12 @@ function Landing(props) {
     const { history } = props;
 
     // action creators
-    const { getTaggedBootcamps, getTaggedCourses, updateLoadedCourse } = props;
+    const {
+        getTaggedBootcamps,
+        getTaggedCourses,
+        updateLoadedCourse,
+        resetLoading,
+    } = props;
 
     const [activeCourseTab, setactiveCourseTab] = useState(defaultTab);
     const [activeBootcampTab, setactiveBootcampTab] = useState(defaultTab);
@@ -443,184 +449,188 @@ function Landing(props) {
         isTabletLandscape,
         isDesktopOrLaptop
     ) => {
-        if (taggedCoursesCount > 0) {
-            if (isMobile) {
-                return taggedCourses.map((course) => (
-                    <CourseCard
-                        key={course._id}
-                        courseId={course._id}
-                        image={course.picture}
-                        author={course.author}
-                        title={course.title}
-                        description={course.description}
-                        keyPointsList={course.contentList}
-                        price={course.cost}
-                        rating={course.averageRating}
-                        userCount={course.ratings}
-                        currentStudentsCount={course.currentStudentsCount}
-                        maxStudentsAllowed={course.maxStudentsAllowed}
-                        email={course.user.email}
-                        startDate={course.startDate}
-                        endDate={course.endDate}
-                    />
-                ));
-            }
-            if (isTabletPortrait) {
-                const cardList = [];
-                for (
-                    let index = taggedCourseIndex.start;
-                    index < taggedCourseIndex.start + 3 &&
-                    index < taggedCoursesCount;
-                    index++
-                ) {
-                    console.log(taggedCourses);
-                    if (!taggedCoursesLoading) {
-                        const course = taggedCourses[index];
-                        console.log(course, index);
-                        const {
-                            _id,
-                            picture,
-                            author,
-                            title,
-                            description,
-                            contentList,
-                            averageRating,
-                            ratings,
-                            cost,
-                            currentStudentsCount,
-                            maxStudentsAllowed,
-                            startDate,
-                            endDate,
-                        } = course;
-                        cardList.push(
-                            <CourseCard
-                                key={index}
-                                courseId={_id}
-                                image={picture}
-                                author={author}
-                                title={title}
-                                description={description}
-                                keyPointsList={contentList}
-                                price={cost}
-                                rating={averageRating}
-                                userCount={ratings}
-                                currentStudentsCount={currentStudentsCount}
-                                maxStudentsAllowed={maxStudentsAllowed}
-                                email={course.user.email}
-                                startDate={startDate}
-                                endDate={endDate}
-                            />
-                        );
-                    }
+        if (!taggedCoursesLoading) {
+            if (taggedCoursesCount > 0) {
+                if (isMobile) {
+                    return taggedCourses.map((course) => (
+                        <CourseCard
+                            key={course._id}
+                            courseId={course._id}
+                            image={course.picture}
+                            author={course.author}
+                            title={course.title}
+                            description={course.description}
+                            keyPointsList={course.contentList}
+                            price={course.cost}
+                            rating={course.averageRating}
+                            userCount={course.ratings}
+                            currentStudentsCount={course.currentStudentsCount}
+                            maxStudentsAllowed={course.maxStudentsAllowed}
+                            email={course.user.email}
+                            startDate={course.startDate}
+                            endDate={course.endDate}
+                        />
+                    ));
                 }
-                return cardList;
-            }
-            if (isTabletLandscape) {
-                const cardList = [];
-                for (
-                    let index = taggedCourseIndex.start;
-                    index < taggedCourseIndex.start + 4 &&
-                    index < taggedCoursesCount;
-                    index++
-                ) {
-                    console.log(taggedCourses);
-                    if (!taggedCoursesLoading) {
-                        const course = taggedCourses[index];
-                        console.log(course, index);
-                        const {
-                            _id,
-                            picture,
-                            author,
-                            title,
-                            description,
-                            contentList,
-                            averageRating,
-                            ratings,
-                            cost,
-                            currentStudentsCount,
-                            maxStudentsAllowed,
-                            startDate,
-                            endDate,
-                        } = course;
-                        cardList.push(
-                            <CourseCard
-                                key={index}
-                                courseId={_id}
-                                image={picture}
-                                author={author}
-                                title={title}
-                                description={description}
-                                keyPointsList={contentList}
-                                price={cost}
-                                rating={averageRating}
-                                userCount={ratings}
-                                currentStudentsCount={currentStudentsCount}
-                                maxStudentsAllowed={maxStudentsAllowed}
-                                email={course.user.email}
-                                startDate={startDate}
-                                endDate={endDate}
-                            />
-                        );
+                if (isTabletPortrait) {
+                    const cardList = [];
+                    for (
+                        let index = taggedCourseIndex.start;
+                        index < taggedCourseIndex.start + 3 &&
+                        index < taggedCoursesCount;
+                        index++
+                    ) {
+                        console.log(taggedCourses);
+                        if (!taggedCoursesLoading) {
+                            const course = taggedCourses[index];
+                            console.log(course, index);
+                            const {
+                                _id,
+                                picture,
+                                author,
+                                title,
+                                description,
+                                contentList,
+                                averageRating,
+                                ratings,
+                                cost,
+                                currentStudentsCount,
+                                maxStudentsAllowed,
+                                startDate,
+                                endDate,
+                            } = course;
+                            cardList.push(
+                                <CourseCard
+                                    key={index}
+                                    courseId={_id}
+                                    image={picture}
+                                    author={author}
+                                    title={title}
+                                    description={description}
+                                    keyPointsList={contentList}
+                                    price={cost}
+                                    rating={averageRating}
+                                    userCount={ratings}
+                                    currentStudentsCount={currentStudentsCount}
+                                    maxStudentsAllowed={maxStudentsAllowed}
+                                    email={course.user.email}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                />
+                            );
+                        }
                     }
+                    return cardList;
                 }
-                return cardList;
-            }
-            if (isDesktopOrLaptop) {
-                const cardList = [];
-                for (
-                    let index = taggedCourseIndex.start;
-                    index < taggedCourseIndex.start + 5 &&
-                    index < taggedCoursesCount;
-                    index++
-                ) {
-                    console.log(taggedCourses);
-                    if (!taggedCoursesLoading) {
-                        const course = taggedCourses[index];
-                        console.log(course, index);
-                        const {
-                            _id,
-                            picture,
-                            author,
-                            title,
-                            description,
-                            contentList,
-                            averageRating,
-                            ratings,
-                            cost,
-                            currentStudentsCount,
-                            maxStudentsAllowed,
-                            startDate,
-                            endDate,
-                        } = course;
-                        cardList.push(
-                            <CourseCard
-                                key={index}
-                                courseId={_id}
-                                image={picture}
-                                author={author}
-                                title={title}
-                                description={description}
-                                keyPointsList={contentList}
-                                price={cost}
-                                rating={averageRating}
-                                userCount={ratings}
-                                currentStudentsCount={currentStudentsCount}
-                                maxStudentsAllowed={maxStudentsAllowed}
-                                email={course.user.email}
-                                startDate={startDate}
-                                endDate={endDate}
-                            />
-                        );
+                if (isTabletLandscape) {
+                    const cardList = [];
+                    for (
+                        let index = taggedCourseIndex.start;
+                        index < taggedCourseIndex.start + 4 &&
+                        index < taggedCoursesCount;
+                        index++
+                    ) {
+                        console.log(taggedCourses);
+                        if (!taggedCoursesLoading) {
+                            const course = taggedCourses[index];
+                            console.log(course, index);
+                            const {
+                                _id,
+                                picture,
+                                author,
+                                title,
+                                description,
+                                contentList,
+                                averageRating,
+                                ratings,
+                                cost,
+                                currentStudentsCount,
+                                maxStudentsAllowed,
+                                startDate,
+                                endDate,
+                            } = course;
+                            cardList.push(
+                                <CourseCard
+                                    key={index}
+                                    courseId={_id}
+                                    image={picture}
+                                    author={author}
+                                    title={title}
+                                    description={description}
+                                    keyPointsList={contentList}
+                                    price={cost}
+                                    rating={averageRating}
+                                    userCount={ratings}
+                                    currentStudentsCount={currentStudentsCount}
+                                    maxStudentsAllowed={maxStudentsAllowed}
+                                    email={course.user.email}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                />
+                            );
+                        }
                     }
+                    return cardList;
                 }
-                return cardList;
+                if (isDesktopOrLaptop) {
+                    const cardList = [];
+                    for (
+                        let index = taggedCourseIndex.start;
+                        index < taggedCourseIndex.start + 5 &&
+                        index < taggedCoursesCount;
+                        index++
+                    ) {
+                        console.log(taggedCourses);
+                        if (!taggedCoursesLoading) {
+                            const course = taggedCourses[index];
+                            console.log(course, index);
+                            const {
+                                _id,
+                                picture,
+                                author,
+                                title,
+                                description,
+                                contentList,
+                                averageRating,
+                                ratings,
+                                cost,
+                                currentStudentsCount,
+                                maxStudentsAllowed,
+                                startDate,
+                                endDate,
+                            } = course;
+                            cardList.push(
+                                <CourseCard
+                                    key={index}
+                                    courseId={_id}
+                                    image={picture}
+                                    author={author}
+                                    title={title}
+                                    description={description}
+                                    keyPointsList={contentList}
+                                    price={cost}
+                                    rating={averageRating}
+                                    userCount={ratings}
+                                    currentStudentsCount={currentStudentsCount}
+                                    maxStudentsAllowed={maxStudentsAllowed}
+                                    email={course.user.email}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                />
+                            );
+                        }
+                    }
+                    return cardList;
+                }
+            } else {
+                return (
+                    <h2 className="center" style={{ marginTop: '10rem' }}>
+                        No Courses yet on this category
+                    </h2>
+                );
             }
         } else {
-            return (
-                <h2 className="center" style={{ marginTop: '10rem' }}>
-                    No Courses yet on this category
-                </h2>
-            );
+            return <Spinner size="sm" />;
         }
     };
 
@@ -800,145 +810,149 @@ function Landing(props) {
         isTabletLandscape,
         isDesktopOrLaptop
     ) => {
-        if (taggedBootcampsCount > 0) {
-            if (isMobile) {
-                return taggedBootcamps.map((bootcamp) => (
-                    <BootcampCard
-                        key={bootcamp._id}
-                        bootcampId={bootcamp._id}
-                        image={bootcamp.photo}
-                        title={bootcamp.name}
-                        description={bootcamp.description}
-                        offeringsList={bootcamp.offerings}
-                        avgPrice={bootcamp.averageCost}
-                        avgRating={bootcamp.averageRating}
-                        ratingCount={bootcamp.ratings}
-                    />
-                ));
-            }
-            if (isTabletPortrait) {
-                const cardList = [];
-                for (
-                    let index = taggedBootcampIndex.start;
-                    index < taggedBootcampIndex.start + 3 &&
-                    index < taggedBootcampsCount;
-                    index++
-                ) {
-                    console.log(taggedBootcamps);
-                    if (!taggedBootcampsLoading) {
-                        const bootcamp = taggedBootcamps[index];
-                        console.log(bootcamp, index);
-                        const {
-                            _id,
-                            photo,
-                            name,
-                            description,
-                            offerings,
-                            ratings,
-                            averageRating,
-                            averageCost,
-                        } = bootcamp;
-                        cardList.push(
-                            <BootcampCard
-                                key={_id}
-                                bootcampId={_id}
-                                image={photo}
-                                title={name}
-                                description={description}
-                                offeringsList={offerings}
-                                avgPrice={averageCost}
-                                avgRating={averageRating}
-                                ratingCount={ratings}
-                            />
-                        );
-                    }
+        if (!taggedBootcampsLoading) {
+            if (taggedBootcampsCount > 0) {
+                if (isMobile) {
+                    return taggedBootcamps.map((bootcamp) => (
+                        <BootcampCard
+                            key={bootcamp._id}
+                            bootcampId={bootcamp._id}
+                            image={bootcamp.photo}
+                            title={bootcamp.name}
+                            description={bootcamp.description}
+                            offeringsList={bootcamp.offerings}
+                            avgPrice={bootcamp.averageCost}
+                            avgRating={bootcamp.averageRating}
+                            ratingCount={bootcamp.ratings}
+                        />
+                    ));
                 }
-                return cardList;
-            }
-            if (isTabletLandscape) {
-                const cardList = [];
-                for (
-                    let index = taggedBootcampIndex.start;
-                    index < taggedBootcampIndex.start + 4 &&
-                    index < taggedBootcampsCount;
-                    index++
-                ) {
-                    console.log(taggedBootcamps);
-                    if (!taggedBootcampsLoading) {
-                        const bootcamp = taggedBootcamps[index];
-                        console.log(bootcamp, index);
-                        const {
-                            _id,
-                            photo,
-                            name,
-                            description,
-                            offerings,
-                            ratings,
-                            averageRating,
-                            averageCost,
-                        } = bootcamp;
-                        cardList.push(
-                            <BootcampCard
-                                key={_id}
-                                bootcampId={_id}
-                                image={photo}
-                                title={name}
-                                description={description}
-                                offeringsList={offerings}
-                                avgPrice={averageCost}
-                                avgRating={averageRating}
-                                ratingCount={ratings}
-                            />
-                        );
+                if (isTabletPortrait) {
+                    const cardList = [];
+                    for (
+                        let index = taggedBootcampIndex.start;
+                        index < taggedBootcampIndex.start + 3 &&
+                        index < taggedBootcampsCount;
+                        index++
+                    ) {
+                        console.log(taggedBootcamps);
+                        if (!taggedBootcampsLoading) {
+                            const bootcamp = taggedBootcamps[index];
+                            console.log(bootcamp, index);
+                            const {
+                                _id,
+                                photo,
+                                name,
+                                description,
+                                offerings,
+                                ratings,
+                                averageRating,
+                                averageCost,
+                            } = bootcamp;
+                            cardList.push(
+                                <BootcampCard
+                                    key={_id}
+                                    bootcampId={_id}
+                                    image={photo}
+                                    title={name}
+                                    description={description}
+                                    offeringsList={offerings}
+                                    avgPrice={averageCost}
+                                    avgRating={averageRating}
+                                    ratingCount={ratings}
+                                />
+                            );
+                        }
                     }
+                    return cardList;
                 }
-                return cardList;
-            }
-            if (isDesktopOrLaptop) {
-                const cardList = [];
-                for (
-                    let index = taggedBootcampIndex.start;
-                    index < taggedBootcampIndex.start + 5 &&
-                    index < taggedBootcampsCount;
-                    index++
-                ) {
-                    console.log(taggedBootcamps);
-                    if (!taggedBootcampsLoading) {
-                        const bootcamp = taggedBootcamps[index];
-                        console.log(bootcamp, index);
-                        const {
-                            _id,
-                            photo,
-                            name,
-                            description,
-                            offerings,
-                            ratings,
-                            averageRating,
-                            averageCost,
-                        } = bootcamp;
-                        cardList.push(
-                            <BootcampCard
-                                key={_id}
-                                bootcampId={_id}
-                                image={photo}
-                                title={name}
-                                description={description}
-                                offeringsList={offerings}
-                                avgPrice={averageCost}
-                                avgRating={averageRating}
-                                ratingCount={ratings}
-                            />
-                        );
+                if (isTabletLandscape) {
+                    const cardList = [];
+                    for (
+                        let index = taggedBootcampIndex.start;
+                        index < taggedBootcampIndex.start + 4 &&
+                        index < taggedBootcampsCount;
+                        index++
+                    ) {
+                        console.log(taggedBootcamps);
+                        if (!taggedBootcampsLoading) {
+                            const bootcamp = taggedBootcamps[index];
+                            console.log(bootcamp, index);
+                            const {
+                                _id,
+                                photo,
+                                name,
+                                description,
+                                offerings,
+                                ratings,
+                                averageRating,
+                                averageCost,
+                            } = bootcamp;
+                            cardList.push(
+                                <BootcampCard
+                                    key={_id}
+                                    bootcampId={_id}
+                                    image={photo}
+                                    title={name}
+                                    description={description}
+                                    offeringsList={offerings}
+                                    avgPrice={averageCost}
+                                    avgRating={averageRating}
+                                    ratingCount={ratings}
+                                />
+                            );
+                        }
                     }
+                    return cardList;
                 }
-                return cardList;
+                if (isDesktopOrLaptop) {
+                    const cardList = [];
+                    for (
+                        let index = taggedBootcampIndex.start;
+                        index < taggedBootcampIndex.start + 5 &&
+                        index < taggedBootcampsCount;
+                        index++
+                    ) {
+                        console.log(taggedBootcamps);
+                        if (!taggedBootcampsLoading) {
+                            const bootcamp = taggedBootcamps[index];
+                            console.log(bootcamp, index);
+                            const {
+                                _id,
+                                photo,
+                                name,
+                                description,
+                                offerings,
+                                ratings,
+                                averageRating,
+                                averageCost,
+                            } = bootcamp;
+                            cardList.push(
+                                <BootcampCard
+                                    key={_id}
+                                    bootcampId={_id}
+                                    image={photo}
+                                    title={name}
+                                    description={description}
+                                    offeringsList={offerings}
+                                    avgPrice={averageCost}
+                                    avgRating={averageRating}
+                                    ratingCount={ratings}
+                                />
+                            );
+                        }
+                    }
+                    return cardList;
+                }
+            } else {
+                return (
+                    <h2 className="center" style={{ marginTop: '10rem' }}>
+                        No Courses yet on this category
+                    </h2>
+                );
             }
         } else {
-            return (
-                <h2 className="center" style={{ marginTop: '10rem' }}>
-                    No Courses yet on this category
-                </h2>
-            );
+            return <Spinner size="sm" />;
         }
     };
 
