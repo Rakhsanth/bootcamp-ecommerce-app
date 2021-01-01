@@ -13,7 +13,10 @@ import { pusherApiKey, pusherCluster } from '../../config/config';
 
 const dropDownToggle = (event) => {
     const dropdownIcon = event.target.children[1];
+    console.log(dropdownIcon);
     const dropdownElement = event.target.nextElementSibling;
+    console.log(event.target);
+    console.log(dropdownElement);
     if (dropdownElement.classList.contains('dropdown-close')) {
         dropdownElement.classList.remove('dropdown-close');
         dropdownElement.classList.add('dropdown-open');

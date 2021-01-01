@@ -16,6 +16,7 @@ import {
 import { updateCourse, createOrEditProfileDetails } from '../api';
 // config values
 import { pusherApiKey, pusherCluster } from '../config/config';
+import Spinner from './utils/Spinner';
 
 function Cart(props) {
     const {
@@ -54,6 +55,8 @@ function Cart(props) {
             });
         }
     });
+
+    const [paying, setpaying] = useState(false);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -171,6 +174,9 @@ function Cart(props) {
             token = localStorage.getItem('token');
         }
         let data;
+
+        setpaying(true);
+
         try {
             const axiosConfig = {
                 headers: {
@@ -230,9 +236,12 @@ function Cart(props) {
                     console.log('Payment succeeded');
                     await updateCourseEnrollmentCount();
                     await addCoursesToUserProfile();
+
+                    setpaying(false);
                 } else {
                     // props.setAlert(confirmedResponse.data.data, 'danger');
                     console.log('user or bank workflow rejected');
+                    setpaying(false);
                 }
                 history.replace('/');
             },
@@ -354,6 +363,19 @@ function Cart(props) {
                             have incomplete enrolled courses
                         </span>
                     ) : null}
+                </div>
+            ) : null}
+            {paying ? (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: '0',
+                        left: '0',
+                        width: '100vw',
+                        height: '100vw',
+                    }}
+                >
+                    <Spinner size="lg" global={true} />
                 </div>
             ) : null}
         </div>

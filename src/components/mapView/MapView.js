@@ -12,6 +12,8 @@ import { resetLoading, getMapBootcamps } from '../../actions';
 
 // Import geojson for inida map
 import { geoJson } from '../../config/india_geo_json';
+// Utils
+import Spinner from '../utils/Spinner';
 
 function MapView(props) {
     const cssColors = {
@@ -341,7 +343,7 @@ function MapView(props) {
                     );
                 }}
             </Formik>
-            <div class="d3-map"></div>
+            <div class="d3-map">{loading ? <Spinner size="md" /> : null}</div>
         </Fragment>
     );
 }

@@ -1,21 +1,23 @@
 // react related
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 // action creators
-import { registerUser } from '../actions';
+import { resetLoading, registerUser } from '../actions';
 // utils
 import { validatePassword } from '../components/utils/utilFunctions';
+import Spinner from './utils/Spinner';
 
 function Register(props) {
-    const { registerUser, history } = props;
+    const { resetLoading, registerUser, history, loading, loggedIn } = props;
 
     const initialValues = {
         fullName: '',
         email: '',
         password: '',
+        role: 'user',
     };
     const validationSchema = Yup.object({
         fullName: Yup.string().required('name is mandatory'),
@@ -34,11 +36,14 @@ function Register(props) {
         const body = values;
         body.name = values.fullName;
         body.thirdParty = false;
-        body.role = 'user';
+        body.role = values.role === 'publisher' ? values.role : 'user';
+        resetLoading('auth');
         registerUser(body, history);
     };
 
-    return (
+    return loggedIn ? (
+        <Redirect to="/" />
+    ) : (
         <div className="signup-container">
             <div className="signup-container-message">
                 Sign Up and Enroll !!
@@ -67,7 +72,21 @@ function Register(props) {
                                         )}
                                     </ErrorMessage>
                                 </div>
-                                <div className="signup-container-form-email">
+                                <div class="ui toggle checkbox">
+                                    <Field
+                                        id="role"
+                                        type="checkbox"
+                                        name="role"
+                                        value="publisher"
+                                    />
+                                    <label htmlFor="role">
+                                        Join as publisher
+                                    </label>
+                                </div>
+                                <div
+                                    className="signup-container-form-email"
+                                    style={{ marginTop: '1rem' }}
+                                >
                                     <Field
                                         type="email"
                                         name="email"
@@ -108,14 +127,19 @@ function Register(props) {
             <div className="signup-container-signin">
                 Already have an account ? <Link to="/login">Sign In</Link>
             </div>
+            {loading ? <Spinner size="lg" /> : null}
         </div>
     );
 }
 
 const mapStateToProps = (store) => {
     return {
+        loading: store.auth.loading,
+        loggedIn: store.auth.loggedIn,
         auth: store.auth,
     };
 };
 
-export default connect(mapStateToProps, { registerUser })(withRouter(Register));
+export default connect(mapStateToProps, { resetLoading, registerUser })(
+    withRouter(Register)
+);
