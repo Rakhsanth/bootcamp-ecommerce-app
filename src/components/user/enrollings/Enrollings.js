@@ -2,14 +2,21 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 // redux related
 import { connect } from 'react-redux';
-import { getUserProfile } from '../../../actions';
+import { getUserProfile, setAlert } from '../../../actions';
 // Api calls
 import { createOrEditProfileDetails } from '../../../api';
 // custom components
 import EnrolledCard from './EnrolledCard';
 
 function Enrollings(props) {
-    const { isLoggedIn, user, profile, history, getUserProfile } = props;
+    const {
+        isLoggedIn,
+        user,
+        profile,
+        history,
+        getUserProfile,
+        setAlert,
+    } = props;
     console.log(props);
 
     useEffect(() => {
@@ -23,9 +30,14 @@ function Enrollings(props) {
         const enrolledCourses = profile.enrolledCourses.filter(
             (course) => course.courseId !== courseId
         );
-        await createOrEditProfileDetails(profile._id, 'edit', {
+        const response = await createOrEditProfileDetails(profile._id, 'edit', {
             enrolledCourses,
         });
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
+        }
         await getUserProfile(user._id);
     };
 
@@ -69,6 +81,6 @@ const mapStateToProps = (store) => ({
     profile: store.profile.profile,
 });
 
-export default connect(mapStateToProps, { getUserProfile })(
+export default connect(mapStateToProps, { getUserProfile, setAlert })(
     withRouter(Enrollings)
 );

@@ -19,7 +19,12 @@ import {
 } from '../utils/utilFunctions';
 
 // actions
-import { resetLoading, getTaggedCourses, getCourse } from '../../actions';
+import {
+    resetLoading,
+    setAlert,
+    getTaggedCourses,
+    getCourse,
+} from '../../actions';
 
 const customDatePickerStyle = {
     marginBottom: '1rem',
@@ -36,7 +41,9 @@ function CourseForm(props) {
         loading,
         course,
         removeForm,
+        renderThisCourse,
         resetLoading,
+        setAlert,
         getTaggedCourses,
         getCourse,
         causeReRender,
@@ -176,10 +183,21 @@ function CourseForm(props) {
     });
 
     const onSubmit = async (values, submitProps) => {
+        let response;
         if (createOrEdit === 'create') {
-            await createEditCourse(values, 'create', null, bootcampId);
+            response = await createEditCourse(
+                values,
+                'create',
+                null,
+                bootcampId
+            );
         } else {
-            await createEditCourse(values, 'edit', courseId);
+            response = await createEditCourse(values, 'edit', courseId);
+        }
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
         }
         getTaggedCourses(
             null,
@@ -193,7 +211,11 @@ function CourseForm(props) {
             query,
             null
         );
-        removeForm();
+        if (createOrEdit === 'create') {
+            removeForm();
+        } else {
+            renderThisCourse(false);
+        }
         resetLoading('taggedCourses');
     };
 
@@ -712,6 +734,7 @@ const mapStateTopProps = (store) => ({
 
 export default connect(mapStateTopProps, {
     resetLoading,
+    setAlert,
     getTaggedCourses,
     getCourse,
 })(withRouter(CourseForm));

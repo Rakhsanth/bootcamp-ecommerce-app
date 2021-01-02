@@ -1,5 +1,5 @@
 import React, { Fragment, useState, createRef, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -36,7 +36,7 @@ function CourseResults(props) {
         getTaggedCourses,
         updateLoadedCourse,
     } = props;
-    const { loading, totalCount, courses } = props;
+    const { loading, totalCount, courses, userRole } = props;
 
     const [showFilter, setshowFilter] = useState(true);
     const [currentPage, setcurrentPage] = useState(1);
@@ -346,7 +346,7 @@ function CourseResults(props) {
         });
     };
 
-    return (
+    return userRole !== 'publisher' ? (
         <div className="main-conatiner-courses">
             <div className="search-title">
                 <h2 className="h2-heading">
@@ -561,6 +561,8 @@ function CourseResults(props) {
                 </span>
             </div>
         </div>
+    ) : (
+        <Redirect to="/" />
     );
 }
 
@@ -569,6 +571,7 @@ const mapStateToProps = (store) => {
         loading: store.taggedCourses.loading,
         totalCount: store.taggedCourses.totalCount,
         courses: store.taggedCourses.courses,
+        userRole: store.auth.user.role,
     };
 };
 

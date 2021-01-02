@@ -21,10 +21,11 @@ import Alert from './components/utils/Alert';
 // Redux store and actions
 import { Provider } from 'react-redux';
 import { store, persistor } from './store';
-import { loadUser } from './actions';
+import { loadUser, setAlert } from './actions';
 
 // Redux presist related
 import { PersistGate } from 'redux-persist/integration/react';
+import AlertWrapper from './components/utils/AlertWrapper';
 
 function App() {
     useEffect(() => {
@@ -36,11 +37,7 @@ function App() {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Header />
-                    <div className="tempAlert-container">
-                        <Alert color="red" message="Otha Oombu da Shit" />
-                        <Alert color="black" message="Otha Shit" />
-                        <Alert color="green" message="Otha Shit" />
-                    </div>
+                    <AlertWrapper />
                     <Route exact path="/" component={Landing} />
                     <Switch>
                         {/* Other specific dynamic routes and pages goes here */}

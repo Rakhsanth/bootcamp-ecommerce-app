@@ -14,13 +14,14 @@ import {
 } from '../utils/utilFunctions';
 
 // actions
-import { resetLoading, getTaggedBootcamps } from '../../actions';
+import { resetLoading, setAlert, getTaggedBootcamps } from '../../actions';
 
 function BootcampForm(props) {
     const {
         history,
         removeForm,
         resetLoading,
+        setAlert,
         getTaggedBootcamps,
         causeReRender,
         userId,
@@ -123,7 +124,12 @@ function BootcampForm(props) {
     });
 
     const onSubmit = async (values, submitProps) => {
-        await createEditBootcamp(values, 'create');
+        const response = await createEditBootcamp(values, 'create');
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
+        }
         getTaggedBootcamps(
             null,
             null,
@@ -380,7 +386,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -400,7 +406,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -430,7 +436,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -450,7 +456,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -480,7 +486,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -500,7 +506,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -718,6 +724,8 @@ function BootcampForm(props) {
 
 const mapStateTopProps = (store) => ({});
 
-export default connect(mapStateTopProps, { resetLoading, getTaggedBootcamps })(
-    withRouter(BootcampForm)
-);
+export default connect(mapStateTopProps, {
+    resetLoading,
+    setAlert,
+    getTaggedBootcamps,
+})(withRouter(BootcampForm));

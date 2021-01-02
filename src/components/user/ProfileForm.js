@@ -11,12 +11,13 @@ import {
     validateDocFileSize,
     validateMobileNumber,
 } from '../utils/utilFunctions';
+import { getUserProfile, setAlert } from '../../actions';
 
 function ProfileForm(props) {
     let valuesFromBackend;
     // let image = 'no-photo.jpg';
 
-    const { loading, user, history } = props;
+    const { loading, user, history, setAlert, getUserProfile } = props;
 
     const [profile, setprofile] = useState(null);
 
@@ -66,7 +67,13 @@ function ProfileForm(props) {
         } else {
             result = await createOrEditProfileDetails(null, 'create', values);
         }
+        if (result) {
+            setAlert('green', 'Profile updated successfully', 3);
+        } else {
+            setAlert('red', 'Something went wrong please try again later', 3);
+        }
         getProfileDetailsUtil();
+        getUserProfile(user._id);
         history.push('/');
     };
 
@@ -221,4 +228,6 @@ const mapStateToProps = (store) => ({
     user: store.auth.user,
 });
 
-export default connect(mapStateToProps, {})(withRouter(ProfileForm));
+export default connect(mapStateToProps, { setAlert, getUserProfile })(
+    withRouter(ProfileForm)
+);
