@@ -17,6 +17,7 @@ function Register(props) {
         fullName: '',
         email: '',
         password: '',
+        password2: '',
         role: 'user',
     };
     const validationSchema = Yup.object({
@@ -28,6 +29,13 @@ function Register(props) {
             'test-pwd',
             'password must have uppercase, lowercase, numbers and special charachers and atleast 7 characters',
             (value) => validatePassword(value)
+        ),
+        password2: Yup.string().test(
+            'validate confirm password',
+            'password and confirm password must be same',
+            function (value) {
+                return value === this.parent.password;
+            }
         ),
     });
     const onSubmit = (values, onSubmitProps) => {
@@ -107,6 +115,23 @@ function Register(props) {
                                         placeholder="Password"
                                     />
                                     <ErrorMessage name="password">
+                                        {(errorMsg) => (
+                                            <span
+                                                className="errorMessage"
+                                                style={{ width: '350px' }}
+                                            >
+                                                {errorMsg}
+                                            </span>
+                                        )}
+                                    </ErrorMessage>
+                                </div>
+                                <div className="signup-container-form-password">
+                                    <Field
+                                        name="password2"
+                                        type="password"
+                                        placeholder="Confirm Password"
+                                    />
+                                    <ErrorMessage name="password2">
                                         {(errorMsg) => (
                                             <span className="errorMessage">
                                                 {errorMsg}

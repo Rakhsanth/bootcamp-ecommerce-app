@@ -78,16 +78,43 @@ export const createEditBootcamp = async (
                     imageConfig
                 );
             } catch (err) {
-                console.log(err);
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
+                    return {
+                        success: err.response.data.success,
+                        message: err.response.data.data,
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: 'Something went wrong, please try again later',
+                    };
+                }
             }
         }
+        return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response.data);
-        if (
-            err.response.data.data ===
-            "Cannot read property 'longitude' of undefined"
-        ) {
-            console.log('please endter a valid pincode / zipcode');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            if (
+                err.response.data.data ===
+                "Cannot read property 'longitude' of undefined"
+            ) {
+                console.log('please endter a valid pincode / zipcode');
+                return {
+                    success: false,
+                    message: 'please endter a valid pincode / zipcode',
+                };
+            }
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
         }
     }
 };
@@ -100,7 +127,18 @@ export const deleteBootcamp = async (bootcampId) => {
             getPostConfig('application/json', true, true)
         );
     } catch (err) {
-        console.log(err.response);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -154,7 +192,18 @@ export const createEditCourse = async (
                     imageConfig
                 );
             } catch (err) {
-                console.log(err);
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
+                    return {
+                        success: err.response.data.success,
+                        message: err.response.data.data,
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: 'Something went wrong, please try again later',
+                    };
+                }
             }
         }
         if (typeof video !== 'string' && video !== undefined) {
@@ -173,16 +222,33 @@ export const createEditCourse = async (
                     videoConfig
                 );
             } catch (err) {
-                console.log(err);
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
+                    return {
+                        success: err.response.data.success,
+                        message: err.response.data.data,
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: 'Something went wrong, please try again later',
+                    };
+                }
             }
         }
+        return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response.data);
-        if (
-            err.response.data.data ===
-            "Cannot read property 'longitude' of undefined"
-        ) {
-            console.log('please endter a valid pincode / zipcode');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
         }
     }
 };
@@ -195,7 +261,18 @@ export const deleteCourse = async (courseId) => {
             getPostConfig('application/json', true, true)
         );
     } catch (err) {
-        console.log(err.response);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -208,8 +285,20 @@ export const updateCourse = async (courseId, data) => {
             getPostConfig('application/json', true, true)
         );
         console.log(response.data.data);
+        return { success: response.data.success };
     } catch (err) {
-        console.log(err.response);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -228,7 +317,18 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
         const response = await axios.get(getURL);
         return response.data;
     } catch (err) {
-        console.log(err);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -252,7 +352,18 @@ export const getBootcampReviews = async (
         const response = await axios.get(getURL);
         return response.data;
     } catch (err) {
-        console.log(err);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -271,8 +382,18 @@ export const getProfileDetails = async (userId) => {
             return response.data.data[0];
         }
     } catch (err) {
-        console.log(err);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -291,8 +412,18 @@ export const getProfileNotifications = async (profileId) => {
             return response.data.data.notifications;
         }
     } catch (err) {
-        console.log(err);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -311,8 +442,18 @@ export const deleteNotification = async (userId, notificationId) => {
             return response.data.data.notifications;
         }
     } catch (err) {
-        console.log(err);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -364,8 +505,19 @@ export const createOrEditProfileDetails = async (
                 getPostConfig('multipart/form-data', true, true)
             );
         }
+        return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };

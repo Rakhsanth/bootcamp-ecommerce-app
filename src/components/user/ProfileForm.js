@@ -11,12 +11,13 @@ import {
     validateDocFileSize,
     validateMobileNumber,
 } from '../utils/utilFunctions';
+import { getUserProfile, setAlert } from '../../actions';
 
 function ProfileForm(props) {
     let valuesFromBackend;
     // let image = 'no-photo.jpg';
 
-    const { loading, user, history } = props;
+    const { loading, user, history, setAlert, getUserProfile } = props;
 
     const [profile, setprofile] = useState(null);
 
@@ -66,7 +67,13 @@ function ProfileForm(props) {
         } else {
             result = await createOrEditProfileDetails(null, 'create', values);
         }
+        if (result) {
+            setAlert('green', 'Profile updated successfully', 3);
+        } else {
+            setAlert('red', 'Something went wrong please try again later', 3);
+        }
         getProfileDetailsUtil();
+        getUserProfile(user._id);
         history.push('/');
     };
 
@@ -124,6 +131,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="picture">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
 
                             <div class="pubProfile-form-control">
@@ -140,6 +154,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Name"
                                 />
+                                <ErrorMessage name="name">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -157,6 +178,13 @@ function ProfileForm(props) {
                                     placeholder="abc@def.com"
                                     disabled
                                 />
+                                <ErrorMessage name="email">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -172,6 +200,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Tamil Nadu"
                                 />
+                                <ErrorMessage name="email">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -187,6 +222,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="600028"
                                 />
+                                <ErrorMessage name="zipcode">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -202,6 +244,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="9087654321"
                                 />
+                                <ErrorMessage name="mobile">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <input
                                 type="submit"
@@ -221,4 +270,6 @@ const mapStateToProps = (store) => ({
     user: store.auth.user,
 });
 
-export default connect(mapStateToProps, {})(withRouter(ProfileForm));
+export default connect(mapStateToProps, { setAlert, getUserProfile })(
+    withRouter(ProfileForm)
+);

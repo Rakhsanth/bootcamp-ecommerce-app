@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // api calls
 import { createEditBootcamp } from '../../api';
 // actions
-import { resetLoading, getBootcamp } from '../../actions';
+import { resetLoading, setAlert, getBootcamp } from '../../actions';
 // custom utils
 import { validateImageFileSize } from '../utils/utilFunctions';
 import Courses from './Courses';
@@ -17,7 +17,7 @@ function EditBootcamp(props) {
         renderThisBootcamp,
         causeReRender,
     } = props;
-    const { loading, bootcamp, getBootcamp } = props;
+    const { loading, bootcamp, setAlert, getBootcamp } = props;
 
     useEffect(() => {
         getBootcamp(bootcampId);
@@ -83,8 +83,13 @@ function EditBootcamp(props) {
         ),
     });
 
-    const onSubmit = (values, submitProps) => {
-        createEditBootcamp(values, 'edit', bootcampId);
+    const onSubmit = async (values, submitProps) => {
+        const response = await createEditBootcamp(values, 'edit', bootcampId);
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
+        }
         resetLoading('taggedBootcamps');
         causeReRender();
         renderThisBootcamp(false);
@@ -226,6 +231,13 @@ function EditBootcamp(props) {
                                                     );
                                                 }}
                                             </Field>
+                                            <ErrorMessage name="image">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="bootcamp-form-content-basic-details">
                                             <div class="pubProfile-form-control">
@@ -242,6 +254,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tech Pllayground"
                                                 />
+                                                <ErrorMessage name="name">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -257,6 +276,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tamil Nadu"
                                                 />
+                                                <ErrorMessage name="state">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -272,6 +298,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Madurai"
                                                 />
+                                                <ErrorMessage name="district">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -287,6 +320,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="no: 10, xyz apartments, abc nagar, 10th cross street ........."
                                                 />
+                                                <ErrorMessage name="address">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -302,6 +342,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="600026"
                                                 />
+                                                <ErrorMessage name="zipcode">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -317,7 +364,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -337,7 +384,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -367,7 +414,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -387,7 +434,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -417,7 +464,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -437,7 +484,7 @@ function EditBootcamp(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -467,6 +514,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input input-textarea"
                                                     placeholder="Tech Playground where anyone with a learning motive can come and leave with a better you!"
                                                 />
+                                                <ErrorMessage name="description">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -482,6 +536,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="www.techcamp.com"
                                                 />
+                                                <ErrorMessage name="website">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <FieldArray name="offerings">
                                                 {(fieldArrayProps) => {
@@ -571,7 +632,13 @@ function EditBootcamp(props) {
                                                     );
                                                 }}
                                             </FieldArray>
-
+                                            <ErrorMessage name="offerings">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                             <div class="pubProfile-form-control">
                                                 <label
                                                     for="bootcampSite"
@@ -586,6 +653,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="johndoe@techcamp.com"
                                                 />
+                                                <ErrorMessage name="email">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -601,6 +675,13 @@ function EditBootcamp(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="9108765432"
                                                 />
+                                                <ErrorMessage name="phone">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="bootcamp-form-content-basic-bottom">
                                                 <button
@@ -641,6 +722,8 @@ const mapStateToProps = (store) => ({
     bootcamp: store.bootcamp.bootcamp,
 });
 
-export default connect(mapStateToProps, { resetLoading, getBootcamp })(
-    EditBootcamp
-);
+export default connect(mapStateToProps, {
+    resetLoading,
+    setAlert,
+    getBootcamp,
+})(EditBootcamp);

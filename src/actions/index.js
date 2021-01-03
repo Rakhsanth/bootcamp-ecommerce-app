@@ -37,12 +37,26 @@ import {
     GET_NOTIFICATION_COUNT,
     RESET_NOTIFICATION_COUNT,
     NOTIFICATION_ERROR,
+    SET_ALERT,
+    REMOVE_ALERT,
 } from './actionTypes';
 
 // reset loading property of specified state
 export const resetLoading = (state) => {
     return async function (dispatch) {
         dispatch({ type: RESET_LOADING, payload: state });
+    };
+};
+
+// action to show alerts or info
+export const setAlert = (color, message, timeout) => {
+    // not an async function as it is not related to API calls and just static timeout
+    return function (dispatch) {
+        dispatch({ type: SET_ALERT, payload: { color, message } });
+        setTimeout(
+            () => dispatch({ type: REMOVE_ALERT, payload: { color, message } }),
+            timeout * 1000
+        );
     };
 };
 
@@ -61,9 +75,22 @@ export const registerUser = (body, history) => {
             history.replace('/');
             dispatch({ type: REGISTER_USER, payload: response.data });
             dispatch(loadUser());
+            dispatch(
+                setAlert('green', 'Signed up and logged in successfully', 3)
+            );
         } catch (err) {
-            console.log(err.response.data);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -82,10 +109,21 @@ export const loginUser = (body, history) => {
             );
             history.replace('/');
             dispatch({ type: LOGIN_USER, payload: response.data });
+            dispatch(setAlert('green', 'Logged in successfully', 3));
             dispatch(loadUser());
         } catch (err) {
-            console.log(err.response);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -93,6 +131,7 @@ export const loginUser = (body, history) => {
 export const logout = () => {
     return function (dispatch) {
         dispatch({ type: LOGOUT });
+        dispatch(setAlert('green', 'Logged out successfully', 3));
     };
 };
 
@@ -112,8 +151,25 @@ export const loadUser = () => {
         try {
             const response = await axios.get(`${apiBaseURL}/auth/me`, config);
             dispatch({ type: LOAD_USER, payload: response.data.data });
+            // load the user profile if exists
+            dispatch(getUserProfile(response.data.data._id));
         } catch (err) {
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -211,13 +267,18 @@ export const getTaggedBootcamps = (
             }
         } catch (err) {
             if (err.response !== undefined) {
-                console.log(err.response.data);
-                dispatch({
-                    type: GET_BOOTCAMPS_ERROR,
-                    payload: err.response.data,
-                });
+                console.log(err.response.status);
+                dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
             }
-            dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response });
         }
     };
 };
@@ -255,7 +316,18 @@ export const getMapBootcamps = (filter, state, zipcode, radialDistance) => {
             });
             dispatch({ type: GET_MAP_BOOTCAMPS, payload: bootcampsData });
         } catch (err) {
-            console.log(err);
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -352,8 +424,19 @@ export const getTaggedCourses = (
                 });
             }
         } catch (err) {
-            console.log(err);
-            dispatch({ type: GET_COURSES_ERROR, payload: err.response });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({ type: GET_COURSES_ERROR, payload: err.response });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -368,8 +451,22 @@ export const getCoursesByBootcamp = (bootcampId) => {
                 payload: response.data.data,
             });
         } catch (err) {
-            console.log(err);
-            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_BOOTCAMP_ERROR,
+                    payload: err.response.data,
+                });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -385,8 +482,22 @@ export const getBootcamp = (bootcampId) => {
                 payload: { bootcamp: response.data.data },
             });
         } catch (err) {
-            console.log(err);
-            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_BOOTCAMP_ERROR,
+                    payload: err.response.data,
+                });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -402,8 +513,22 @@ export const getCourse = (courseId) => {
                 payload: { course: response.data.data },
             });
         } catch (err) {
-            console.log(err);
-            dispatch({ type: GET_COURSE_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_COURSE_ERROR,
+                    payload: err.response.data,
+                });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -484,7 +609,18 @@ export const getUserProfile = (userId) => {
                 });
             }
         } catch (err) {
-            console.log(err.response.data);
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -518,7 +654,18 @@ export const resetNotificationCount = (id) => {
                 payload: response.data.data.unReadCount,
             });
         } catch (err) {
-            console.log(err);
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };

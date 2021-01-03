@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
+// actions
+import { setAlert } from '../../actions';
 // APIs
 import { getProfileDetails, createOrEditProfileDetails } from '../../api';
 // utils
@@ -15,7 +17,7 @@ function ProfileForm(props) {
     let valuesFromBackend;
     // let image = 'no-photo.jpg';
 
-    const { loading, user } = props;
+    const { loading, user, setAlert } = props;
 
     const [profile, setprofile] = useState(null);
 
@@ -57,15 +59,20 @@ function ProfileForm(props) {
     });
     const onSubmit = async (values, submitProps) => {
         console.log(values);
-        let result;
+        let response;
         if (profile) {
-            result = await createOrEditProfileDetails(
+            response = await createOrEditProfileDetails(
                 profile._id,
                 'edit',
                 values
             );
         } else {
-            result = await createOrEditProfileDetails(null, 'create', values);
+            response = await createOrEditProfileDetails(null, 'create', values);
+        }
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
         }
         getProfileDetailsUtil();
     };
@@ -124,6 +131,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="picture">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
 
                             <div class="pubProfile-form-control">
@@ -140,6 +154,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Name"
                                 />
+                                <ErrorMessage name="name">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -174,6 +195,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="resume">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -189,6 +217,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="www.foo_bar.com"
                                 />
+                                <ErrorMessage name="websiteLink">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -204,6 +239,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="9087654321"
                                 />
+                                <ErrorMessage name="mobile">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <input
                                 type="submit"
@@ -223,4 +265,4 @@ const mapStateToProps = (store) => ({
     user: store.auth.user,
 });
 
-export default connect(mapStateToProps, {})(ProfileForm);
+export default connect(mapStateToProps, { setAlert })(ProfileForm);

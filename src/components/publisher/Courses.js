@@ -33,6 +33,7 @@ function Courses(props) {
     }, [getTaggedCourses, loading, reRender]);
 
     const removeForm = () => {
+        console.log('removal requested');
         setdisplayCourseForm(false);
     };
 
@@ -115,6 +116,7 @@ function Courses(props) {
                             createOrEdit={'edit'}
                             courseId={editCourseId}
                             causeReRender={causeReRender}
+                            removeForm={removeForm}
                             renderThisCourse={renderThisCourse}
                         />
                     );

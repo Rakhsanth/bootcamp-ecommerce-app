@@ -29,6 +29,7 @@ function Landing(props) {
         authLoading,
         loggedIn,
         user,
+        profile,
         taggedBootcamps,
         taggedCourses,
         taggedBootcampsCount,
@@ -1112,6 +1113,35 @@ function Landing(props) {
                 {renderBootcampsRightNavButton()}
             </div>
             <div className="map-view">
+                {profile === null ? (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            zIndex: 10,
+                            backgroundColor: 'rgba(185, 185, 182, 0.7)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <h5
+                            style={{
+                                color: '#ea5252',
+                                fontSize: '3rem',
+                                padding: '0 2rem',
+                                fontWeight: 600,
+                                textAlign: 'center',
+                            }}
+                        >
+                            Please login and complete filling your profile for
+                            free to enjoy this filtering using map !!!
+                        </h5>
+                    </div>
+                ) : null}
                 <MapView />
             </div>
             <div className="top-catagories-container">
@@ -1191,6 +1221,7 @@ const mapStateToProps = (store) => {
         authLoading: store.auth.loading,
         loggedIn: store.auth.loggedIn,
         user: store.auth.user,
+        profile: store.profile.profile,
         taggedBootcampsLoading: store.taggedBootcamps.loading,
         taggedCoursesLoading: store.taggedCourses.loading,
         taggedBootcamps: store.taggedBootcamps.bootcamps,

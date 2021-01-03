@@ -14,13 +14,14 @@ import {
 } from '../utils/utilFunctions';
 
 // actions
-import { resetLoading, getTaggedBootcamps } from '../../actions';
+import { resetLoading, setAlert, getTaggedBootcamps } from '../../actions';
 
 function BootcampForm(props) {
     const {
         history,
         removeForm,
         resetLoading,
+        setAlert,
         getTaggedBootcamps,
         causeReRender,
         userId,
@@ -123,7 +124,12 @@ function BootcampForm(props) {
     });
 
     const onSubmit = async (values, submitProps) => {
-        await createEditBootcamp(values, 'create');
+        const response = await createEditBootcamp(values, 'create');
+        if (response.success) {
+            setAlert('green', response.message, 3);
+        } else {
+            setAlert('red', response.message, 4);
+        }
         getTaggedBootcamps(
             null,
             null,
@@ -289,6 +295,13 @@ function BootcampForm(props) {
                                                     );
                                                 }}
                                             </Field>
+                                            <ErrorMessage name="image">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="bootcamp-form-content-basic-details">
                                             <div class="pubProfile-form-control">
@@ -305,6 +318,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tech Pllayground"
                                                 />
+                                                <ErrorMessage name="name">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -320,6 +340,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tamil Nadu"
                                                 />
+                                                <ErrorMessage name="state">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -335,6 +362,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Madurai"
                                                 />
+                                                <ErrorMessage name="district">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -350,6 +384,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="no: 10, xyz apartments, abc nagar, 10th cross street ........."
                                                 />
+                                                <ErrorMessage name="address">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -365,6 +406,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="600026"
                                                 />
+                                                <ErrorMessage name="zipcode">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -380,7 +428,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -400,7 +448,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="housing"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .housing ===
@@ -430,7 +478,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -450,7 +498,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobAssistance"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobAssistance ===
@@ -480,7 +528,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="true"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -500,7 +548,7 @@ function BootcampForm(props) {
                                                             type="radio"
                                                             name="jobGuarantee"
                                                             value="false"
-                                                            class="pubProfile-form-control-input"
+                                                            class="pubProfile-form-control-input-checkbox"
                                                             checked={
                                                                 formik.values
                                                                     .jobGuarantee ===
@@ -549,6 +597,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input input-textarea"
                                                     placeholder="Tech Playground where anyone with a learning motive can come and leave with a better you!"
                                                 />
+                                                <ErrorMessage name="description">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -564,6 +619,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="www.techcamp.com"
                                                 />
+                                                <ErrorMessage name="website">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <FieldArray name="offerings">
                                                 {(fieldArrayProps) => {
@@ -650,6 +712,13 @@ function BootcampForm(props) {
                                                     );
                                                 }}
                                             </FieldArray>
+                                            <ErrorMessage name="offerings">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
 
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -665,6 +734,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="johndoe@techcamp.com"
                                                 />
+                                                <ErrorMessage name="email">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -680,6 +756,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="9108765432"
                                                 />
+                                                <ErrorMessage name="phone">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                         </div>
                                         <div class="bootcamp-form-content-basic-bottom">
@@ -718,6 +801,8 @@ function BootcampForm(props) {
 
 const mapStateTopProps = (store) => ({});
 
-export default connect(mapStateTopProps, { resetLoading, getTaggedBootcamps })(
-    withRouter(BootcampForm)
-);
+export default connect(mapStateTopProps, {
+    resetLoading,
+    setAlert,
+    getTaggedBootcamps,
+})(withRouter(BootcampForm));

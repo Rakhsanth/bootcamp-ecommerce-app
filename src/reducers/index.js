@@ -33,6 +33,8 @@ import {
     GET_PROFILE,
     PROFILE_ERROR,
     GET_COURSES_BY_BOOTCAMP,
+    SET_ALERT,
+    REMOVE_ALERT,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -438,6 +440,27 @@ const notificationReducer = (state = initialNotification, action) => {
     }
 };
 
+// Alert reducer
+const initialAlertState = {
+    alerts: [],
+};
+const alertReducer = (state = initialAlertState, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case SET_ALERT:
+            return { ...state, alerts: [...state.alerts, payload] };
+        case REMOVE_ALERT:
+            return {
+                ...state,
+                alerts: state.alerts.filter(
+                    ({ color, message }) => message !== payload.message
+                ),
+            };
+        default:
+            return state;
+    }
+};
+
 export default combineReducers({
     auth: userLoginRegisterReducer,
     taggedBootcamps: taggedBootcampsReducer,
@@ -449,4 +472,5 @@ export default combineReducers({
     cart: cartReducer,
     profile: profileReducer,
     notification: notificationReducer,
+    alert: alertReducer,
 });

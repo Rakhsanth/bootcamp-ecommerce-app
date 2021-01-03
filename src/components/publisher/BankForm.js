@@ -42,6 +42,13 @@ function BankForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="1234567890123456"
                                 />
+                                <ErrorMessage name="accountNumber">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -57,6 +64,13 @@ function BankForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="abcd0002457"
                                 />
+                                <ErrorMessage name="ifsc">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <input
                                 type="submit"
