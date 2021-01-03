@@ -59,6 +59,8 @@ html {
 }
 
 body {
+    height: 10vh;
+    overflow: visible;
     font-family: 'Raleway', sans-serif !important;
     box-sizing: border-box;
 }
