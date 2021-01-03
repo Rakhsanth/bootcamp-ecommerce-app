@@ -131,6 +131,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="picture">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
 
                             <div class="pubProfile-form-control">
@@ -147,6 +154,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Name"
                                 />
+                                <ErrorMessage name="name">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -164,6 +178,13 @@ function ProfileForm(props) {
                                     placeholder="abc@def.com"
                                     disabled
                                 />
+                                <ErrorMessage name="email">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -179,6 +200,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Tamil Nadu"
                                 />
+                                <ErrorMessage name="email">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -194,6 +222,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="600028"
                                 />
+                                <ErrorMessage name="zipcode">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -209,6 +244,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="9087654321"
                                 />
+                                <ErrorMessage name="mobile">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <input
                                 type="submit"

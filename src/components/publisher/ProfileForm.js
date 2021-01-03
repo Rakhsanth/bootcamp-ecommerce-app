@@ -131,6 +131,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="picture">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
 
                             <div class="pubProfile-form-control">
@@ -147,6 +154,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="Name"
                                 />
+                                <ErrorMessage name="name">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -181,6 +195,13 @@ function ProfileForm(props) {
                                         );
                                     }}
                                 </Field>
+                                <ErrorMessage name="resume">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -196,6 +217,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="www.foo_bar.com"
                                 />
+                                <ErrorMessage name="websiteLink">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <div class="pubProfile-form-control">
                                 <label
@@ -211,6 +239,13 @@ function ProfileForm(props) {
                                     class="pubProfile-form-control-input"
                                     placeholder="9087654321"
                                 />
+                                <ErrorMessage name="mobile">
+                                    {(errorMsg) => (
+                                        <span className="errorMessage">
+                                            {errorMsg}
+                                        </span>
+                                    )}
+                                </ErrorMessage>
                             </div>
                             <input
                                 type="submit"

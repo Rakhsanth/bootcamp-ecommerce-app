@@ -295,6 +295,13 @@ function BootcampForm(props) {
                                                     );
                                                 }}
                                             </Field>
+                                            <ErrorMessage name="image">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="bootcamp-form-content-basic-details">
                                             <div class="pubProfile-form-control">
@@ -311,6 +318,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tech Pllayground"
                                                 />
+                                                <ErrorMessage name="name">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -326,6 +340,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Tamil Nadu"
                                                 />
+                                                <ErrorMessage name="state">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -341,6 +362,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="Madurai"
                                                 />
+                                                <ErrorMessage name="district">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -356,6 +384,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="no: 10, xyz apartments, abc nagar, 10th cross street ........."
                                                 />
+                                                <ErrorMessage name="address">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -371,6 +406,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="600026"
                                                 />
+                                                <ErrorMessage name="zipcode">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -555,6 +597,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input input-textarea"
                                                     placeholder="Tech Playground where anyone with a learning motive can come and leave with a better you!"
                                                 />
+                                                <ErrorMessage name="description">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -570,6 +619,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="www.techcamp.com"
                                                 />
+                                                <ErrorMessage name="website">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <FieldArray name="offerings">
                                                 {(fieldArrayProps) => {
@@ -656,6 +712,13 @@ function BootcampForm(props) {
                                                     );
                                                 }}
                                             </FieldArray>
+                                            <ErrorMessage name="offerings">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
 
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -671,6 +734,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="johndoe@techcamp.com"
                                                 />
+                                                <ErrorMessage name="email">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                             <div class="pubProfile-form-control">
                                                 <label
@@ -686,6 +756,13 @@ function BootcampForm(props) {
                                                     class="pubProfile-form-control-input"
                                                     placeholder="9108765432"
                                                 />
+                                                <ErrorMessage name="phone">
+                                                    {(errorMsg) => (
+                                                        <span className="errorMessage">
+                                                            {errorMsg}
+                                                        </span>
+                                                    )}
+                                                </ErrorMessage>
                                             </div>
                                         </div>
                                         <div class="bootcamp-form-content-basic-bottom">

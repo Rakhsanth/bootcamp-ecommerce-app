@@ -79,15 +79,14 @@ export const registerUser = (body, history) => {
                 setAlert('green', 'Signed up and logged in successfully', 3)
             );
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -113,15 +112,14 @@ export const loginUser = (body, history) => {
             dispatch(setAlert('green', 'Logged in successfully', 3));
             dispatch(loadUser());
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -156,8 +154,22 @@ export const loadUser = () => {
             // load the user profile if exists
             dispatch(getUserProfile(response.data.data._id));
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: LOGIN_SIGNUP_ERROR, payload: err.response.data });
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
+                dispatch(setAlert('red', err.response.data.data, 4));
+            } else {
+                dispatch(
+                    setAlert(
+                        'red',
+                        'Servers are down, please try again later',
+                        4
+                    )
+                );
+            }
         }
     };
 };
@@ -254,15 +266,15 @@ export const getTaggedBootcamps = (
                 });
             }
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({ type: GET_BOOTCAMPS_ERROR, payload: err.response });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -304,14 +316,14 @@ export const getMapBootcamps = (filter, state, zipcode, radialDistance) => {
             });
             dispatch({ type: GET_MAP_BOOTCAMPS, payload: bootcampsData });
         } catch (err) {
-            console.log(err.response.status);
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -412,15 +424,15 @@ export const getTaggedCourses = (
                 });
             }
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: GET_COURSES_ERROR, payload: err.response });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({ type: GET_COURSES_ERROR, payload: err.response });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -439,15 +451,18 @@ export const getCoursesByBootcamp = (bootcampId) => {
                 payload: response.data.data,
             });
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_BOOTCAMP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -467,15 +482,18 @@ export const getBootcamp = (bootcampId) => {
                 payload: { bootcamp: response.data.data },
             });
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: GET_BOOTCAMP_ERROR, payload: err.response.data });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_BOOTCAMP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -495,15 +513,18 @@ export const getCourse = (courseId) => {
                 payload: { course: response.data.data },
             });
         } catch (err) {
-            console.log(err.response.status);
-            dispatch({ type: GET_COURSE_ERROR, payload: err.response.data });
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
+                dispatch({
+                    type: GET_COURSE_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -588,14 +609,14 @@ export const getUserProfile = (userId) => {
                 });
             }
         } catch (err) {
-            console.log(err.response.status);
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );
@@ -633,14 +654,14 @@ export const resetNotificationCount = (id) => {
                 payload: response.data.data.unReadCount,
             });
         } catch (err) {
-            console.log(err.response.status);
-            if (err.response.data !== undefined) {
+            if (err.response !== undefined) {
+                console.log(err.response.status);
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
                     setAlert(
                         'red',
-                        'Something went wrong, please try again later',
+                        'Servers are down, please try again later',
                         4
                     )
                 );

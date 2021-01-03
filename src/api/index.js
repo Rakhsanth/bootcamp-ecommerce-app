@@ -78,8 +78,8 @@ export const createEditBootcamp = async (
                     imageConfig
                 );
             } catch (err) {
-                console.log(err.response.status);
-                if (err.response.data !== undefined) {
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
                     return {
                         success: err.response.data.success,
                         message: err.response.data.data,
@@ -94,9 +94,8 @@ export const createEditBootcamp = async (
         }
         return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response.status);
-
-        if (err.response.data !== undefined) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
             if (
                 err.response.data.data ===
                 "Cannot read property 'longitude' of undefined"
@@ -128,7 +127,18 @@ export const deleteBootcamp = async (bootcampId) => {
             getPostConfig('application/json', true, true)
         );
     } catch (err) {
-        console.log(err.response.status);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -182,8 +192,8 @@ export const createEditCourse = async (
                     imageConfig
                 );
             } catch (err) {
-                console.log(err.response.status);
-                if (err.response.data !== undefined) {
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
                     return {
                         success: err.response.data.success,
                         message: err.response.data.data,
@@ -212,8 +222,8 @@ export const createEditCourse = async (
                     videoConfig
                 );
             } catch (err) {
-                console.log(err.response.status);
-                if (err.response.data !== undefined) {
+                if (err.response !== undefined) {
+                    console.log(err.response.status);
                     return {
                         success: err.response.data.success,
                         message: err.response.data.data,
@@ -228,8 +238,8 @@ export const createEditCourse = async (
         }
         return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response.status);
-        if (err.response.data !== undefined) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
             return {
                 success: err.response.data.success,
                 message: err.response.data.data,
@@ -251,7 +261,18 @@ export const deleteCourse = async (courseId) => {
             getPostConfig('application/json', true, true)
         );
     } catch (err) {
-        console.log(err.response.status);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -266,8 +287,8 @@ export const updateCourse = async (courseId, data) => {
         console.log(response.data.data);
         return { success: response.data.success };
     } catch (err) {
-        console.log(err.response.status);
-        if (err.response.data !== undefined) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
             return {
                 success: err.response.data.success,
                 message: err.response.data.data,
@@ -296,7 +317,18 @@ export const getReviews = async (courseId, pageNum, percents, query) => {
         const response = await axios.get(getURL);
         return response.data;
     } catch (err) {
-        console.log(err.response.status);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -320,7 +352,18 @@ export const getBootcampReviews = async (
         const response = await axios.get(getURL);
         return response.data;
     } catch (err) {
-        console.log(err.response.status);
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -339,8 +382,18 @@ export const getProfileDetails = async (userId) => {
             return response.data.data[0];
         }
     } catch (err) {
-        console.log(err.response.status);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -359,8 +412,18 @@ export const getProfileNotifications = async (profileId) => {
             return response.data.data.notifications;
         }
     } catch (err) {
-        console.log(err.response.status);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -379,8 +442,18 @@ export const deleteNotification = async (userId, notificationId) => {
             return response.data.data.notifications;
         }
     } catch (err) {
-        console.log(err.response.status);
-        // console.log('create a profile 1st');
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Something went wrong, please try again later',
+            };
+        }
     }
 };
 
@@ -434,8 +507,8 @@ export const createOrEditProfileDetails = async (
         }
         return { success: true, message: 'Updated successfully' };
     } catch (err) {
-        console.log(err.response.status);
-        if (err.response.data !== undefined) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
             return {
                 success: err.response.data.success,
                 message: err.response.data.data,

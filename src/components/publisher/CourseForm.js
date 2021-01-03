@@ -272,6 +272,13 @@ function CourseForm(props) {
                                                 );
                                             }}
                                         </Field>
+                                        <ErrorMessage name="image">
+                                            {(errorMsg) => (
+                                                <span className="errorMessage">
+                                                    {errorMsg}
+                                                </span>
+                                            )}
+                                        </ErrorMessage>
                                     </div>
                                     <div class="bootcamp-form-content-basic-picture">
                                         <label
@@ -303,6 +310,13 @@ function CourseForm(props) {
                                                 );
                                             }}
                                         </Field>
+                                        <ErrorMessage name="video">
+                                            {(errorMsg) => (
+                                                <span className="errorMessage">
+                                                    {errorMsg}
+                                                </span>
+                                            )}
+                                        </ErrorMessage>
                                     </div>
                                     <div class="bootcamp-form-content-basic-details">
                                         <div class="pubProfile-form-control">
@@ -319,6 +333,13 @@ function CourseForm(props) {
                                                 class="pubProfile-form-control-input"
                                                 placeholder="Tech Pllayground"
                                             />
+                                            <ErrorMessage name="title">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -334,6 +355,13 @@ function CourseForm(props) {
                                                 class="pubProfile-form-control-input"
                                                 placeholder="Tamil Nadu"
                                             />
+                                            <ErrorMessage name="description">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -348,6 +376,13 @@ function CourseForm(props) {
                                                 name="requirementDescription"
                                                 class="pubProfile-form-control-input"
                                             />
+                                            <ErrorMessage name="requirementDescription">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -362,6 +397,13 @@ function CourseForm(props) {
                                                 name="maxStudentsAllowed"
                                                 class="pubProfile-form-control-input"
                                             />
+                                            <ErrorMessage name="maxStudentsAllowed">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -456,6 +498,13 @@ function CourseForm(props) {
                                                     );
                                                 }}
                                             </Field>
+                                            <ErrorMessage name="startDate">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -506,6 +555,13 @@ function CourseForm(props) {
                                                     );
                                                 }}
                                             </Field>
+                                            <ErrorMessage name="endDate">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -520,6 +576,13 @@ function CourseForm(props) {
                                                 name="author"
                                                 class="pubProfile-form-control-input"
                                             />
+                                            <ErrorMessage name="author">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <div class="pubProfile-form-control">
                                             <label
@@ -534,6 +597,13 @@ function CourseForm(props) {
                                                 name="cost"
                                                 class="pubProfile-form-control-input"
                                             />
+                                            <ErrorMessage name="cost">
+                                                {(errorMsg) => (
+                                                    <span className="errorMessage">
+                                                        {errorMsg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
                                         </div>
                                         <FieldArray name="contentList">
                                             {(fieldArrayProps) => {
@@ -616,6 +686,13 @@ function CourseForm(props) {
                                                 );
                                             }}
                                         </FieldArray>
+                                        <ErrorMessage name="contentList">
+                                            {(errorMsg) => (
+                                                <span className="errorMessage">
+                                                    {errorMsg}
+                                                </span>
+                                            )}
+                                        </ErrorMessage>
                                         <FieldArray name="basicRequirements">
                                             {(fieldArrayProps) => {
                                                 const {
@@ -699,6 +776,13 @@ function CourseForm(props) {
                                                 );
                                             }}
                                         </FieldArray>
+                                        <ErrorMessage name="basicRequirements">
+                                            {(errorMsg) => (
+                                                <span className="errorMessage">
+                                                    {errorMsg}
+                                                </span>
+                                            )}
+                                        </ErrorMessage>
                                     </div>
 
                                     <div class="bootcamp-form-content-basic-bottom">
