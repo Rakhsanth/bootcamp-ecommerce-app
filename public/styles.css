@@ -131,6 +131,7 @@ a:hover {
 .errorMessage {
     color: red;
     display: block;
+    font-size: 1.5rem;
 }
 
 .d3-map {
@@ -3425,4 +3426,24 @@ a:hover {
 .cart-checkout-total-price {
     font-size: 3rem;
     margin-bottom: 2rem;
+}
+
+.forgot-password-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(185, 185, 182, 0.5);
+}
+.forgot-password-container .forgot-password-form {
+    width: 60%;
+    padding: 3rem;
+    background-color: white;
+    box-shadow: 1rem 1rem 1.5rem #dcdacb;
+    border-radius: 1rem;
 }

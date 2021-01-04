@@ -17,7 +17,8 @@ import PublisherNotification from './components/notification/PublisherNotificati
 import UserNotification from './components/notification/UserNotification';
 import ProtectedRoute from './components/ProtectedRoute';
 import Alert from './components/utils/Alert';
-
+import AlertWrapper from './components/utils/AlertWrapper';
+import ResetForgotPassword from './components/cards/ResetForgotPassword';
 // Redux store and actions
 import { Provider } from 'react-redux';
 import { store, persistor } from './store';
@@ -25,7 +26,6 @@ import { loadUser, setAlert } from './actions';
 
 // Redux presist related
 import { PersistGate } from 'redux-persist/integration/react';
-import AlertWrapper from './components/utils/AlertWrapper';
 
 function App() {
     useEffect(() => {
@@ -56,6 +56,11 @@ function App() {
                             exact
                             path="/bootcamps/:bootcampId"
                             component={Bootcamp}
+                        />
+                        <Route
+                            exact
+                            path="/resetForgotPassword"
+                            component={ResetForgotPassword}
                         />
                         <Route exact path="/cart" component={Cart} />
                         <ProtectedRoute

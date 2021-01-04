@@ -1,4 +1,4 @@
-import React, { createRef, Fragment } from 'react';
+import React, { createRef, Fragment, useState } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { connect } from 'react-redux';
@@ -13,10 +13,14 @@ import { googleSignInClientId, facebookSignInAppId } from '../config/config';
 // utils
 import { validatePassword } from '../components/utils/utilFunctions';
 import Spinner from './utils/Spinner';
+// Components
+import ForgotPassword from './cards/ForgotPassword';
 
 function Login(props) {
     const { loading, loggedIn } = props;
     const { resetLoading, loginUser, history } = props;
+
+    const [forgotPassword, setforgotPassword] = useState(false);
 
     const initialValues = {
         email: '',
@@ -100,6 +104,10 @@ function Login(props) {
         console.log(body);
         resetLoading('auth');
         loginUser(body, history);
+    };
+
+    const removeMe = () => {
+        setforgotPassword(false);
     };
 
     return loggedIn ? (
@@ -212,7 +220,15 @@ function Login(props) {
 
                             <div class="login-container-forgotpw">
                                 Or{' '}
-                                <Link to="/resetPassword">Forgot Password</Link>
+                                <a
+                                    href="#"
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        setforgotPassword(true);
+                                    }}
+                                >
+                                    Forgot Password
+                                </a>
                             </div>
                             <div class="login-container-signup">
                                 Don't have an account?{' '}
@@ -224,6 +240,7 @@ function Login(props) {
                 {loading ? <Spinner size="lg" /> : null}
                 {/* <Spinner size="lg" /> */}
             </div>
+            {forgotPassword ? <ForgotPassword removeMe={removeMe} /> : null}
         </Fragment>
     );
 }
