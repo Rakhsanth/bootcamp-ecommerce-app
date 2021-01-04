@@ -160,55 +160,56 @@ function Login(props) {
                                         callback={responseFacebook}
                                     />
                                 </div>
-                            </div>
-                            <div class="login-container-form">
-                                <Formik
-                                    initialValues={initialValues}
-                                    validationSchema={validationSchema}
-                                    onSubmit={onSubmit}
-                                >
-                                    {(formik) => {
-                                        return (
-                                            <Form>
-                                                <div class="login-container-email pubProfile-form-control">
-                                                    <Field
-                                                        type="email"
-                                                        name="email"
-                                                        placeholder="email"
-                                                    />
-                                                    <ErrorMessage name="email">
-                                                        {(errorMsg) => (
-                                                            <span className="errorMessage">
-                                                                {errorMsg}
-                                                            </span>
-                                                        )}
-                                                    </ErrorMessage>
-                                                </div>
-                                                <div class="login-container-password pubProfile-form-control">
-                                                    <Field
-                                                        type="password"
-                                                        name="password"
-                                                        placeholder="password"
-                                                    />
-                                                    <ErrorMessage name="password">
-                                                        {(errorMsg) => (
-                                                            <span className="errorMessage">
-                                                                {errorMsg}
-                                                            </span>
-                                                        )}
-                                                    </ErrorMessage>
-                                                </div>
+                                <div class="login-container-form">
+                                    <Formik
+                                        initialValues={initialValues}
+                                        validationSchema={validationSchema}
+                                        onSubmit={onSubmit}
+                                    >
+                                        {(formik) => {
+                                            return (
+                                                <Form style={{ width: '100%' }}>
+                                                    <div class="login-container-email pubProfile-form-control">
+                                                        <Field
+                                                            type="email"
+                                                            name="email"
+                                                            placeholder="email"
+                                                        />
+                                                        <ErrorMessage name="email">
+                                                            {(errorMsg) => (
+                                                                <span className="errorMessage">
+                                                                    {errorMsg}
+                                                                </span>
+                                                            )}
+                                                        </ErrorMessage>
+                                                    </div>
+                                                    <div class="login-container-password pubProfile-form-control">
+                                                        <Field
+                                                            type="password"
+                                                            name="password"
+                                                            placeholder="password"
+                                                        />
+                                                        <ErrorMessage name="password">
+                                                            {(errorMsg) => (
+                                                                <span className="errorMessage">
+                                                                    {errorMsg}
+                                                                </span>
+                                                            )}
+                                                        </ErrorMessage>
+                                                    </div>
 
-                                                <div class="login-container-button">
-                                                    <button class="btn btn-loginpage">
-                                                        Login
-                                                    </button>
-                                                </div>
-                                            </Form>
-                                        );
-                                    }}
-                                </Formik>
+                                                    <div class="login-container-button">
+                                                        <button class="btn btn-loginpage">
+                                                            Login
+                                                        </button>
+                                                    </div>
+                                                </Form>
+                                            );
+                                        }}
+                                    </Formik>
+                                </div>
                             </div>
+
                             <div class="login-container-forgotpw">
                                 Or{' '}
                                 <Link to="/resetPassword">Forgot Password</Link>
