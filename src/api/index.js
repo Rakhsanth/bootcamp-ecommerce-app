@@ -521,3 +521,65 @@ export const createOrEditProfileDetails = async (
         }
     }
 };
+
+// to call forgot password;
+export const forgotPassword = async (value) => {
+    const postURL = `${apiBaseURL}/auth/forgotPassword`;
+    try {
+        const response = await axios.post(
+            postURL,
+            value,
+            getPostConfig('application/json')
+        );
+        return {
+            success: response.data.success,
+            message: response.data.message,
+        };
+    } catch (err) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Server is down, please try again later',
+            };
+        }
+    }
+};
+
+// to reset forgot password using reset token;
+export const resetForgotPassword = async (values) => {
+    const { resetToken, password } = values;
+    const putURL = `${apiBaseURL}/auth/resetPassword/${resetToken}`;
+
+    console.log(password);
+
+    try {
+        const response = await axios.put(
+            putURL,
+            { password },
+            getPostConfig('application/json')
+        );
+        return {
+            success: response.data.success,
+            message: 'Password reset successfully',
+        };
+    } catch (err) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Server is down, please try again later',
+            };
+        }
+    }
+};
