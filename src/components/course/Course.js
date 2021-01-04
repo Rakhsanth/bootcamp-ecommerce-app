@@ -368,50 +368,54 @@ function Course(props) {
                     </h2>
                     <div className="container-scrolly-main">
                         {courses.length > 0 ? (
-                            courses.map((course) => (
-                                <div
-                                    key={course._id}
-                                    className="container-scrolly-main-item"
-                                >
-                                    <img
-                                        src={
-                                            course.picture !== 'no-photo.jpg'
-                                                ? course.picture
-                                                : './img/courseImages/courseCardImg.jpg'
-                                        }
-                                        alt="course"
-                                        className="container-scrolly-main-item-img"
-                                    />
-                                    <div className="container-scrolly-main-item-titledesc">
-                                        <h4 className="container-scrolly-main-item-titledesc-title">
-                                            {course.title}
-                                        </h4>
-                                        <p className="container-scrolly-main-item-titledesc-desc">
-                                            {course.description}
-                                        </p>
-                                    </div>
+                            courses.map((course) =>
+                                course._id !== courseId ? (
+                                    <Link
+                                        key={course._id}
+                                        to={`/courses/${course._id}`}
+                                        className="container-scrolly-main-item"
+                                    >
+                                        <img
+                                            src={
+                                                course.picture !==
+                                                'no-photo.jpg'
+                                                    ? course.picture
+                                                    : './img/courseImages/courseCardImg.jpg'
+                                            }
+                                            alt="course"
+                                            className="container-scrolly-main-item-img"
+                                        />
+                                        <div className="container-scrolly-main-item-titledesc">
+                                            <h4 className="container-scrolly-main-item-titledesc-title">
+                                                {course.title}
+                                            </h4>
+                                            <p className="container-scrolly-main-item-titledesc-desc">
+                                                {course.description}
+                                            </p>
+                                        </div>
 
-                                    <div className="container-scrolly-main-item-rating">
-                                        <h5 className="container-scrolly-main-item-rating-text">
-                                            {course.averageRating}
-                                        </h5>
-                                        <svg className="container-scrolly-main-item-rating-icon">
-                                            <use xlinkHref="img/sprite.svg#icon-star-full"></use>
-                                        </svg>
-                                    </div>
-                                    <div className="container-scrolly-main-item-ratecount">
-                                        <svg className="container-scrolly-main-item-rating-icon">
-                                            <use xlinkHref="img/sprite.svg#icon-users"></use>
-                                        </svg>
-                                        <span className="container-scrolly-main-item-ratecount-text">
-                                            {course.ratings}
+                                        <div className="container-scrolly-main-item-rating">
+                                            <h5 className="container-scrolly-main-item-rating-text">
+                                                {course.averageRating}
+                                            </h5>
+                                            <svg className="container-scrolly-main-item-rating-icon">
+                                                <use xlinkHref="img/sprite.svg#icon-star-full"></use>
+                                            </svg>
+                                        </div>
+                                        <div className="container-scrolly-main-item-ratecount">
+                                            <svg className="container-scrolly-main-item-rating-icon">
+                                                <use xlinkHref="img/sprite.svg#icon-users"></use>
+                                            </svg>
+                                            <span className="container-scrolly-main-item-ratecount-text">
+                                                {course.ratings}
+                                            </span>
+                                        </div>
+                                        <span className="container-scrolly-main-item-price">
+                                            &#8377; {course.cost}
                                         </span>
-                                    </div>
-                                    <span className="container-scrolly-main-item-price">
-                                        &#8377; {course.cost}
-                                    </span>
-                                </div>
-                            ))
+                                    </Link>
+                                ) : null
+                            )
                         ) : (
                             <h2>No other courses yet !!!</h2>
                         )}
