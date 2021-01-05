@@ -35,6 +35,8 @@ import {
     GET_COURSES_BY_BOOTCAMP,
     SET_ALERT,
     REMOVE_ALERT,
+    GET_USER_REVIEWS,
+    REVIEWS_ERROR,
 } from '../actions/actionTypes';
 
 const initialLoginStatus = {
@@ -440,6 +442,24 @@ const notificationReducer = (state = initialNotification, action) => {
     }
 };
 
+// User reviews reducer
+const initialReviews = {
+    loading: true,
+    reviews: [],
+    error: false,
+};
+const reviewsReducer = (state = initialReviews, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case GET_USER_REVIEWS:
+            return { ...state, loading: false, reviews: payload, error: false };
+        case REVIEWS_ERROR:
+            return { ...state, loading: false, reviews: payload, error: true };
+        default:
+            return state;
+    }
+};
+
 // Alert reducer
 const initialAlertState = {
     alerts: [],
@@ -471,6 +491,7 @@ export default combineReducers({
     course: courseReducer,
     cart: cartReducer,
     profile: profileReducer,
+    reviews: reviewsReducer,
     notification: notificationReducer,
     alert: alertReducer,
 });

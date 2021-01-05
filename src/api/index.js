@@ -583,3 +583,84 @@ export const resetForgotPassword = async (values) => {
         }
     }
 };
+
+// create or edit review
+export const createOrEditReview = async (
+    createOrEdit,
+    courseOrBootcamp,
+    courseOrBootcampId,
+    reviewId,
+    values
+) => {
+    let postURL;
+    if (courseOrBootcamp === 'course') {
+        postURL = `${apiBaseURL}/courses/${courseOrBootcampId}/reviews`;
+    } else {
+        postURL = `${apiBaseURL}/bootcamps/${courseOrBootcampId}/reviews`;
+    }
+
+    const putURL = `${apiBaseURL}/reviews/${reviewId}`;
+
+    try {
+        let response;
+        if (createOrEdit === 'create') {
+            response = await axios.post(
+                postURL,
+                values,
+                getPostConfig('application/json', true, true)
+            );
+        } else {
+            response = await axios.put(
+                putURL,
+                values,
+                getPostConfig('application/json', true, true)
+            );
+        }
+        return {
+            success: response.data.success,
+            message: 'Updated successfully',
+        };
+    } catch (err) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Server down, please try again later',
+            };
+        }
+    }
+};
+
+// delete a review:
+export const deleteReview = async (reviewId) => {
+    const deleteURL = `${apiBaseURL}/reviews/${reviewId}`;
+
+    try {
+        const response = await axios.delete(
+            deleteURL,
+            getPostConfig('application/json', true, true)
+        );
+        return {
+            success: response.data.success,
+            message: 'Updated successfully',
+        };
+    } catch (err) {
+        if (err.response !== undefined) {
+            console.log(err.response.status);
+            return {
+                success: err.response.data.success,
+                message: err.response.data.data,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Server down, please try again later',
+            };
+        }
+    }
+};

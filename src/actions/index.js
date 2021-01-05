@@ -39,6 +39,8 @@ import {
     NOTIFICATION_ERROR,
     SET_ALERT,
     REMOVE_ALERT,
+    GET_USER_REVIEWS,
+    REVIEWS_ERROR,
 } from './actionTypes';
 
 // reset loading property of specified state
@@ -665,6 +667,34 @@ export const resetNotificationCount = (id) => {
                         4
                     )
                 );
+            }
+        }
+    };
+};
+
+// get user reviews action
+export const getUserReviews = (userId) => {
+    return async function (dispatch) {
+        const getURL = `${apiBaseURL}/reviews?user=${userId}`;
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const response = await axios.get(getURL, config);
+            dispatch({ type: GET_USER_REVIEWS, payload: response.data.data });
+        } catch (err) {
+            if (err.response !== undefined) {
+                dispatch({ type: REVIEWS_ERROR, payload: err.response.data });
+                console.log(err.response.status);
+            } else {
+                console.log('Server is not up and running');
             }
         }
     };

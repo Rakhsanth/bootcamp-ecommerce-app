@@ -1175,6 +1175,7 @@ a:hover {
 }
 
 .categories-bootcamps {
+    position: relative;
     grid-row: 5 / 6;
     grid-column: col-start 1 / col-end 10;
     width: 95%;

@@ -6,15 +6,24 @@ import ReactPlayer from 'react-player/lazy';
 // api calls
 import { getReviews } from '../../api';
 // actions
-import { getCourse, addToCart, getCoursesByBootcamp } from '../../actions';
+import {
+    getCourse,
+    addToCart,
+    getCoursesByBootcamp,
+    getUserProfile,
+} from '../../actions';
 // config values
 import { pusherApiKey, pusherCluster } from '../../config/config';
+import ReviewForm from '../cards/ReviewForm';
 
 function Course(props) {
     const {
         loading,
         course,
+        user,
+        profile,
         getCourse,
+        getUserProfile,
         addToCart,
         cartItems,
         getCoursesByBootcamp,
@@ -105,7 +114,10 @@ function Course(props) {
             getCoursesByBootcamp(course.bootcamp);
             courses = courses.filter((item) => item._id !== course._id);
         }
-    }, [getCourse]);
+        if (user._id !== undefined) {
+            getUserProfile(user._id);
+        }
+    }, [getCourse, getUserProfile, user]);
 
     console.log(reviews, totalReviews);
 
@@ -233,6 +245,19 @@ function Course(props) {
                 );
             }
         }
+    };
+
+    const canIReview = () => {
+        if (profile.enrolledCourses.length === 0) {
+            return false;
+        }
+        const match = profile.enrolledCourses.find(
+            (course) => course.courseId === courseId
+        );
+        if (match === undefined) {
+            return false;
+        }
+        return true;
     };
 
     return !loading && course ? (
@@ -567,6 +592,18 @@ function Course(props) {
                             See more
                         </button>
                     ) : null}
+                    {profile !== null && canIReview() ? (
+                        <ReviewForm
+                            courseOrBootcamp="course"
+                            courseOrBootcampId={courseId}
+                            setReviewToState={setReviewToState}
+                            setStarPercerntsToState={setStarPercerntsToState}
+                        />
+                    ) : (
+                        <h3>
+                            You can add review once you enroll for this course
+                        </h3>
+                    )}
                 </div>
             </div>
         </Fragment>
@@ -581,6 +618,9 @@ const mapStateToProps = (store) => {
         course: store.course.course,
         cartItems: store.cart.cartItems,
         courses: store.bootcampCourses.courses,
+        reviews: store.reviews.reviews,
+        user: store.auth.user,
+        profile: store.profile.profile,
     };
 };
 
@@ -588,4 +628,5 @@ export default connect(mapStateToProps, {
     getCourse,
     addToCart,
     getCoursesByBootcamp,
+    getUserProfile,
 })(withRouter(Course));
