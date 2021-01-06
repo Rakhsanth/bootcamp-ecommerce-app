@@ -63,21 +63,21 @@ function Landing(props) {
     const [scrollNextPage, setscrollNextPage] = useState(null);
 
     // Pusher related stuff for realtime DB related updations
-    const pusher = new Pusher(pusherApiKey, {
-        cluster: pusherCluster,
-    });
-    const channel = pusher.subscribe('courses');
-    channel.bind('updated', function (data) {
-        console.log('Pusher subscribed');
-        if (taggedCourses.length !== 0) {
-            taggedCourses.forEach((course, index) => {
-                if (course._id === data.newUpdatedDoc._id) {
-                    console.log('Found the modefied doc in realtime');
-                    updateLoadedCourse(data.newUpdatedDoc);
-                }
-            });
-        }
-    });
+    // const pusher = new Pusher(pusherApiKey, {
+    //     cluster: pusherCluster,
+    // });
+    // const channel = pusher.subscribe('courses');
+    // channel.bind('updated', function (data) {
+    //     console.log('Pusher subscribed');
+    //     if (taggedCourses.length !== 0) {
+    //         taggedCourses.forEach((course, index) => {
+    //             if (course._id === data.newUpdatedDoc._id) {
+    //                 console.log('Found the modefied doc in realtime');
+    //                 updateLoadedCourse(data.newUpdatedDoc);
+    //             }
+    //         });
+    //     }
+    // });
 
     const courseDesignTab = useRef();
     const courseDevelopmentTab = useRef();

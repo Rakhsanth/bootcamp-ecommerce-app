@@ -450,7 +450,8 @@ function Bootcamp(props) {
                     ) : null}
                     {profile !== null && canIReview() ? (
                         <ReviewForm
-                            courseOrBootcamp="course"
+                            currentPage={currentPage}
+                            courseOrBootcamp="bootcamp"
                             courseOrBootcampId={bootcampId}
                             setReviewToState={setReviewToState}
                             setStarPercerntsToState={setStarPercerntsToState}

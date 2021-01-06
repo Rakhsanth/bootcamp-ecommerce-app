@@ -43,19 +43,19 @@ function Course(props) {
     const [filterQuery, setfilterQuery] = useState(null);
 
     // Pusher related stuff for realtime DB related updations
-    const pusher = new Pusher(pusherApiKey, {
-        cluster: pusherCluster,
-    });
-    const channel = pusher.subscribe('courses');
-    channel.bind('updated', function (data) {
-        console.log('Pusher subscribed');
-        if (course) {
-            if (course._id === data.newUpdatedDoc._id) {
-                console.log('Found the modefied doc in realtime');
-                getCourse(courseId);
-            }
-        }
-    });
+    // const pusher = new Pusher(pusherApiKey, {
+    //     cluster: pusherCluster,
+    // });
+    // const channel = pusher.subscribe('courses');
+    // channel.bind('updated', function (data) {
+    //     console.log('Pusher subscribed');
+    //     if (course) {
+    //         if (course._id === data.newUpdatedDoc._id) {
+    //             console.log('Found the modefied doc in realtime');
+    //             getCourse(courseId);
+    //         }
+    //     }
+    // });
 
     console.log(courseId, currentPage, starPercents);
 

@@ -451,6 +451,12 @@ const initialReviews = {
 const reviewsReducer = (state = initialReviews, action) => {
     const { type, payload } = action;
     switch (type) {
+        case RESET_LOADING:
+            if (payload === 'reviews') {
+                return { ...state, loading: true };
+            } else {
+                return state;
+            }
         case GET_USER_REVIEWS:
             return { ...state, loading: false, reviews: payload, error: false };
         case REVIEWS_ERROR:

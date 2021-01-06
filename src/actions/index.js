@@ -83,6 +83,10 @@ export const registerUser = (body, history) => {
         } catch (err) {
             if (err.response !== undefined) {
                 console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
@@ -116,6 +120,10 @@ export const loginUser = (body, history) => {
         } catch (err) {
             if (err.response !== undefined) {
                 console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
