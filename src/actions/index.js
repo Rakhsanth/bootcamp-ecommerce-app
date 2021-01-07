@@ -39,7 +39,11 @@ import {
     NOTIFICATION_ERROR,
     SET_ALERT,
     REMOVE_ALERT,
+    GET_USER_REVIEWS,
+    REVIEWS_ERROR,
 } from './actionTypes';
+
+const pirmaryColor = '#094c59';
 
 // reset loading property of specified state
 export const resetLoading = (state) => {
@@ -81,6 +85,10 @@ export const registerUser = (body, history) => {
         } catch (err) {
             if (err.response !== undefined) {
                 console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
@@ -114,6 +122,10 @@ export const loginUser = (body, history) => {
         } catch (err) {
             if (err.response !== undefined) {
                 console.log(err.response.status);
+                dispatch({
+                    type: LOGIN_SIGNUP_ERROR,
+                    payload: err.response.data,
+                });
                 dispatch(setAlert('red', err.response.data.data, 4));
             } else {
                 dispatch(
@@ -160,7 +172,13 @@ export const loadUser = () => {
                     type: LOGIN_SIGNUP_ERROR,
                     payload: err.response.data,
                 });
-                dispatch(setAlert('red', err.response.data.data, 4));
+                dispatch(
+                    setAlert(
+                        pirmaryColor,
+                        'Login or sign up as user or publisher',
+                        4
+                    )
+                );
             } else {
                 dispatch(
                     setAlert(
@@ -665,6 +683,34 @@ export const resetNotificationCount = (id) => {
                         4
                     )
                 );
+            }
+        }
+    };
+};
+
+// get user reviews action
+export const getUserReviews = (userId) => {
+    return async function (dispatch) {
+        const getURL = `${apiBaseURL}/reviews?user=${userId}`;
+        let token;
+        if (localStorage.token) {
+            token = localStorage.getItem('token');
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        };
+        try {
+            const response = await axios.get(getURL, config);
+            dispatch({ type: GET_USER_REVIEWS, payload: response.data.data });
+        } catch (err) {
+            if (err.response !== undefined) {
+                dispatch({ type: REVIEWS_ERROR, payload: err.response.data });
+                console.log(err.response.status);
+            } else {
+                console.log('Server is not up and running');
             }
         }
     };

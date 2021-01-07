@@ -1,10 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+// cpm[onents
+import ReviewForm from '../cards/ReviewForm';
 // api calls
 import { getBootcampReviews } from '../../api';
 // actions
-import { getBootcamp, getCoursesByBootcamp } from '../../actions';
+import {
+    getBootcamp,
+    getCoursesByBootcamp,
+    getUserProfile,
+} from '../../actions';
 // config values
 
 function Bootcamp(props) {
@@ -12,7 +18,10 @@ function Bootcamp(props) {
         loading,
         bootcamp,
         courses,
+        user,
+        profile,
         getBootcamp,
+        getUserProfile,
         getCoursesByBootcamp,
     } = props;
     const {
@@ -82,7 +91,10 @@ function Bootcamp(props) {
         setReviewToState();
         getBootcamp(bootcampId);
         getCoursesByBootcamp(bootcampId);
-    }, [getBootcamp, getCoursesByBootcamp]);
+        if (user._id !== undefined) {
+            getUserProfile(user._id);
+        }
+    }, [getBootcamp, getCoursesByBootcamp, user]);
 
     console.log(reviews, totalReviews);
 
@@ -135,6 +147,22 @@ function Bootcamp(props) {
     const handleSeeMore = () => {
         setReviewToState(currentPage + 1);
         setcurrentPage(currentPage + 1);
+    };
+
+    const canIReview = () => {
+        if (profile.enrolledCourses.length === 0 || courses.length === 0) {
+            return false;
+        }
+        const courseIds = courses.map((course) => course._id);
+        const mergedCourseIds = courseIds.join(',');
+        console.log(mergedCourseIds);
+        for (const course of profile.enrolledCourses) {
+            if (mergedCourseIds.search(course.courseId) !== -1) {
+                console.log('found the course enrolled');
+                return true;
+            }
+        }
+        return false;
     };
 
     return !loading && bootcamp ? (
@@ -420,6 +448,19 @@ function Bootcamp(props) {
                             See more
                         </button>
                     ) : null}
+                    {profile !== null && canIReview() ? (
+                        <ReviewForm
+                            currentPage={currentPage}
+                            courseOrBootcamp="bootcamp"
+                            courseOrBootcampId={bootcampId}
+                            setReviewToState={setReviewToState}
+                            setStarPercerntsToState={setStarPercerntsToState}
+                        />
+                    ) : (
+                        <h3>
+                            You can add review once you enroll for this course
+                        </h3>
+                    )}
                 </div>
             </div>
         </Fragment>
@@ -433,9 +474,13 @@ const mapStateToProps = (store) => {
         loading: store.course.loading,
         bootcamp: store.bootcamp.bootcamp,
         courses: store.bootcampCourses.courses,
+        user: store.auth.user,
+        profile: store.profile.profile,
     };
 };
 
-export default connect(mapStateToProps, { getBootcamp, getCoursesByBootcamp })(
-    withRouter(Bootcamp)
-);
+export default connect(mapStateToProps, {
+    getBootcamp,
+    getCoursesByBootcamp,
+    getUserProfile,
+})(withRouter(Bootcamp));

@@ -848,7 +848,7 @@ a:hover {
 }
 @media (max-width: 37.5em) {
     .categories-card {
-        width: 500%;
+        /* width: 500%; */
         height: 45rem;
     }
 }
@@ -1160,6 +1160,7 @@ a:hover {
     .categories {
         overflow-x: auto;
         overflow-y: hidden;
+        justify-content: flex-start;
     }
 }
 @media (hover: none) {
@@ -1170,11 +1171,12 @@ a:hover {
 }
 @media (hover: hover) {
     .categories {
-        overflow-x: clip;
+        overflow-x: hidden;
     }
 }
 
 .categories-bootcamps {
+    position: relative;
     grid-row: 5 / 6;
     grid-column: col-start 1 / col-end 10;
     width: 95%;
@@ -1192,6 +1194,11 @@ a:hover {
 }
 .categories-bootcamps::-webkit-scrollbar-thumb {
     background: white;
+}
+@media (max-width: 37.5em) {
+    .categories-bootcamps {
+        justify-content: flex-start;
+    }
 }
 @media (hover: none) {
     .categories-bootcamps {
@@ -1372,6 +1379,7 @@ a:hover {
 @media (max-width: 56.25em) {
     .main-conatiner-course {
         margin-top: 4rem;
+        position: relative;
         grid-template-rows:
             50vh min-content minmax(15rem, min-content) minmax(
                 20rem,
@@ -1838,6 +1846,7 @@ a:hover {
     padding: 0 16% !important;
     width: 100%;
     height: 5rem;
+    font-size: 1.9rem !important;
     margin-bottom: 1rem;
     border: 1px solid black !important;
 }
@@ -1852,6 +1861,8 @@ a:hover {
 }
 .login-container-button > button {
     width: 100%;
+    height: 6rem;
+    margin-top: 2rem;
 }
 .login-container a {
     color: white;
@@ -2048,12 +2059,29 @@ a:hover {
     width: 100%;
     height: 100%;
 }
+@media (max-width: 56.25em) {
+    .course-image {
+        width: 75vw;
+        height: 50vh;
+        margin: 0 auto;
+    }
+}
 
 .course-image-overlay {
     grid-row: 1 / 2;
     grid-column: col-start 1 / col-end 10;
     width: 100%;
     height: 100%;
+}
+@media (max-width: 56.25em) {
+    .course-image-overlay {
+        width: 75vw;
+        height: 50vh;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 .course-top-details {
@@ -2067,7 +2095,13 @@ a:hover {
 }
 @media (max-width: 56.25em) {
     .course-top-details {
-        grid-column: col-start 1 / col-end 10;
+        width: 75vw;
+        height: 50vh;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0 5rem;
     }
 }
 .course-top-details-title {
@@ -2258,6 +2292,22 @@ a:hover {
         height: 1rem;
     }
 }
+
+.course-feedback-top-rating-stars-star-review {
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    fill: #eb8a2f;
+    margin-right: 1rem;
+}
+@media (max-width: 37.5em) {
+    .course-feedback-top-rating-stars-star-review {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin-right: 1rem;
+    }
+}
+
 .course-feedback-top-percents {
     flex-grow: 1;
     display: flex;
@@ -3446,4 +3496,8 @@ a:hover {
     background-color: white;
     box-shadow: 1rem 1rem 1.5rem #dcdacb;
     border-radius: 1rem;
+}
+
+.review-form-buttons {
+    margin-top: 1rem;
 }
