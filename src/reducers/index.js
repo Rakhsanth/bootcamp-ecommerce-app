@@ -400,6 +400,8 @@ const profileReducer = (state = initialProfile, action) => {
             }
         case GET_PROFILE:
             return { ...state, loading: false, profile: payload, error: false };
+        case LOGOUT:
+            return { ...state, loading: false, profile: null, error: true };
         case PROFILE_ERROR:
             return { ...state, loading: false, profile: payload, error: true };
         default:
