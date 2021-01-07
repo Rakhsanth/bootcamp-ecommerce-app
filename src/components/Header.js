@@ -46,15 +46,15 @@ function Header(props) {
     });
 
     // Pusher related stuff for realtime DB related updations
-    // const pusher = new Pusher(pusherApiKey, {
-    //     cluster: pusherCluster,
-    // });
-    // const channel = pusher.subscribe('notifications');
-    // channel.bind('updated', function (data) {
-    //     console.log('Pusher subscribed notification change');
-    //     console.log(data);
-    //     getNotificationCount(data.doc.unReadCount);
-    // });
+    const pusher = new Pusher(pusherApiKey, {
+        cluster: pusherCluster,
+    });
+    const channel = pusher.subscribe('notifications');
+    channel.bind('updated', function (data) {
+        console.log('Pusher subscribed notification change');
+        console.log(data);
+        getNotificationCount(data.doc.unReadCount);
+    });
 
     const openMenu = () => {
         const sidenav = document.querySelector('.sidenav');

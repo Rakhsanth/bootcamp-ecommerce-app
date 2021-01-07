@@ -43,6 +43,8 @@ import {
     REVIEWS_ERROR,
 } from './actionTypes';
 
+const pirmaryColor = '#094c59';
+
 // reset loading property of specified state
 export const resetLoading = (state) => {
     return async function (dispatch) {
@@ -170,7 +172,13 @@ export const loadUser = () => {
                     type: LOGIN_SIGNUP_ERROR,
                     payload: err.response.data,
                 });
-                dispatch(setAlert('red', err.response.data.data, 4));
+                dispatch(
+                    setAlert(
+                        pirmaryColor,
+                        'Login or sign up as user or publisher',
+                        4
+                    )
+                );
             } else {
                 dispatch(
                     setAlert(

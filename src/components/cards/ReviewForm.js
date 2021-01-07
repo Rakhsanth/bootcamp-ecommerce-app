@@ -4,7 +4,13 @@ import { connect } from 'react-redux';
 import * as Yup from 'yup';
 
 // actions
-import { setAlert, getUserReviews, resetLoading } from '../../actions';
+import {
+    setAlert,
+    getUserReviews,
+    resetLoading,
+    getBootcamp,
+    getCourse,
+} from '../../actions';
 import { createOrEditReview, deleteReview } from '../../api';
 
 function ReviewForm(props) {
@@ -21,6 +27,8 @@ function ReviewForm(props) {
         setAlert,
         resetLoading,
         getUserReviews,
+        getCourse,
+        getBootcamp,
         reviewLoading,
     } = props;
 
@@ -42,7 +50,9 @@ function ReviewForm(props) {
         console.log(myReview);
         const toState = newReview();
         setmyReview(toState);
-        setrating(toState.rating);
+        if (toState !== null) {
+            setrating(toState.rating);
+        }
     };
 
     // Vannila javascript related variables
@@ -111,6 +121,11 @@ function ReviewForm(props) {
         }
         await setReviewToState(currentPage, 'limit=5');
         await setStarPercerntsToState();
+        if (courseOrBootcamp === 'course') {
+            getCourse(courseOrBootcampId);
+        } else {
+            getBootcamp(courseOrBootcampId);
+        }
         setsaving(false);
         resetLoading('reviews');
         if (response.success) {
@@ -125,9 +140,15 @@ function ReviewForm(props) {
         await deleteReview(myReview._id);
         await setReviewToState(currentPage, 'limit=5');
         await setStarPercerntsToState();
-        setsaving(false);
         setmyReview(null);
         setrating(0);
+        handleRatingStarHoverOut();
+        if (courseOrBootcamp === 'course') {
+            getCourse(courseOrBootcampId);
+        } else {
+            getBootcamp(courseOrBootcampId);
+        }
+        setsaving(false);
     };
 
     const handleRatingStarHoverIn = (num) => {
@@ -143,7 +164,7 @@ function ReviewForm(props) {
             }
         });
     };
-    const handleRatingStarHoverOut = (num) => {
+    const handleRatingStarHoverOut = () => {
         const stars = document.querySelectorAll(
             '.course-feedback-top-rating-stars-star-review'
         );
@@ -273,7 +294,9 @@ function ReviewForm(props) {
             >
                 {(formik) => {
                     console.log(formik);
-                    formik.values.rating = rating;
+                    if (formik.values.rating !== rating) {
+                        formik.setFieldValue('rating', rating);
+                    }
                     return (
                         <Form className="review-form">
                             {renderStars(rating)}
@@ -366,4 +389,6 @@ export default connect(mapStateToProps, {
     setAlert,
     resetLoading,
     getUserReviews,
+    getCourse,
+    getBootcamp,
 })(ReviewForm);
