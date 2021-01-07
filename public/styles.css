@@ -393,8 +393,8 @@ a:hover {
     border-radius: 5px;
 }
 
-.ui.selection.dropdown {
-    padding: 1.2rem 2.1rem;
+.map-view-form .ui.selection.dropdown {
+    padding: 1rem 2.1rem;
 }
 @media (max-width: 56.25em) {
     .ui.selection.dropdown {
