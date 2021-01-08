@@ -1350,7 +1350,7 @@ a:hover {
     padding-left: 3rem;
     width: 100vw;
     display: grid;
-    grid-template-rows: 15rem 7rem minmax(25rem, min-content) 10rem 25vh;
+    grid-template-rows: 15rem 7rem minmax(25rem, min-content) 10rem;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1371,7 +1371,7 @@ a:hover {
     display: grid;
     grid-template-rows:
         50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
-        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+        minmax(20rem, min-content) minmax(50rem, min-content) min-content;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -1386,7 +1386,7 @@ a:hover {
                 20rem,
                 min-content
             )
-            minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+            minmax(20rem, min-content) minmax(50rem, min-content) min-content;
     }
 }
 @media (max-width: 56.25em) {
@@ -1401,7 +1401,7 @@ a:hover {
     display: grid;
     grid-template-rows:
         65vh 5rem minmax(40vh, min-content) 5rem minmax(40vh, min-content)
-        repeat(3, min-content) 25vh;
+        repeat(3, min-content);
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 1rem;
     column-gap: 1rem;
@@ -1461,7 +1461,7 @@ a:hover {
     display: grid;
     grid-template-rows:
         50vh min-content minmax(15rem, min-content) minmax(20rem, min-content)
-        minmax(20rem, min-content) minmax(50rem, min-content) min-content 25vh;
+        minmax(20rem, min-content) minmax(50rem, min-content) min-content;
     grid-template-columns: repeat(10, [col-start] 1fr [col-end]);
     row-gap: 4rem;
     column-gap: 1rem;
@@ -2106,9 +2106,11 @@ a:hover {
     }
 }
 .course-top-details-title {
+    margin-left: 2rem;
     font-size: 2rem;
 }
 .course-top-details-bootcamp {
+    margin-left: 2rem;
     font-size: 1.5rem;
 }
 
@@ -3501,4 +3503,44 @@ a:hover {
 
 .review-form-buttons {
     margin-top: 1rem;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 2.5rem 2rem;
+    background-color: #094c59;
+    height: 25vh;
+    color: white;
+}
+
+.footer-container .project-spec {
+    height: 90%;
+    width: 20%;
+}
+.footer-container .project-spec .project-spec-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.footer-container .logo {
+    height: 90%;
+    width: 20%;
+}
+.footer-container .logo img {
+    display: block;
+    margin: 0 auto;
+    padding-top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+}
+
+.footer-container .copyrights {
+    height: 90%;
+    width: 20%;
+}
+.footer-container .copyrights .copyrights-text {
+    font-size: 1.2rem;
+    font-weight: bold;
 }

@@ -19,6 +19,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Alert from './components/utils/Alert';
 import AlertWrapper from './components/utils/AlertWrapper';
 import ResetForgotPassword from './components/cards/ResetForgotPassword';
+import Footer from './components/Footer';
 // Redux store and actions
 import { Provider } from 'react-redux';
 import { store, persistor } from './store';
@@ -84,6 +85,7 @@ function App() {
                             component={UserNotification}
                         />
                     </Switch>
+                    <Footer />
                 </Router>
             </PersistGate>
         </Provider>
