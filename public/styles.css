@@ -1837,6 +1837,12 @@ a:hover {
     flex-direction: column;
     justify-items: center;
 }
+.login-container-thirdparty .login-container-thirdparty-inner{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-items: center;
+}
 .google-signin-provider > div {
     padding: 0 !important;
     margin-top: 0.5rem;
