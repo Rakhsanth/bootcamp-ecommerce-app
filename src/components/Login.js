@@ -43,7 +43,8 @@ function Login(props) {
     const publisherTabRef = createRef();
     const tabs = [userTabRef, publisherTabRef];
 
-    const thirdPartyRef = createRef();
+    const thirdPartyRefFB = createRef();
+    const thirdPartyRefGoogle = createRef();
 
     const handleTabs = (tab) => {
         tabs.forEach((tab, index) => {
@@ -53,12 +54,14 @@ function Login(props) {
             }
         });
 
-        thirdPartyRef.current.style.display = 'none';
+        thirdPartyRefFB.current.style.display = 'none';
+        thirdPartyRefGoogle.current.style.display = 'none';
 
         if (tab === 'userTab') {
             console.log(userTabRef.current);
             userTabRef.current.classList.add('active');
-            thirdPartyRef.current.style.display = 'flex';
+            thirdPartyRefFB.current.style.display = 'block';
+            thirdPartyRefGoogle.current.style.display = 'block';
         }
         if (tab === 'publisherTab') {
             console.log(publisherTabRef.current);
@@ -145,12 +148,10 @@ function Login(props) {
                                 {' '}
                                 Login with your Bootcamp account{' '}
                             </div>
-                            <div
-                                ref={thirdPartyRef}
-                                class="login-container-thirdparty"
-                            >
+                            <div class="login-container-thirdparty">
                                 <div class="login-container-google">
                                     <GoogleLogin
+                                        ref={thirdPartyRefGoogle}
                                         className="google-signin-provider"
                                         clientId={googleSignInClientId}
                                         // buttonText="Login"
@@ -161,6 +162,7 @@ function Login(props) {
                                 </div>
                                 <div class="login-container-facebook">
                                     <FacebookLogin
+                                        ref={thirdPartyRefFB}
                                         className="facebook-signin-provider"
                                         appId={facebookSignInAppId}
                                         fields="name,email,picture"
