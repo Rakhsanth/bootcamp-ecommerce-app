@@ -117,7 +117,7 @@ function Course(props) {
         if (user._id !== undefined) {
             getUserProfile(user._id);
         }
-    }, [getCourse, getUserProfile, user]);
+    }, [getCourse, getUserProfile, user, courseId]);
 
     console.log(reviews, totalReviews);
 

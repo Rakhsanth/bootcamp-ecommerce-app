@@ -94,7 +94,7 @@ function Bootcamp(props) {
         if (user._id !== undefined) {
             getUserProfile(user._id);
         }
-    }, [getBootcamp, getCoursesByBootcamp, user]);
+    }, [getBootcamp, getCoursesByBootcamp, user, bootcampId]);
 
     console.log(reviews, totalReviews);
 
