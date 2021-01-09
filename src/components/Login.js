@@ -43,8 +43,7 @@ function Login(props) {
     const publisherTabRef = createRef();
     const tabs = [userTabRef, publisherTabRef];
 
-    const thirdPartyRefFB = createRef();
-    const thirdPartyRefGoogle = createRef();
+    const thirdPartyRef = createRef();
 
     const handleTabs = (tab) => {
         tabs.forEach((tab, index) => {
@@ -54,14 +53,12 @@ function Login(props) {
             }
         });
 
-        thirdPartyRefFB.current.style.display = 'none';
-        thirdPartyRefGoogle.current.style.display = 'none';
+        thirdPartyRef.current.style.display = 'none';
 
         if (tab === 'userTab') {
             console.log(userTabRef.current);
             userTabRef.current.classList.add('active');
-            thirdPartyRefFB.current.style.display = 'block';
-            thirdPartyRefGoogle.current.style.display = 'block';
+            thirdPartyRef.current.style.display = 'flex';
         }
         if (tab === 'publisherTab') {
             console.log(publisherTabRef.current);
@@ -149,26 +146,29 @@ function Login(props) {
                                 Login with your Bootcamp account{' '}
                             </div>
                             <div class="login-container-thirdparty">
-                                <div class="login-container-google">
-                                    <GoogleLogin
-                                        ref={thirdPartyRefGoogle}
-                                        className="google-signin-provider"
-                                        clientId={googleSignInClientId}
-                                        // buttonText="Login"
-                                        onSuccess={responseGoogle}
-                                        onFailure={responseGoogleFail}
-                                        cookiePolicy={'single_host_origin'}
-                                    />
-                                </div>
-                                <div class="login-container-facebook">
-                                    <FacebookLogin
-                                        ref={thirdPartyRefFB}
-                                        className="facebook-signin-provider"
-                                        appId={facebookSignInAppId}
-                                        fields="name,email,picture"
-                                        // onClick={componentClicked}
-                                        callback={responseFacebook}
-                                    />
+                                <div
+                                    className="login-container-thirdparty-inner"
+                                    ref={thirdPartyRef}
+                                >
+                                    <div class="login-container-google">
+                                        <GoogleLogin
+                                            className="google-signin-provider"
+                                            clientId={googleSignInClientId}
+                                            // buttonText="Login"
+                                            onSuccess={responseGoogle}
+                                            onFailure={responseGoogleFail}
+                                            cookiePolicy={'single_host_origin'}
+                                        />
+                                    </div>
+                                    <div class="login-container-facebook">
+                                        <FacebookLogin
+                                            className="facebook-signin-provider"
+                                            appId={facebookSignInAppId}
+                                            fields="name,email,picture"
+                                            // onClick={componentClicked}
+                                            callback={responseFacebook}
+                                        />
+                                    </div>
                                 </div>
                                 <div class="login-container-form">
                                     <Formik
