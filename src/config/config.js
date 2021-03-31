@@ -1,5 +1,5 @@
 // export const apiBaseURL = 'http://localhost:8080/api/v1';
-export const apiBaseURL = 'https://discoverbootcamps.el.r.appspot.com/api/v1';
+export const apiBaseURL = 'https://discoverbootcamps.el.r.appspot.com/api/v2';
 // Razorpay
 export const razorpayAPIKeyId = 'rzp_test_Xz7HUOqBQL8NS3';
 // Pusher
