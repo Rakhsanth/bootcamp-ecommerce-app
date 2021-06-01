@@ -392,7 +392,9 @@ function CourseResults(props) {
                     }}
                 </Formik>
 
-                <span className="filter-result-count">10,000 results</span>
+                <span className="filter-result-count">
+                    {totalCount} results
+                </span>
             </div>
             <Formik
                 initialValues={checkBoxesInitialValues}
